@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
   max-width: 1600px;
-  height: 100vh;
+  height: 50vh;
   margin: 0 auto;
   overflow: hidden;
   display: flex;
@@ -15,7 +15,7 @@ export const SideBarContainer = styled.div`
   flex: 1;
   flex-direction: column;
   width: 150px;
-  height: 100vh;
+  height: 50vh;
   align-items: center;
   position: absolute;
   border-right: 1px solid black;
