@@ -5,23 +5,25 @@ import StartingPage from "./pages/startingPage/StartingPage";
 import SignUp from "./pages/signup/SignUp";
 import SignIn from "./pages/signin/SignIn";
 import ProjectCreationPage from "./pages/projectCreation/ProjectCreationPage";
+import ProjectMembers from "./pages/projectMembers/ProjectMembers";
 
 function App() {
   return (
     <>
       <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" />
-            <Route path="/StartingPage" element={<StartingPage />} />
-            <Route path="/SignUp" element={<SignUp />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route
-              path="/ProjectCreationPage"
-              element={<ProjectCreationPage />}
-            />
-          </Routes>
-        </Layout>
+        {/* <Layout> */}
+        <Routes>
+          <Route path="/" />
+          <Route path="/startingpage" element={<StartingPage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/projectmembers" element={<ProjectMembers />} />
+          <Route
+            path="/projectcreationpage"
+            element={<ProjectCreationPage />}
+          />
+        </Routes>
+        {/* </Layout> */}
       </Router>
     </>
   );
