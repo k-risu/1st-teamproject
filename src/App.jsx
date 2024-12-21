@@ -5,6 +5,8 @@ import StartingPage from "./pages/startingPage/StartingPage";
 import SignUp from "./pages/signup/SignUp";
 import SignIn from "./pages/signin/SignIn";
 import ProjectCreationPage from "./pages/projectCreation/ProjectCreationPage";
+import Schedule from "./pages/calendar/Schedule";
+import Modal from "./components/modal/Modal";
 
 function App() {
   return (
@@ -13,11 +15,13 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" />
-            <Route path="/StartingPage" element={<StartingPage />} />
-            <Route path="/SignUp" element={<SignUp />} />
+            <Route path="/startingpage" element={<StartingPage />} />
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/modal" element={<Modal />} />
             <Route
-              path="/ProjectCreationPage"
+              path="/projectcreationpage"
               element={<ProjectCreationPage />}
             />
           </Routes>

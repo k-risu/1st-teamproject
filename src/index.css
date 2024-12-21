@@ -2,6 +2,10 @@
   --primary-color: #000000;
   --secondary-color: #0000ff;
   --font-size-base: 16px;
+
+  --fc-button-bg-color: #000000;
+  --fc-highlight-color: rgb(169, 222, 249, 0.5);
+  --fc-today-bg-color: rgb(255, 205, 178, 0.5);
 }
 
 * {
