@@ -16,7 +16,7 @@ function MyPage() {
   const userData = {
     nickname: "react그린이", // 닉네임
     email: "reactgreen@example.com", // 이메일
-    profileImage: "https://via.placeholder.com/150", // 프로필 이미지 URL
+    profilePic: "https://via.placeholder.com/150", // 프로필 이미지 URL
   };
 
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 이미지 팝업 상태
@@ -40,7 +40,7 @@ function MyPage() {
         <UserProfile>
           {/* 프로필 이미지와 기본 텍스트 */}
           <img
-            src={userData.profileImage}
+            src={userData.profilePic}
             alt="유저 프로필"
             style={{
               borderRadius: "50%", // 원형으로 보이게 설정
@@ -93,7 +93,7 @@ function MyPage() {
             onClick={(e) => e.stopPropagation()} // 내부 클릭 시 닫히지 않도록
           >
             <img
-              src={userData.profileImage}
+              src={userData.profilePic}
               alt="유저 프로필 확대"
               style={{ width: "300px", height: "300px", borderRadius: "50%" }}
             />

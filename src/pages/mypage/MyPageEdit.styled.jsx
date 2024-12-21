@@ -16,7 +16,7 @@ export const ProfileWrapper = styled.div`
   align-items: center;
   margin: 20px auto;
   padding-left: 100px; /* 좌측 여백 추가 */
-  max-width: 800px;
+  max-width: 900px;
 `;
 
 export const UserProfile = styled.div`
@@ -40,7 +40,7 @@ export const EditForm = styled.form`
   align-items: center;
   gap: 20px;
   margin: 20px auto;
-  max-width: 500px;
+  max-width: 900px;
 `;
 
 export const Label = styled.label`
@@ -86,4 +86,5 @@ export const ButtonGroup = styled.div`
   justify-content: flex-start; /* 입력 필드 옆에서 정렬 */
   align-items: center;
   gap: 10px; /* 입력 필드와 버튼 간 간격 */
+  margin-top: 5px; /* 버튼 그룹과 입력 필드 간격 추가 */
 `;
