@@ -2,7 +2,9 @@ import styled from "@emotion/styled";
 
 export const CalendarLayout = styled.section`
   max-width: 1440px;
+  width: 1200px;
   height: 700px;
+  background-color: white;
 
   .fc .fc-toolbar-title {
     font-weight: normal;
@@ -46,8 +48,5 @@ export const CalendarLayout = styled.section`
     justify-content: center;
     align-items: center;
     text-align: center;
-  }
-
-  .fc-button {
   }
 `;

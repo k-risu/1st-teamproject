@@ -17,7 +17,6 @@ export const SideBarContainer = styled.div`
 export const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   height: 80px;
   width: 90%;
   border-bottom: 1px solid black;

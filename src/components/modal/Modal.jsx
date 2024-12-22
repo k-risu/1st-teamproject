@@ -14,14 +14,14 @@ const Modal = ({ onClose, isOpen }) => {
         <div>
           <label>시작일</label>
           <input type="date" />
-          &nbsp; ~ &nbsp;
+          <br />
           <label>종료일</label>
           <input type="date" />
         </div>
         <br />
         <ButtonWrap>
-          <ButtonModal onClick={() => isOpen(false)}>확인</ButtonModal>
-          <ButtonModal onClick={() => isOpen(false)}>취소</ButtonModal>
+          <ButtonModal onClick={close}>확인</ButtonModal>
+          <ButtonModal onClick={close}>취소</ButtonModal>
         </ButtonWrap>
       </ModalBox>
     </ModalBackGround>
