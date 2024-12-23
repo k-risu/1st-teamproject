@@ -36,7 +36,7 @@ export const SignUpTop = styled.div`
   position: relative;
   ${alignment}
 
-  margin-top: 55px;
+  margin-top: 85px;
   margin-bottom: 100px;
 `;
 
@@ -61,6 +61,13 @@ export const SignUpTextField = styled.input`
   margin-left: 5vw;
   box-sizing: border-box;
   justify-content: flex-start;
+  font-size: 18px;
+  text-align: left;
+  padding-left: 15px;
+  &::placeholder {
+    font-size: 15px;
+    color: #888888;
+  }
 `;
 export const SignUpField = styled.div`
   ${alignment}

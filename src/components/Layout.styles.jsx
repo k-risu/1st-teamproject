@@ -1,19 +1,30 @@
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
+  position: relative;
   max-width: 1600px;
   height: 100vh;
   margin: 0 auto;
-  background-color: navajowhite;
   overflow-x: hidden;
   overflow-y: hidden;
   display: flex;
 `;
 
-export const Main = styled.div`
+export const MainContainer = styled.div`
   display: flex;
-  width: 1400px;
-  max-height: 100%;
-  margin: 0 auto;
-  background-color: pink;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  height: 100vh;
+
+  /* background-color: pink; */
+`;
+
+export const Main = styled.div`
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  width: 90%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
 `;

@@ -7,6 +7,9 @@ import SignIn from "./pages/signin/SignIn";
 import MyPage from "./pages/mypage/MyPage";
 import ProjectCreationPage from "./pages/projectCreation/ProjectCreationPage";
 import MyPageEdit from "./pages/mypage/MyPageEdit";
+import ProjectMembers from "./pages/projectMembers/ProjectMembers";
+import Schedule from "./pages/calendar/Schedule";
+import Modal from "./components/modal/Modal";
 
 function App() {
   return (
@@ -20,6 +23,7 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/myedit" element={<MyPageEdit />} />
+           <Route path="/projectmembers" element={<ProjectMembers />} />
             <Route
               path="/projectCreationPage"
               element={<ProjectCreationPage />}

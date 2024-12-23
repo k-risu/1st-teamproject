@@ -18,6 +18,7 @@ import {
   SignUpTextFieldName,
   SignUpTop,
 } from "./SignUp.styles";
+import { SlArrowLeft } from "react-icons/sl";
 
 function SignUp() {
   const [over14, setOver14] = useState(null);
@@ -28,22 +29,24 @@ function SignUp() {
     <SignUpLayout>
       <SignUpForm>
         <SignUpTop>
-          <BackBt>&lt;</BackBt>
+          <BackBt>
+            <SlArrowLeft />
+          </BackBt>
           <SignUpText>회원가입</SignUpText>
         </SignUpTop>
         <SignUpFieldWrap>
           <SignUpField>
             <SignUpTextFieldName>&nbsp;이메일</SignUpTextFieldName>
-            <SignUpTextField />
+            <SignUpTextField placeholder="사용 하실 이메일 주소를 입력해주세요" />
           </SignUpField>
           <SignUpField>
             <SignUpTextFieldName>회원가입</SignUpTextFieldName>
-            <SignUpTextField />
+            <SignUpTextField placeholder="사용 하실 비밀번호를 입력해주세요" />
           </SignUpField>
           <SignUpFieldDCBT>
             <SignUpField CheckBt={true}>
               <SignUpTextFieldName>&nbsp;닉네임</SignUpTextFieldName>
-              <SignUpTextField />
+              <SignUpTextField placeholder="사용 하실 닉네임을 입력해주세요" />
             </SignUpField>
             <DuplicateCheckBt type="button">중복 확인</DuplicateCheckBt>
           </SignUpFieldDCBT>

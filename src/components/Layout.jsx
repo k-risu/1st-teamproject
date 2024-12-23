@@ -1,11 +1,20 @@
 import Header from "./basic/header/index";
-import { Main } from "./Layout.styles";
+import { SideBarContainer } from "./basic/header/index.styled";
+import SideBar from "./basic/sidebar/SideBar";
+import { Container, Main, MainContainer } from "./Layout.styles";
 
 const Layout = ({ children }) => {
   return (
     <>
-      <Header></Header>
-      <Main>{children}</Main>
+      <Container className="Container">
+        <SideBarContainer className="SideBarContainer">
+          <SideBar />
+        </SideBarContainer>
+        <MainContainer className="MainContainer">
+          <Header></Header>
+          <Main className="Main">{children}</Main>
+        </MainContainer>
+      </Container>
     </>
   );
 };
