@@ -10,6 +10,7 @@ import MyPageEdit from "./pages/mypage/MyPageEdit";
 import ProjectMembers from "./pages/projectMembers/ProjectMembers";
 import Schedule from "./pages/calendar/Schedule";
 import Modal from "./components/modal/Modal";
+import DashBoard from "./pages/dashboard/DashBoard";
 
 function App() {
   return (
@@ -23,11 +24,14 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/myedit" element={<MyPageEdit />} />
-           <Route path="/projectmembers" element={<ProjectMembers />} />
+            <Route path="/projectmembers" element={<ProjectMembers />} />
             <Route
               path="/projectCreationPage"
               element={<ProjectCreationPage />}
             />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/project" element={<DashBoard />} />
+            <Route path="/modal" element={<Modal />} />
           </Routes>
         </Layout>
       </Router>
