@@ -6,6 +6,8 @@ import SignUp from "./pages/signup/SignUp";
 import SignIn from "./pages/signin/SignIn";
 import ProjectCreationPage from "./pages/projectCreation/ProjectCreationPage";
 import ProjectMembers from "./pages/projectMembers/ProjectMembers";
+import Schedule from "./pages/calendar/Schedule";
+import Modal from "./components/modal/Modal";
 
 function App() {
   return (
