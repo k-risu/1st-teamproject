@@ -4,7 +4,10 @@ const SideBar = () => {
   return (
     <>
       <div>
-        <SideBarProfile src="public\profile-image-mock.jpg" alt="profilePic" />
+        <SideBarProfile
+          src="public\profile-image-mock.jpg"
+          alt="profileImage"
+        />
         <p>단단무지</p>
       </div>
       <div>
