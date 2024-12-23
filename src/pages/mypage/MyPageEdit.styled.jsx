@@ -37,7 +37,7 @@ export const UserImage = styled.div`
 export const EditForm = styled.form`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   gap: 20px;
   margin: 20px auto;
   max-width: 900px;

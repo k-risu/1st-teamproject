@@ -53,7 +53,6 @@ function MyPageEdit() {
 
   return (
     <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-      {" "}
       {/* 전체 컨테이너 크기 고정 */}
       {/* 헤더 영역 */}
       <Header>
@@ -84,81 +83,73 @@ function MyPageEdit() {
           />
         </UserProfile>
       </ProfileWrapper>
+
       {/* 정보 변경 폼 */}
       <EditForm onSubmit={handleSubmit(onSubmit)}>
-        {" "}
         {/* react-hook-form과 연결 */}
         {/* 이메일 */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            marginBottom: "10px",
+            gap: "10px",
+            marginBottom: "20px",
           }}
         >
-          <Label style={{ marginRight: "10px", flexShrink: "0" }}>이메일</Label>
+          <Label>이메일</Label>
           <InputField
             type="text"
             value="reactgreen@example.com" // 이메일은 고정값
             readOnly
           />
         </div>
-        {/* 비밀번호 */}
+        {/* 비밀번호 및 비밀번호 확인 영역 */}
         <div
           style={{
             display: "flex",
-            alignItems: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <Label style={{ marginRight: "10px", flexShrink: "0" }}>
-            비밀번호
-          </Label>
-          <InputField
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            {...register("password")}
-          />
-        </div>
-        {errors.password && (
-          <p style={{ color: "red", marginTop: "5px" }}>
-            {errors.password.message}
-          </p>
-        )}{" "}
-        {/* 오류 메시지 표시 */}
-        {/* 비밀번호 확인 */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <Label style={{ marginRight: "10px", flexShrink: "0" }}>
-            비밀번호 확인
-          </Label>
-          <InputField
-            type="password"
-            placeholder="비밀번호 확인"
-            {...register("passwordConfirm")}
-          />
-        </div>
-        {errors.passwordConfirm && (
-          <p style={{ color: "red", marginTop: "5px" }}>
-            {errors.passwordConfirm.message}
-          </p>
-        )}{" "}
-        {/* 오류 메시지 표시 */}
-        {/* 닉네임 */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "10px",
+            flexDirection: "column",
             gap: "10px",
+            marginBottom: "20px",
           }}
         >
-          <Label style={{ marginRight: "10px", flexShrink: "0" }}>닉네임</Label>
+          <div>
+            <Label>비밀번호</Label>
+            <InputField
+              type="password"
+              placeholder="비밀번호를 입력해주세요"
+              {...register("password")}
+            />
+            {errors.password && (
+              <p style={{ color: "red", marginTop: "5px" }}>
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <Label>비밀번호 확인</Label>
+            <InputField
+              type="password"
+              placeholder="비밀번호 확인"
+              {...register("passwordConfirm")}
+            />
+            {errors.passwordConfirm && (
+              <p style={{ color: "red", marginTop: "5px" }}>
+                {errors.passwordConfirm.message}
+              </p>
+            )}
+          </div>
+        </div>
+        {/* 닉네임 및 중복 확인 영역 */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            marginBottom: "20px",
+          }}
+        >
+          <Label>닉네임</Label>
           <InputField
             placeholder="닉네임을 입력해주세요"
             {...register("nickname")}
@@ -171,8 +162,7 @@ function MyPageEdit() {
           <p style={{ color: "red", marginTop: "5px" }}>
             {errors.nickname.message}
           </p>
-        )}{" "}
-        {/* 오류 메시지 표시 */}
+        )}
         {/* 저장 버튼 */}
         <SubmitButton type="submit">정보 변경 저장하기</SubmitButton>
       </EditForm>
