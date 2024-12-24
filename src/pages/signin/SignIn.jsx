@@ -48,7 +48,7 @@ function SignIn() {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await fetch("http://192.168.0.180:8080/api/mail", {
+        const response = await fetch("api/mail", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: values.email }),
@@ -70,7 +70,7 @@ function SignIn() {
     const email = formik.values.email;
     const code = document.querySelector("input[name='verificationCode']").value;
     try {
-      const response = await fetch("http://192.168.0.180:8080/api/mail", {
+      const response = await fetch("api/mail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code }),
@@ -95,14 +95,11 @@ function SignIn() {
 
     setIsLoading(true); // 로딩 상태 시작
     try {
-      const response = await fetch(
-        "http://192.168.0.180:8080/api/user/sign-in",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        },
-      );
+      const response = await fetch("api/user/sign-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
       const data = await response.json();
 
       if (data.code === "IE") {
@@ -269,15 +266,12 @@ function SignIn() {
                       "input[name='email']",
                     ).value;
                     try {
-                      const response = await fetch(
-                        "http://192.168.0.180:8080/api/mail",
-                        {
-                          // fetch("/api/mail", 이 부분에 새 엔드포인트 입력 적용
-                          method: "GET", // HTTP 메서드
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ email }), // 요청 데이터
-                        },
-                      );
+                      const response = await fetch("api/mail", {
+                        // fetch("/api/mail", 이 부분에 새 엔드포인트 입력 적용
+                        method: "GET", // HTTP 메서드
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email }), // 요청 데이터
+                      });
                       const data = await response.json();
                       if (data.code === "OK") {
                         alert("인증번호가 전송되었습니다.");

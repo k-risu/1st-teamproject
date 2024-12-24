@@ -20,6 +20,8 @@
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@hookform/resolvers": "^3.9.1",
+    "@nivo/bullet": "^0.88.0",
+    "@nivo/core": "^0.88.0",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "formik": "^2.4.6",
@@ -46,6 +48,5 @@
     "globals": "^15.12.0",
     "prettier": "^3.4.2",
     "vite": "^6.0.1"
-  },
-  "proxy": ""
+  }
 }
