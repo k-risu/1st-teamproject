@@ -8,7 +8,8 @@ import {
   ProjectInfo,
 } from "./DashBoard.styles";
 import { ResponsiveBullet } from "@nivo/bullet";
-import { Swiper, SwiperSlide } from "swiper";
+
+import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
 const DashBoard = () => {
@@ -37,7 +38,7 @@ const DashBoard = () => {
           <ContainerTitle>달성률(D-18)</ContainerTitle>
           <div>
             <div>
-              <p>전체 달성률</p>
+              <p>{data[0].title}</p>
               <ResponsiveBullet
                 data={[data[0]]}
                 margin={{ top: 50, right: 90, bottom: 50, left: 90 }}
@@ -47,13 +48,10 @@ const DashBoard = () => {
                 measureSize={1}
                 markerSize={0}
                 motionConfig="slow"
-              >
-                {data[0].title}
-                {data[0]}
-              </ResponsiveBullet>
+              ></ResponsiveBullet>
             </div>
             <div>
-              <p>개인 달성률</p>
+              <p>{data[1].title}</p>
               <ResponsiveBullet
                 data={[data[1]]}
                 margin={{ top: 50, right: 90, bottom: 50, left: 90 }}
@@ -64,34 +62,33 @@ const DashBoard = () => {
                 markerSize={0}
                 motionConfig="slow"
               />
-              {console.log([data[0]])}
             </div>
           </div>
         </CompletionContainer>
         <MemberContainer>
           <ContainerTitle>프로젝트 구성원</ContainerTitle>
           <div>
-            <Swiper className="mySwiper">
+            <Swiper slidesPerView={5} spaceBetween={10}>
               <SwiperSlide>
-                <img src="public\profile-image-mock.jpg" alt="" />
+                <img src="public\profile1.jpg" alt="" />
               </SwiperSlide>
               <SwiperSlide>
-                <img src="public\profile-image-mock.jpg" alt="" />
+                <img src="public\profile2.jpg" alt="" />
               </SwiperSlide>
               <SwiperSlide>
-                <img src="public\profile-image-mock.jpg" alt="" />
+                <img src="public\profile3.jpg" alt="" />
               </SwiperSlide>
               <SwiperSlide>
-                <img src="public\profile-image-mock.jpg" alt="" />
+                <img src="public\profile4.jpg" alt="" />
               </SwiperSlide>
               <SwiperSlide>
-                <img src="public\profile-image-mock.jpg" alt="" />
+                <img src="public\profile5.png" alt="" />
               </SwiperSlide>
               <SwiperSlide>
-                <img src="public\profile-image-mock.jpg" alt="" />
+                <img src="public\profile6.jpg" alt="" />
               </SwiperSlide>
               <SwiperSlide>
-                <img src="public\profile-image-mock.jpg" alt="" />
+                <img src="public\profile7.png" alt="" />
               </SwiperSlide>
             </Swiper>
           </div>

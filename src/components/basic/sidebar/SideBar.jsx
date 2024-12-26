@@ -18,10 +18,7 @@ const SideBar = () => {
     <>
       <SideBarContainer className="SideBarContainer">
         <SideBarProfile>
-          <SideBarProfileImg
-            src="public\profile-image-mock.jpg"
-            alt="profileImage"
-          />
+          <SideBarProfileImg src="public\profile8.jpg" alt="profileImage" />
           <p>단단무지</p>
         </SideBarProfile>
         <SideBarMenuWrap>

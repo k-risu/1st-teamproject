@@ -10,7 +10,8 @@ const Layout = ({ children }) => {
       <Container className="Container">
         {pathname === "/schedule" ||
         pathname === "/projectcreationpage" ||
-        pathname === "/project" ? (
+        pathname === "/project" ||
+        pathname === "/projectlist" ? (
           <SideBar />
         ) : (
           <></>
@@ -18,7 +19,8 @@ const Layout = ({ children }) => {
         <MainContainer className="MainContainer">
           {pathname === "/schedule" ||
           pathname === "/projectcreationpage" ||
-          pathname === "/project" ? (
+          pathname === "/project" ||
+          pathname === "/projectlist" ? (
             <Header />
           ) : (
             <></>

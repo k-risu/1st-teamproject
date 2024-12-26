@@ -26,4 +26,7 @@ export const Main = styled.div`
   height: 100vh;
   justify-content: center;
   align-items: center;
+
+  overflow-x: hidden;
+  overflow-y: auto;
 `;

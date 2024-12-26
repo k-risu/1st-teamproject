@@ -11,6 +11,7 @@ import ProjectMembers from "./pages/projectMembers/ProjectMembers";
 import Schedule from "./pages/calendar/Schedule";
 import Modal from "./components/modal/Modal";
 import DashBoard from "./pages/dashboard/DashBoard";
+import ProjectList from "./pages/projectlist/ProjectList";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/project" element={<DashBoard />} />
+            <Route path="/projectlist" element={<ProjectList />} />
             <Route path="/modal" element={<Modal />} />
           </Routes>
         </Layout>
