@@ -8,12 +8,12 @@ import {
   Label,
   ButtonGroup,
   ProfileWrapper,
+  InputWrapper,
 } from "./MyPageEdit.styled";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
-import { InputWrapper } from "./MyPageEdit.styled";
 import { TbCameraHeart } from "react-icons/tb";
 
 // 유효성 검증 스키마 정의
@@ -112,7 +112,7 @@ function MyPageEdit() {
           />
         </InputWrapper>
         {errors.password && (
-          <p style={{ color: "red", marginTop: "5px" }}>
+          <p style={{ color: "red", margin: "0 auto", textAlign: "center" }}>
             {errors.password.message}
           </p>
         )}
@@ -127,7 +127,7 @@ function MyPageEdit() {
           />
         </InputWrapper>
         {errors.passwordConfirm && (
-          <p style={{ color: "red", marginTop: "5px" }}>
+          <p style={{ color: "red", margin: "0 auto", textAlign: "center" }}>
             {errors.passwordConfirm.message}
           </p>
         )}
@@ -144,7 +144,7 @@ function MyPageEdit() {
           </ButtonGroup>
         </InputWrapper>
         {errors.nickname && (
-          <p style={{ color: "red", marginTop: "5px" }}>
+          <p style={{ color: "red", margin: "0 auto", textAlign: "center" }}>
             {errors.nickname.message}
           </p>
         )}
