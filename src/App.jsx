@@ -1,17 +1,17 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout";
-import StartingPage from "./pages/startingPage/StartingPage";
-import SignUp from "./pages/signup/SignUp";
-import SignIn from "./pages/signin/SignIn";
 import MyPage from "./pages/mypage/MyPage";
-import ProjectCreationPage from "./pages/projectCreation/ProjectCreationPage";
 import MyPageEdit from "./pages/mypage/MyPageEdit";
+import ProjectCreationPage from "./pages/projectCreation/ProjectCreationPage";
 import ProjectMembers from "./pages/projectMembers/ProjectMembers";
 import Schedule from "./pages/calendar/Schedule";
 import Modal from "./components/modal/Modal";
 import DashBoard from "./pages/dashboard/DashBoard";
 import ProjectList from "./pages/projectlist/ProjectList";
+import SignIn from "./pages/signin/SignIn";
+import SignUp from "./pages/signup/SignUp";
+import StartingPage from "./pages/startingPage/StartingPage";
 
 function App() {
   return (
