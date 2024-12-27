@@ -86,40 +86,55 @@ export const SigninBoxInputBox = styled.input`
 `;
 
 export const SigninBoxSigninbt = styled.button`
-  max-width: 500px;
-  width: 20%;
-  padding: 5px;
-  background-color: #f3f3f3;
-  color: #000;
-  border: 1px solid #ddd;
-  border-radius: 50px;
-  cursor: pointer;
+  max-width: 150px;
+  width: 50%; /* 버튼이 너무 작지 않도록 너비 조정 */
+  padding: 7px 0px; /* 버튼 내부 여백 */
+  background-color: #f3f3f3; /* 메인 버튼 배경색 */
+  color: black; /* 버튼 텍스트 색상 */
+  border: 1px solid #007bff; /* 테두리에 색상 추가 */
+  border-radius: 8px; /* 버튼 모서리를 둥글게 */
+  font-size: 16px; /* 텍스트 크기 */
+  font-weight: bold; /* 텍스트 강조 */
+  margin-top: 20px; /* 버튼과 상단 요소 간 간격 */
+  cursor: pointer; /* 포인터 커서 표시 */
+  transition: background-color 0.3s ease; /* 호버 시 부드러운 색상 전환 효과 */
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* 호버 효과로 더 어두운 색상 */
+  }
+
+  &:active {
+    background-color: #003d80; /* 클릭 시 색상 */
   }
 `;
 
 export const ButtonGroup = styled.div`
   display: flex;
-
-  justify-content: space-between; /* 버튼 간 간격을 동일하게 설정 */
-  margin-top: 10px;
-  width: 500px; /* 이메일/비밀번호 박스와 동일한 너비 설정 */
-  padding-left: 50px; /* 레이블 너비와 동일하게 왼쪽 여백 추가 */
+  justify-content: center; /* 모든 버튼을 가운데 정렬 */
+  gap: 15px; /* 버튼 간 간격 */
+  margin-top: 20px; /* 그룹 상단 간격 */
+  flex-wrap: wrap; /* 화면 크기에 따라 버튼이 줄바꿈되도록 설정 */
 `;
 
 export const SigninBoxGroupbt = styled.button`
-  flex: 1; /* 버튼 너비를 균등 분배 */
-  margin: 0 10px; /* 버튼 간 간격 설정 */
-  padding: 5px;
-  border: 1px solid #ddd;
-  border-radius: 50px;
-  background-color: #f3f3f3;
-  cursor: pointer;
+  padding: 10px 20px; /* 버튼 내부 여백 */
+  border: 1px solid #007bff; /* 테두리에 색상 추가 */
+  border-radius: 8px; /* 버튼 모서리를 둥글게 */
+  background-color: transparent; /* 버튼 배경 투명 */
+  color: "black"; /* 버튼 텍스트 색상 */
+  font-size: 14px; /* 텍스트 크기 */
+  font-weight: bold; /* 텍스트 강조 */
+  cursor: pointer; /* 포인터 커서 표시 */
+  transition: all 0.3s ease; /* 호버 효과 부드럽게 */
 
   &:hover {
-    background-color: #ddd; /* 호버 효과 */
+    background-color: #007bff; /* 배경색 변경 */
+    color: white; /* 텍스트 색상 변경 */
+  }
+
+  &:active {
+    background-color: #0056b3; /* 클릭 시 색상 */
+    border-color: #0056b3; /* 클릭 시 테두리 색상 변경 */
   }
 `;
 
