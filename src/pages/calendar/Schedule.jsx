@@ -21,7 +21,9 @@ const Schedule = () => {
 
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(`/main?date=${date}&signedUserNo=1`);
+        const response = await axios.get(
+          `api/main?date=${date}&signedUserNo=1`,
+        );
         setCurrentEvents(response.data);
       } catch (error) {
         console.error("데이터 가져오기 실패 : ", error);

@@ -6,30 +6,35 @@ export const Container = styled.div`
   max-width: 1400px;
   width: 1200px;
   max-height: 700px;
+  height: 700px;
+  justify-content: space-between;
+  align-items: flex-start;
 `;
 
 export const ContainerTitle = styled.p`
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 20px;
+  justify-content: flex-start;
 `;
 
 export const ProjectListWrap = styled.ul`
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 
 export const Projects = styled.li`
   display: flex;
   width: 40%;
-  max-height: 300px;
-  justify-content: flex-start;
+  max-height: 500px;
+  justify-content: space-between;
   align-items: center;
 
   div {
     display: flex;
-    margin-right: 20px;
-    justify-content: flex-start;
     align-items: center;
   }
 `;

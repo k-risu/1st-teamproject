@@ -195,7 +195,6 @@ function ProjectMembers() {
     return result;
   };
 
-
   return (
     <MembersLayout>
       <MembersLayoutTop>
@@ -223,7 +222,7 @@ function ProjectMembers() {
       )}
 
       {/* 4개씩 그룹으로 나누어 렌더링 */}
-      {memberChunks.map((chunk, chunkIndex) => (
+      {chunkMembers.map((chunk, chunkIndex) => (
         <Members key={chunkIndex}>
           {chunk.map((member) =>
             member ? (
