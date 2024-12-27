@@ -9,8 +9,8 @@ export const Container = styled.div`
 `;
 
 export const ContainerTitle = styled.p`
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 700;
   margin-bottom: 20px;
 `;
 

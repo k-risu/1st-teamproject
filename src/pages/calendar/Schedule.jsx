@@ -16,15 +16,17 @@ const Schedule = () => {
   const [eventData, setEventData] = useState(null);
 
   useEffect(() => {
+    const date = dayjs().format("YYYYMM");
+    console.log(date);
+
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("/api/events");
+        const response = await axios.get(`/main?date=${date}&signedUserNo=1`);
         setCurrentEvents(response.data);
       } catch (error) {
         console.error("데이터 가져오기 실패 : ", error);
       }
     };
-
     fetchEvents();
   }, []);
 
