@@ -8,6 +8,7 @@ export const Container = styled.div`
   overflow-x: hidden;
   overflow-y: hidden;
   display: flex;
+  border-right: 1px solid black;
 `;
 
 export const MainContainer = styled.div`
@@ -16,15 +17,16 @@ export const MainContainer = styled.div`
   align-items: flex-end;
   width: 100%;
   height: 100vh;
-
-  /* background-color: pink; */
 `;
 
 export const Main = styled.div`
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.1);
   display: flex;
   width: 90%;
   height: 100vh;
   justify-content: center;
   align-items: center;
+
+  overflow-x: hidden;
+  overflow-y: auto;
 `;

@@ -21,5 +21,3 @@ SMS, 이메일 중복확인 API 개발   - commit message 내용
 ```
 
 ## 유의사항
-
-- 라이브러리, 패키지는 다같이 merge 한 이후에 다운 받아서 다시 folk sync

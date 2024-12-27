@@ -15,18 +15,20 @@ const Schedule = () => {
   const [newEventTitle, setNewEventTitle] = useState("");
   const [eventData, setEventData] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchEvents = async () => {
-  //     try {
-  //       const response = await axios.get("/api/events");
-  //       setCurrentEvents(response.data);
-  //     } catch (error) {
-  //       console.error("데이터 가져오기 실패 : ", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const date = dayjs().format("YYYYMM");
+    console.log(date);
 
-  //   fetchEvents();
-  // }, []);
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get(`/main?date=${date}&signedUserNo=1`);
+        setCurrentEvents(response.data);
+      } catch (error) {
+        console.error("데이터 가져오기 실패 : ", error);
+      }
+    };
+    fetchEvents();
+  }, []);
 
   const eventSelectHandler = (selectData) => {
     setEventData(selectData);
