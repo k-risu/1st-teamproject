@@ -195,7 +195,6 @@ function ProjectMembers() {
     return result;
   };
 
-  const memberChunks = chunkMembers(members, 4);
 
   return (
     <MembersLayout>
@@ -219,7 +218,6 @@ function ProjectMembers() {
           </MembersSectionBT>
         </MembersSection>
       </MembersLayoutTop>
-
       {msgModal && (
         <UnassignedMsg isOpen={msgModal} closeModal={msgCloseModal} />
       )}
