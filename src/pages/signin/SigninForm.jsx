@@ -15,24 +15,24 @@ function SigninForm({ loginFormik, isLoading, loginError }) {
 
   return (
     <Form onSubmit={loginFormik.handleSubmit}>
-      {/* 이메일 입력 */}
+      {/* 아이디 입력 */}
       <SigninMailBox>
-        <SigninLabel>이메일</SigninLabel>
+        <SigninLabel>아이디</SigninLabel>
         <SigninBoxInputBox
           type="text"
-          name="email"
-          value={loginFormik.values.email}
+          name="userId" // userId로 변경
+          value={loginFormik.values.userId}
           onChange={loginFormik.handleChange}
           onBlur={loginFormik.handleBlur}
-          placeholder="이메일을 입력해주세요."
+          placeholder="아이디를 입력해주세요."
           style={{
             width: "400px",
             padding: "12px",
             fontSize: "16px",
           }}
         />
-        {loginFormik.touched.email && loginFormik.errors.email && (
-          <p style={{ color: "red" }}>{loginFormik.errors.email}</p>
+        {loginFormik.touched.userId && loginFormik.errors.userId && (
+          <p style={{ color: "red" }}>{loginFormik.errors.userId}</p>
         )}
       </SigninMailBox>
 

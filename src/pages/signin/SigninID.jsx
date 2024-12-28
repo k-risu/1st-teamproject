@@ -7,6 +7,7 @@ import {
   SigninBoxInputBox,
 } from "./SignIn.styled";
 import { GoX } from "react-icons/go";
+import { useNavigate } from "react-router-dom"; // useNavigate 추가
 
 function SigninID({
   emailFormik,
@@ -18,6 +19,8 @@ function SigninID({
   associatedID,
   setShowEmailPopup,
 }) {
+  const navigate = useNavigate(); // navigate 선언
+
   return (
     <PopupOverlay onClick={() => setShowEmailPopup(false)}>
       <PopupContainer onClick={(e) => e.stopPropagation()}>
@@ -65,9 +68,10 @@ function SigninID({
                     <div style={{ marginTop: "20px", textAlign: "center" }}>
                       <p>사용자 ID: {associatedID}</p>
                       <button
-                        onClick={() =>
-                          navigator.clipboard.writeText(associatedID)
-                        }
+                        onClick={() => {
+                          navigator.clipboard.writeText(associatedID);
+                          navigate("/signin"); // "SignIn" 화면으로 이동
+                        }}
                         style={{
                           padding: "10px 20px",
                           backgroundColor: "#4CAF50",

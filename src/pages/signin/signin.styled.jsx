@@ -91,7 +91,7 @@ export const SigninBoxSigninbt = styled.button`
   padding: 7px 0px; /* 버튼 내부 여백 */
   background-color: #f3f3f3; /* 메인 버튼 배경색 */
   color: black; /* 버튼 텍스트 색상 */
-  border: 1px solid #007bff; /* 테두리에 색상 추가 */
+  border: 1px solid #f6f6f6; /* 테두리에 색상 추가 */
   border-radius: 8px; /* 버튼 모서리를 둥글게 */
   font-size: 16px; /* 텍스트 크기 */
   font-weight: bold; /* 텍스트 강조 */
@@ -109,6 +109,8 @@ export const SigninBoxSigninbt = styled.button`
 `;
 
 export const ButtonGroup = styled.div`
+  border: 1px solid #f6f6f6; /* 테두리에 색상 추가 */
+
   display: flex;
   justify-content: center; /* 모든 버튼을 가운데 정렬 */
   gap: 15px; /* 버튼 간 간격 */
@@ -118,7 +120,7 @@ export const ButtonGroup = styled.div`
 
 export const SigninBoxGroupbt = styled.button`
   padding: 10px 20px; /* 버튼 내부 여백 */
-  border: 1px solid #007bff; /* 테두리에 색상 추가 */
+  border: 1px solid #f6f6f6; /* 테두리에 색상 추가 */
   border-radius: 8px; /* 버튼 모서리를 둥글게 */
   background-color: transparent; /* 버튼 배경 투명 */
   color: "black"; /* 버튼 텍스트 색상 */
@@ -180,24 +182,29 @@ export const PopupForm = styled.form`
   gap: 10px; /* 입력 필드와 버튼 간격 */
 `;
 
-export const ResetButton = styled(SigninBoxSigninbt)`
-  margin-top: 15px;
-  display: inline-block; /* 버튼 크기를 내용에 맞게 조정 */
-  text-align: center; /* 텍스트 중앙 정렬 */
-  padding: 10px 20px; /* 여백 추가 */
-  width: auto; /* 너비를 내용에 맞게 조정 */
-  border-radius: 4px; /* 버튼 모서리 둥글게 */
-  font-size: 12px; /* 글자 크기 조정 */
-  background-color: #333; /* 버튼 배경색 어두운 색상 */
-  color: #fff; /* 텍스트 색상을 흰색으로 설정 */
+export const ResetButton = styled.button`
+  display: inline-flex; /* 텍스트와 버튼을 함께 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  padding: 10px 20px; /* 텍스트 주변 여백 */
+  border-radius: 4px; /* 버튼 모서리를 둥글게 */
+  font-size: 1rem; /* 글자 크기 */
+  background-color: #f6f6f6; /* 버튼 배경색 */
+  color: #000; /* 텍스트 색상 */
   border: none; /* 테두리 제거 */
-  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  cursor: pointer; /* 포인터 커서 표시 */
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease; /* 부드러운 전환 효과 */
 
   &:hover {
-    background-color: #444; /* 호버 시 약간 더 밝은 배경색 */
+    background-color: #007bff; /* 호버 시 배경색 변경 */
+    color: white; /* 호버 시 텍스트 색상 변경 */
   }
 
   &:active {
-    background-color: #222; /* 클릭 시 더 어두운 배경색 */
+    transform: scale(0.95); /* 클릭 시 살짝 눌리는 효과 */
+    background-color: #0056b3; /* 클릭 시 배경색 */
   }
 `;

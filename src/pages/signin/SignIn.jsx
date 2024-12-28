@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { useNavigate } from "react-router-dom"; // useNavigate 추가
 import SigninForm from "./SigninForm";
 import SigninID from "./SigninID";
 import SigninPw from "./SigninPw";
@@ -14,6 +15,7 @@ import {
 
 function SignIn() {
   // 상태 관리
+  const navigate = useNavigate(); // navigate 정의
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [showEmailPopup, setShowEmailPopup] = useState(false);
@@ -25,12 +27,14 @@ function SignIn() {
   // 모든 상태와 핸들러를 여기에 유지합니다.
   // 로그인 Formik 설정
   const loginFormik = useFormik({
-    initialValues: { email: "", password: "" },
+    initialValues: { userId: "", password: "" },
     validationSchema: yup.object({
-      email: yup
+      userId: yup
         .string()
-        .email("올바른 이메일 형식이 아닙니다.")
-        .required("이메일을 입력해주세요."),
+        .required("아이디를 입력해주세요.")
+        .test("is-valid-id", "아이디 형식이 올바르지 않습니다.", (value) =>
+          /^[a-zA-Z0-9_-]+$/.test(value),
+        ), // userId 검증 추가
       password: yup.string().required("비밀번호를 입력해주세요."),
     }),
     onSubmit: async (values) => {
@@ -39,12 +43,17 @@ function SignIn() {
         const response = await fetch("/api/user/sign-in", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
+          body: JSON.stringify(values), // userId와 password 전송
         });
         const data = await response.json();
         if (data.code === "OK") {
           alert("로그인 성공!");
           setLoginError("");
+          navigate("/mypage/MyPage");
+        } else if (data.code === "IE") {
+          setLoginError("아이디를 확인해주세요.");
+        } else if (data.code === "IP") {
+          setLoginError("비밀번호를 확인해주세요.");
         } else {
           setLoginError("로그인 실패. 이메일 또는 비밀번호를 확인해주세요.");
         }
@@ -68,11 +77,20 @@ function SignIn() {
     }),
     onSubmit: async () => {
       try {
-        // GET 요청으로 인증번호 전송
-        await handleVerifyCode("GET");
-        setVerificationSent(true); // 인증번호 전송 상태 업데이트
+        const response = await fetch(
+          `/api/user/find-id?email=${emailFormik.values.email}`,
+          { method: "GET" },
+        );
+        const result = await response.json();
+        if (result.code === "OK") {
+          alert("아이디 찾기 성공!");
+          setAssociatedID(result.userId); // ID 저장
+        } else {
+          alert("아이디 찾기에 실패했습니다. 이메일을 확인해주세요.");
+        }
       } catch (error) {
-        console.error("인증번호 전송 오류:", error);
+        console.error("아이디 찾기 오류:", error);
+        alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
       }
     },
   });
@@ -188,13 +206,14 @@ function SignIn() {
       {/* 비밀번호 찾기 팝업 */}
       {showPwPopup && (
         <SigninPw
-          pwFormik={pwFormik}
+          pwFormik={pwFormik} // 전달
           emailFormik={emailFormik}
           setShowPwPopup={setShowPwPopup}
           verificationSent={verificationSent}
           handleVerifyCode={handleVerifyCode}
           isVerified={isVerified}
           setVerificationCode={setVerificationCode}
+          verificationCode={verificationCode} // 추가
         />
       )}
     </SigninContainer>
