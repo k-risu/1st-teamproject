@@ -15,18 +15,28 @@ const Schedule = () => {
   const [newEventTitle, setNewEventTitle] = useState("");
   const [eventData, setEventData] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchEvents = async () => {
-  //     try {
-  //       const response = await axios.get("/api/events");
-  //       setCurrentEvents(response.data);
-  //     } catch (error) {
-  //       console.error("데이터 가져오기 실패 : ", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const date = dayjs().format("YYYYMM");
 
-  //   fetchEvents();
-  // }, []);
+    const getEvents = async () => {
+      try {
+        const res = await axios.get(`api/project?date=${date}&signedUserNo=2`);
+        const userCurrentEvents = res.data.projectList.map((item) => {
+          return {
+            title: item.title,
+            start: item.startAt,
+            end: item.deadline,
+            description: item.description,
+          };
+        });
+        console.log(userCurrentEvents);
+        setCurrentEvents(userCurrentEvents);
+      } catch (error) {
+        console.error("데이터 가져오기 실패 : ", error);
+      }
+    };
+    getEvents();
+  }, []);
 
   const eventSelectHandler = (selectData) => {
     setEventData(selectData);
@@ -45,13 +55,14 @@ const Schedule = () => {
 
     const newEvent = {
       title: newEventTitle,
-      start: eventData.startStr,
-      end: endDate,
+      startAt: eventData.startStr,
+      deadline: endDate,
       allday: eventData.allDay,
+      description: eventData.description,
     };
 
     try {
-      const response = await axios.post("/api/", newEvent);
+      const response = await axios.post("/api/project", newEvent);
       const createdEvent = response.data;
 
       calendarAPI.addEvent(createdEvent);
@@ -88,7 +99,7 @@ const Schedule = () => {
   };
 
   const eventHandler = (e) => {
-    setCurrentEvents(e);
+    // setCurrentEvents(e);
   };
 
   return (

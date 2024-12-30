@@ -5,6 +5,10 @@ import MyPage from "./pages/mypage/MyPage";
 import MyPageEdit from "./pages/mypage/MyPageEdit";
 import ProjectCreationPage from "./pages/projectCreation/ProjectCreationPage";
 import ProjectMembers from "./pages/projectMembers/ProjectMembers";
+import Schedule from "./pages/calendar/Schedule";
+import Modal from "./components/modal/Modal";
+import DashBoard from "./pages/dashboard/DashBoard";
+import ProjectList from "./pages/projectlist/ProjectList";
 import SignIn from "./pages/signin/SignIn";
 import SignUp from "./pages/signup/SignUp";
 import StartingPage from "./pages/startingPage/StartingPage";
@@ -29,6 +33,10 @@ function App() {
               path="/projectCreationPage"
               element={<ProjectCreationPage />}
             />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/project" element={<DashBoard />} />
+            <Route path="/projectlist" element={<ProjectList />} />
+            <Route path="/modal" element={<Modal />} />
           </Routes>
         </Layout>
       </Router>

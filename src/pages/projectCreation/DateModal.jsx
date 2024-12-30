@@ -10,7 +10,6 @@ import {
 
 export const DateModal = ({ isOpen, closeModal }) => {
   if (!isOpen) return null; // 모달이 열리지 않으면 아무것도 렌더링하지 않음
-  //   const { add, setAdd } = useState({});
 
   return (
     <ModalOverlay onClick={closeModal}>

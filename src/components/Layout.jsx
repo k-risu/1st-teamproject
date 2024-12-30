@@ -1,6 +1,5 @@
 import { useLocation } from "react-router-dom";
 import Header from "./basic/header/index";
-import { SideBarContainer } from "./basic/header/index.styled";
 import SideBar from "./basic/sidebar/SideBar";
 import { Container, Main, MainContainer } from "./Layout.styles";
 
@@ -9,16 +8,20 @@ const Layout = ({ children }) => {
   return (
     <>
       <Container className="Container">
-        {pathname === "/schedule" || pathname === "/projectcreationpage" ? (
-          <SideBarContainer className="SideBarContainer">
-            <SideBar />
-          </SideBarContainer>
+        {pathname === "/schedule" ||
+        pathname === "/projectcreationpage" ||
+        pathname === "/project" ||
+        pathname === "/projectlist" ? (
+          <SideBar />
         ) : (
           <></>
         )}
         <MainContainer className="MainContainer">
-          {pathname === "/schedule" || pathname === "/projectcreationpage" ? (
-            <Header></Header>
+          {pathname === "/schedule" ||
+          pathname === "/projectcreationpage" ||
+          pathname === "/project" ||
+          pathname === "/projectlist" ? (
+            <Header />
           ) : (
             <></>
           )}

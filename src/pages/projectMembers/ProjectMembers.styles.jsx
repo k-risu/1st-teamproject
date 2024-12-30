@@ -12,12 +12,15 @@ const alignment = `
 export const MembersLayout = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
+  justify-content: flex-start;
   align-items: center;
   /* margin: auto; */
   background-color: #fbfbfb;
   width: 100vw;
   height: 100vh;
+  overflow-y: auto;
+  padding-bottom: 20px;
 `;
 
 export const ProjectTitle = styled.h1`
@@ -42,6 +45,7 @@ export const MembersLayoutTop = styled.div`
   /* flex-direction: column; */
   width: 100%;
   justify-content: space-between;
+  margin-top: 50px;
 `;
 export const MembersSection = styled.div`
   width: 160px;
@@ -75,6 +79,7 @@ export const Card = styled.div`
   margin: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); // 카드에 그림자 추가
   overflow: hidden;
+  ${(props) => (props.dummy ? "opacity: 0" : "")}
 `;
 
 // 카드 상단 색상
@@ -163,13 +168,13 @@ export const ProgressBar = styled.div`
 `;
 
 // 위 4개의 카드를 한 줄에 4개 배치 (Flexbox)
-export const TopMembers = styled.div`
+export const Members = styled.div`
   display: flex;
-  flex-wrap: nowrap; /* 카드들이 여러 줄로 나눠지도록 설정 */
+  flex-wrap: nowrap;
   /* justify-content: space-between; */
   gap: 20px;
-  margin-bottom: 30px;
-  margin-top: ${(props) => (props.top ? "20px" : "50px")};
+  /* margin-bottom: 30px; */
+  margin-top: 30px;
   /* margin-top: 50px; */
 `;
 
