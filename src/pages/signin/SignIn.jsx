@@ -1,27 +1,29 @@
-import { useState } from "react";
 import { useFormik } from "formik";
-import * as yup from "yup";
+import { useState } from "react";
+import { useCookies } from "react-cookie"; // react-cookie 추가
 import { useNavigate } from "react-router-dom"; // useNavigate 추가
+import * as yup from "yup";
+import {
+  ButtonGroup,
+  SigninBox,
+  SigninBoxGroupbt,
+  SigninContainer,
+  SigninTitle,
+} from "./SignIn.styled";
 import SigninForm from "./SigninForm";
 import SigninID from "./SigninID";
 import SigninPw from "./SigninPw";
-import {
-  SigninContainer,
-  SigninBox,
-  ButtonGroup,
-  SigninBoxGroupbt,
-  SigninTitle,
-} from "./SignIn.styled";
 
 function SignIn() {
   // 상태 관리
-  const navigate = useNavigate(); // navigate 정의
+  const [cookies, setCookie] = useCookies(["token"]); // 쿠키 관리 상태 추가
+  const navigate = useNavigate(); // 페이지 이동 관리
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [showEmailPopup, setShowEmailPopup] = useState(false);
   const [showPwPopup, setShowPwPopup] = useState(false);
   const [verificationSent, setVerificationSent] = useState(false);
-  const [verificationCode, setVerificationCode] = useState(""); // 추가된 부분
+  const [verificationCode, setVerificationCode] = useState(""); // 인증 코드 상태 추가
   const [isVerified, setIsVerified] = useState(false);
   const [associatedID, setAssociatedID] = useState("");
   // 모든 상태와 핸들러를 여기에 유지합니다.
@@ -49,7 +51,13 @@ function SignIn() {
         if (data.code === "OK") {
           alert("로그인 성공!");
           setLoginError("");
-          navigate("/mypage/MyPage");
+
+          // signedUserNo를 쿠키에 저장
+          setCookie("signedUserNo", data.signedUserNo, { path: "/" });
+
+          // token도 쿠키에 저장
+          setCookie("token", data.token, { path: "/" }); // 로그인 토큰을 쿠키에 저장
+          navigate("/schedule"); // 마이페이지로 이동
         } else if (data.code === "IE") {
           setLoginError("아이디를 확인해주세요.");
         } else if (data.code === "IP") {
@@ -77,16 +85,23 @@ function SignIn() {
     }),
     onSubmit: async () => {
       try {
+        console.log("전송된 이메일:", emailFormik.values.email); // 디버깅용 로그 추가
         const response = await fetch(
-          `/api/user/find-id?email=${emailFormik.values.email}`,
+          `/api/mail?email=${emailFormik.values.email}`,
           { method: "GET" },
         );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+        console.log("API 응답 데이터:", result); // API 응답 로그 추가
+
         if (result.code === "OK") {
-          alert("아이디 찾기 성공!");
+          alert("인증 번호 전송 완료!");
           setAssociatedID(result.userId); // ID 저장
         } else {
-          alert("아이디 찾기에 실패했습니다. 이메일을 확인해주세요.");
+          alert("인증 번호 전송 실패. 이메일을 확인해주세요.");
         }
       } catch (error) {
         console.error("아이디 찾기 오류:", error);
@@ -118,7 +133,7 @@ function SignIn() {
     },
   });
 
-  // 인증번호 확인 및 전송 통합 함수
+  // 인증번호 확인 및 전송 통합 함수 (재사용 가능)
   const handleVerifyCode = async (method = "GET") => {
     try {
       const url =

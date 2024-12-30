@@ -28,23 +28,31 @@ function SigninID({
           <GoX />
         </CloseButton>
         <h2 style={{ textAlign: "center" }}>아이디 찾기</h2>
-        <PopupForm onSubmit={emailFormik.handleSubmit}>
-          <SigninBoxInputBox
-            type="text"
-            name="email"
-            placeholder="이메일 주소를 입력해주세요."
-            value={emailFormik.values.email}
-            onChange={emailFormik.handleChange}
-            onBlur={emailFormik.handleBlur}
-          />
-          {emailFormik.touched.email && emailFormik.errors.email && (
-            <p style={{ color: "red" }}>{emailFormik.errors.email}</p>
+        {/* 이메일 입력 폼 */}
+        <PopupForm
+          onSubmit={(e) => {
+            e.preventDefault(); // 기본 동작 방지
+            emailFormik.handleSubmit(); // Formik의 제출 로직 호출
+          }}
+        >
+          {!verificationSent && (
+            <>
+              <SigninBoxInputBox
+                type="text"
+                name="email"
+                placeholder="이메일 주소를 입력해주세요."
+                value={emailFormik.values.email}
+                onChange={emailFormik.handleChange}
+                onBlur={emailFormik.handleBlur}
+              />
+              {emailFormik.touched.email && emailFormik.errors.email && (
+                <p style={{ color: "red" }}>{emailFormik.errors.email}</p>
+              )}
+              <ResetButton type="submit">인증번호 전송</ResetButton>
+            </>
           )}
-          <ResetButton type="submit">
-            {verificationSent
-              ? "인증번호를 확인 후 입력해주세요."
-              : "인증번호 전송"}
-          </ResetButton>
+
+          {/* 인증번호 확인 섹션 */}
           {verificationSent && (
             <>
               <SigninBoxInputBox
@@ -55,10 +63,19 @@ function SigninID({
               />
               <ResetButton
                 type="button"
-                onClick={() => handleVerifyCode("POST")}
+                onClick={() => {
+                  if (!verificationCode) {
+                    alert("인증번호를 입력해주세요.");
+                    return;
+                  }
+                  console.log("제출된 인증 코드:", verificationCode);
+                  handleVerifyCode("POST");
+                }}
               >
                 인증 확인
               </ResetButton>
+
+              {/* 인증 성공 시 표시 */}
               {isVerified && (
                 <>
                   <p style={{ color: "green", marginTop: "10px" }}>
@@ -69,8 +86,14 @@ function SigninID({
                       <p>사용자 ID: {associatedID}</p>
                       <button
                         onClick={() => {
-                          navigator.clipboard.writeText(associatedID);
-                          navigate("/signin"); // "SignIn" 화면으로 이동
+                          try {
+                            navigator.clipboard.writeText(associatedID);
+                            alert("ID가 복사되었습니다.");
+                            navigate("/signin"); // "SignIn" 화면으로 이동
+                          } catch (error) {
+                            console.error("ID 복사 오류:", error);
+                            alert("ID 복사 중 오류가 발생했습니다.");
+                          }
                         }}
                         style={{
                           padding: "10px 20px",

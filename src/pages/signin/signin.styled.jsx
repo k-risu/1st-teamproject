@@ -1,5 +1,12 @@
 import styled from "@emotion/styled";
 
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%; /* 부모 요소의 전체 너비 사용 */
+`;
+
 export const SigninContainer = styled.div`
   display: flex; /* Flexbox 사용 */
   flex-direction: column; /* 세로로 정렬 */
@@ -7,17 +14,6 @@ export const SigninContainer = styled.div`
   align-items: center; /* 가로 중앙 정렬 */
   height: 100vh; /* 화면 전체 높이 */
   background-color: #f9f9f9; /* 배경색 추가 */
-`;
-
-export const PrevButton = styled.button`
-  position: absolute; /* 부모 요소 안에서 위치 설정 */
-  left: 10px; /* 좌측 끝으로 이동 */
-  top: 50%; /* 부모 요소의 중앙에 위치 */
-  transform: translateY(-50%); /* 세로 중앙 정렬 */
-  background: none; /* 배경 제거 */
-  border: none; /* 테두리 제거 */
-  cursor: pointer; /* 마우스 커서 변경 */
-  font-size: 24px; /* 아이콘 크기 조정 */
 `;
 
 export const SigninBox = styled.div`
@@ -39,12 +35,6 @@ export const SigninTitle = styled.h1`
   padding: 30px; /* 제목 상하 여백 */
 `;
 
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%; /* 부모 요소의 전체 너비 사용 */
-`;
 // SigninLabel 스타일 정의 추가
 export const SigninLabel = styled.h2`
   margin: 0;
@@ -55,6 +45,7 @@ export const SigninLabel = styled.h2`
 
 export const SigninMailBox = styled.div`
   display: flex;
+  flex-direction: column; /* 요소를 수직 정렬 */
   align-items: center; /* 세로 가운데 정렬 */
   justify-content: flex-start; /* 레이블과 입력 필드를 왼쪽 정렬 */
   margin-bottom: 16px; /* 하단 여백 */
@@ -63,12 +54,19 @@ export const SigninMailBox = styled.div`
 
 export const SigninPwBox = styled.div`
   display: flex;
+  flex-direction: column; /* 요소를 수직 정렬 */
   align-items: center; /* 세로 가운데 정렬 */
   justify-content: flex-start; /* 레이블과 입력 필드를 왼쪽 정렬 */
   margin-bottom: 16px; /* 하단 여백 */
   width: 500px; /* 입력 필드와 버튼 그룹 너비를 동일하게 설정 */
 `;
-
+export const InputRow = styled.div`
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  gap: 10px; /* 레이블과 입력 필드 간격 */
+  width: 100%;
+`;
 export const SigninBoxInputBox = styled.input`
   flex: 1; /* 남은 공간을 모두 차지 */
   padding: 10px;

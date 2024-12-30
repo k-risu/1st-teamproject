@@ -15,6 +15,6 @@ const createProxy = (baseURL) => {
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: createProxy("http://192.168.0.144:5213"), // Swagger 기본 URL 설정
+    proxy: createProxy("http://112.222.157.156:5213/"), // Swagger 기본 URL 설정
   },
 });
