@@ -25,8 +25,8 @@ export const ModalContent = styled.div`
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  min-width: 400px;
-  min-height: 350px;
+  min-width: 500px;
+  min-height: 425px;
   display: flex;
   flex-direction: column;
   align-items: center; /* 추가: 수평 중앙 정렬 */
@@ -34,19 +34,13 @@ export const ModalContent = styled.div`
   gap: 10px;
 
   h2 {
+    padding-left: 30px;
     font-size: 24px;
     align-self: flex-start;
   }
 
   label {
     font-size: 18px;
-  }
-
-  input {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
   }
 
   div > button {
@@ -73,11 +67,11 @@ export const ButtonWrapper = styled.div`
 export const ModalText = styled.textarea`
   padding: 4.5px;
   font-size: 18px;
-  width: 350px;
+  width: 400px;
   border-radius: 5px;
   border: 2px solid #7a7a7a;
   background-color: #f4f4f4;
-  height: 150px;
+  height: 250px;
   resize: none;
 
   display: block;
@@ -86,18 +80,64 @@ export const ModalText = styled.textarea`
     outline: none;
     border: 2px solid #7a7a7a;
   }
+  ${(props) => props.readOnly}
+  cursor: default;
 `;
 export const ModalInput = styled.input`
-  padding: 4.5px;
-  font-size: 18px;
-  width: 350px;
-  border-radius: 5px;
-  /* border: 2px solid #7a7a7a !important; */
-  border: 2px solid #f4f4f4 !important;
+  width: 400px;
+  border-radius: ${(props) => (props.userInfo ? "5px 5px 0px 0px" : "5px")};
+  border: 2px solid #f4f4f4;
   background-color: #f4f4f4;
+
+  padding: 10px;
+  font-size: 16px;
   &:focus {
     outline: none;
     border: 2px solid #f4f4f4;
+  }
+`;
+export const FindDiv = styled.div`
+  position: absolute;
+  display: flex;
+  width: 400px;
+  border-radius: 0 0 5px 5px;
+  border: 2px solid #f4f4f4;
+  /* border: 2px solid blue; */
+  background-color: #f4f4f4;
+  /* background-color: blue; */
+
+  left: 50px;
+  top: 60px;
+
+  /* padding: 10px; */
+  font-size: 16px;
+  align-items: center;
+  /* justify-content: center; */
+  cursor: pointer;
+  &:hover {
+    border: 2px solid #999999;
+    background-color: #999999;
+  }
+
+  img {
+    display: flex;
+    margin-left: 5px;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: #c0c0c0;
+    border-radius: 5px;
+  }
+  div {
+    margin-left: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: #c0c0c0;
+    border-radius: 15px;
+    font-size: 0;
+  }
+  span {
+    padding: 10px;
   }
 `;
 export const DetailMember = styled(FaSistrix)`
