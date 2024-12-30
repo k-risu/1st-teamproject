@@ -88,7 +88,9 @@ function SignIn() {
         console.log("전송된 이메일:", emailFormik.values.email); // 디버깅용 로그 추가
         const response = await fetch(
           `/api/mail?email=${emailFormik.values.email}`,
-          { method: "GET" },
+          {
+            method: "GET",
+          },
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -136,42 +138,48 @@ function SignIn() {
   // 인증번호 확인 및 전송 통합 함수 (재사용 가능)
   const handleVerifyCode = async (method = "GET") => {
     try {
+      // URL 설정
       const url =
         method === "GET"
           ? `/api/mail?email=${emailFormik.values.email}`
           : "/api/mail";
 
+      console.log("요청 URL:", url);
+      console.log("요청 메서드:", method);
+
+      // 요청 실행
       const response = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }, // 헤더 설정
         body:
           method === "POST"
             ? JSON.stringify({
-                email: emailFormik.values.email,
-                code: verificationCode,
+                email: emailFormik.values.email, // 이메일
+                code: verificationCode, // 인증 코드
               })
-            : null,
+            : null, // GET 요청의 경우 body 없음
       });
+
+      console.log("응답 상태 코드:", response.status);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const result = await response.json();
+      console.log("응답 데이터:", result);
+
+      // 응답 처리
       if (result.code === "OK") {
         alert(method === "POST" ? "인증 성공!" : "인증번호 전송 성공!");
-        setIsVerified(method === "POST");
-        if (method === "GET") {
-          setVerificationSent(true);
-        }
-        if (method === "POST" && result.userId) {
-          setAssociatedID(result.userId);
-        }
+        if (method === "GET") setVerificationSent(true); // 인증번호 전송 상태
+        if (method === "POST") setIsVerified(true); // 인증 성공 상태
+        if (result.userId) setAssociatedID(result.userId); // 사용자 ID 저장
       } else {
         alert("인증 실패. 다시 시도해주세요.");
       }
     } catch (error) {
-      console.error("인증 오류:", error);
+      console.error("인증 요청 중 오류 발생:", error);
       alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
@@ -212,6 +220,7 @@ function SignIn() {
           handleVerifyCode={handleVerifyCode}
           verificationSent={verificationSent}
           setVerificationCode={setVerificationCode}
+          verificationCode={verificationCode}
           isVerified={isVerified}
           associatedID={associatedID}
           emailFormik={emailFormik} // emailFormik 전달

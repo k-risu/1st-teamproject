@@ -1,4 +1,3 @@
-import { UserProfile } from "./MyPage.styled";
 import {
   Header,
   EditForm,
@@ -15,18 +14,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
 import { TbCameraHeart } from "react-icons/tb";
+import axios from "axios";
 
 // 유효성 검증 스키마 정의
 const schema = yup.object().shape({
   nickname: yup.string().required("닉네임을 입력해주세요."),
-  password: yup
-    .string()
-    .required("비밀번호를 확인 부탁드립니다.")
-    .min(8, "비밀번호는 최소 8자 이상이어야 합니다."),
-  passwordConfirm: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "비밀번호가 일치하지 않습니다.")
-    .required("비밀번호는 동일하지 않습니다."),
 });
 
 function MyPageEdit() {
@@ -42,9 +34,41 @@ function MyPageEdit() {
   });
 
   // 폼 제출 핸들러
-  const onSubmit = (data) => {
-    console.log({ ...data, profilePic }); // 최종 데이터 출력
-    alert("정보가 저장되었습니다.");
+  const onSubmit = async (data) => {
+    try {
+      const formData = new FormData();
+      formData.append("targetUserNo", 1); // targetUserNo는 예시 값
+      formData.append("nickname", data.nickname);
+      formData.append("statusMessage", "유저 상태메세지"); // 예시 메시지
+      if (profilePic) {
+        formData.append("pic", profilePic);
+      } else {
+        formData.append("pic", null);
+      }
+
+      const response = await axios.put("/api/user", formData);
+
+      if (response.data.code === "OK") {
+        alert("정보가 저장되었습니다.");
+      } else {
+        switch (response.data.code) {
+          case "DE":
+            alert("이메일 중복 오류가 발생했습니다.");
+            break;
+          case "DN":
+            alert("닉네임 중복 오류가 발생했습니다.");
+            break;
+          case "NN":
+            alert("입력 값에 오류가 있습니다.");
+            break;
+          default:
+            alert("알 수 없는 오류가 발생했습니다.");
+        }
+      }
+    } catch (error) {
+      console.error("API 호출 에러:", error);
+      alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
   };
 
   // 이미지 변경 핸들러
@@ -102,35 +126,15 @@ function MyPageEdit() {
           />
         </InputWrapper>
 
-        {/* 비밀번호 */}
+        {/* 아이디 */}
         <InputWrapper>
-          <Label>비밀번호</Label>
+          <Label>아이디</Label>
           <InputField
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            {...register("password")}
+            type="text"
+            value="testID123" // 아이디는 고정값
+            readOnly
           />
         </InputWrapper>
-        {errors.password && (
-          <p style={{ color: "red", margin: "0 auto", textAlign: "center" }}>
-            {errors.password.message}
-          </p>
-        )}
-
-        {/* 비밀번호 확인 */}
-        <InputWrapper>
-          <Label>비밀번호 확인</Label>
-          <InputField
-            type="password"
-            placeholder="비밀번호 확인"
-            {...register("passwordConfirm")}
-          />
-        </InputWrapper>
-        {errors.passwordConfirm && (
-          <p style={{ color: "red", margin: "0 auto", textAlign: "center" }}>
-            {errors.passwordConfirm.message}
-          </p>
-        )}
 
         {/* 닉네임 */}
         <InputWrapper>

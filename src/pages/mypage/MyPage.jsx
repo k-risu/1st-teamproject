@@ -1,3 +1,7 @@
+import { useState, useEffect } from "react";
+import { useCookies } from "react-cookie";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import {
   Footer,
   Header,
@@ -8,33 +12,54 @@ import {
   Usernickname,
   Userpage,
   UserProfile,
+  UserId,
 } from "./MyPage.styled";
-import { useState, useEffect } from "react";
-import axios from "axios"; // Axios 라이브러리 추가
 
 function MyPage() {
-  // 유저 데이터를 초기 상태로 설정
+  const [cookies] = useCookies(["signedUserNo"]); // 쿠키에서 signedUserNo 가져오기
+  const { targetUserNo } = useParams(); // URL에서 targetUserNo 가져오기
   const [userData, setUserData] = useState({
-    nickname: "react그린이", // 기본 닉네임
-    email: "reactgreen@example.com", // 기본 이메일
+    nickname: "테스트 유저", // 임의 닉네임
+    email: "testuser@example.com", // 임의 이메일
     profilePic: "https://via.placeholder.com/150", // 기본 프로필 이미지 URL
-    userId: "defaultID123", // 기본 유저 ID 추가
-    userStatusMessage: "", // 기본 상태 메시지
+    userId: "testID123", // 임의 유저 ID
+    userStatusMessage: "상태 메시지 테스트", // 임의 상태 메시지
+    myInfo: true, // 정보 변경 버튼이 표시되도록 설정
   });
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // 이미지 팝업 상태
+  // 공통 API 호출 함수
+  const fetchUserData = async (isTargetUser = false) => {
+    const signedUserNo = cookies.signedUserNo; // 쿠키에서 signedUserNo 가져오기
+    const endpoint = isTargetUser
+      ? `/api/user?targetUserNo=${targetUserNo}&signedUserNo=${signedUserNo}`
+      : `/api/user`;
 
-  // API 호출 함수
-  const fetchUserData = async () => {
+    if (!signedUserNo || (isTargetUser && !targetUserNo)) {
+      console.error("필수 값(signedUserNo, targetUserNo)이 누락되었습니다.");
+      return;
+    }
+
     try {
-      const response = await axios.post("/api/user", {
-        targetUserNo: 1, // 하드코딩된 예제. 필요 시 동적으로 변경 가능
-      });
+      const response = await axios.get(endpoint);
 
       if (response.data.code === "OK") {
-        setUserData(response.data.userInfo); // 유저 정보 업데이트
+        setUserData({
+          nickname: response.data.nickname || "",
+          email: response.data.email || "",
+          profilePic: response.data.pic || "",
+          userId: response.data.userId || "",
+          userStatusMessage: response.data.statusMessage || "",
+          myInfo: response.data.myInfo || false,
+        });
+      } else if (response.data.code === "NEU") {
+        console.error("유저 정보를 찾을 수 없습니다.");
+        setUserData((prev) => ({
+          ...prev,
+          myInfo: false,
+        }));
       } else {
-        console.error("Failed to fetch user data", response.data);
+        console.error("알 수 없는 오류:", response.data);
       }
     } catch (error) {
       console.error("API 호출 에러:", error);
@@ -42,59 +67,57 @@ function MyPage() {
   };
 
   useEffect(() => {
-    fetchUserData(); // 컴포넌트가 마운트될 때 API 호출
-  }, []);
+    if (targetUserNo) {
+      fetchUserData(true); // targetUserNo가 있는 경우 호출
+    } else {
+      fetchUserData(false); // targetUserNo가 없는 경우 호출
+    }
+  }, [targetUserNo, cookies.signedUserNo]);
 
-  const handleImageClick = () => {
-    setIsPopupOpen(true); // 팝업 열기
-  };
-
-  const handleClosePopup = () => {
-    setIsPopupOpen(false); // 팝업 닫기
-  };
+  const handleImageClick = () => setIsPopupOpen(true);
+  const handleClosePopup = () => setIsPopupOpen(false);
 
   return (
     <div>
-      {/* 헤더 영역 */}
       <Header>
         <h2>마이 페이지</h2>
       </Header>
-      {/* 유저 정보 섹션 */}
       <Userinfo>
         <UserProfile>
-          {/* 프로필 이미지와 기본 텍스트 */}
-          <img
-            src={userData.profilePic || "https://via.placeholder.com/150"} // 프로필 이미지
-            alt="유저 프로필"
-            style={{
-              borderRadius: "50%", // 원형으로 보이게 설정
-              width: "100px", // 너비
-              height: "100px", // 높이
-              cursor: "pointer", // 클릭 가능한 커서
-            }}
-            onClick={handleImageClick} // 클릭 이벤트 추가
-          />
+          {userData.profilePic ? (
+            <img
+              src={userData.profilePic}
+              alt="유저 프로필"
+              style={{
+                borderRadius: "50%",
+                width: "100px",
+                height: "100px",
+                cursor: "pointer",
+              }}
+              onClick={handleImageClick}
+            />
+          ) : (
+            <p>유저 사진이 없습니다.</p>
+          )}
           <p>{userData.userStatusMessage || "유저 사진 및 정보"}</p>
         </UserProfile>
-
-        {/* 유저 닉네임 및 이메일 정보 */}
         <Userpage>
           <UserDetail>
             <Label>이메일</Label>
-            <Useremail>{userData.email}</Useremail>
+            <Useremail>{userData.email || "이메일 정보 없음"}</Useremail>
           </UserDetail>
           <UserDetail>
             <Label>아이디</Label>
-            <userId>{userData.userId}</userId>
+            <UserId>{userData.userId || "아이디 정보 없음"}</UserId>
           </UserDetail>
           <UserDetail>
             <Label>닉네임</Label>
-            <Usernickname>{userData.nickname}</Usernickname>
+            <Usernickname>
+              {userData.nickname || "닉네임 정보 없음"}
+            </Usernickname>
           </UserDetail>
         </Userpage>
       </Userinfo>
-
-      {/* 팝업 창 */}
       {isPopupOpen && (
         <div
           style={{
@@ -109,7 +132,7 @@ function MyPage() {
             alignItems: "center",
             zIndex: 1000,
           }}
-          onClick={handleClosePopup} // 팝업 외부 클릭 시 닫기
+          onClick={handleClosePopup}
         >
           <div
             style={{
@@ -118,10 +141,10 @@ function MyPage() {
               padding: "20px",
               borderRadius: "8px",
             }}
-            onClick={(e) => e.stopPropagation()} // 내부 클릭 시 닫히지 않도록
+            onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={userData.profilePic || "https://via.placeholder.com/150"}
+              src={userData.profilePic}
               alt="유저 프로필 확대"
               style={{ width: "300px", height: "300px", borderRadius: "50%" }}
             />
@@ -142,17 +165,17 @@ function MyPage() {
           </div>
         </div>
       )}
-
-      {/* 푸터 영역 */}
-      <Footer>
-        <button
-          onClick={() => {
-            window.location.href = "/mypage/myedit"; // 정보 변경 페이지로 이동
-          }}
-        >
-          정보 변경하기
-        </button>
-      </Footer>
+      {userData.myInfo && (
+        <Footer>
+          <button
+            onClick={() => {
+              window.location.href = "/mypage/myedit";
+            }}
+          >
+            정보 변경하기
+          </button>
+        </Footer>
+      )}
     </div>
   );
 }
