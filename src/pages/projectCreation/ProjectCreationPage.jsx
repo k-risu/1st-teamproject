@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { AddModal } from "./AddModal";
+import AddModal from "./AddModal";
 import { DateModal } from "./DateModal";
 import {
   AddTeamMemberBt,
@@ -38,51 +38,42 @@ function ProjectCreationPage() {
     setValue, // setValue 사용
     setError,
   } = useForm({
-    // resolver: yupResolver(loginSchema),
     mode: "onBlur",
   });
 
-  const addTeamMember = (member) => {
-    setTeamMembers((prevMembers) => [...prevMembers, member]);
+  const addTeamMember = () => {
+    console.log();
+
+    setTeamMembers((prev) => [...prev]);
   };
 
-  const me = { id: 3 };
-
-  const project = [
-    {
-      signedUserNo: 1,
-      title: "",
-      description: "",
-      startAt: "2024-11-11",
-      deadLine: "2024-12-12",
-      memberNoList: [1, 2, 3],
-    },
-  ];
   const handleSubmitForm = async (data) => {
     try {
       const formData = new FormData();
+      console.log(data);
+      console.log(teamMembers);
+
       formData.append(
         "req",
         JSON.stringify({
-          email: data.email,
-          userId: data.nickname,
-          password: data.password,
-          passwordConfirm: data.passwordConfirm,
+          signedUserNo: data.signedUserNo,
+          title: data.title,
+          description: data.description,
+          startAt: data.startStr,
+          deadLine: data.endStr,
+          memberNoList: teamMembers,
         }),
       );
 
-      const response = await axios.post("/api/", formData, {
-        // 작업해야됨
+      const res = await axios.post("/api/project/schedule", formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
           accept: "*/*",
         },
       });
-
-      console.log("회원가입 성공:", response.data);
-      // 회원가입 후 처리 (로그인 페이지로 이동 등)
+      console.log(res);
     } catch (error) {
-      console.error("회원가입 실패:", error);
+      console.error(error);
     }
   };
 
@@ -100,11 +91,15 @@ function ProjectCreationPage() {
         <ProjectInformation>
           <InformationWrap>
             <label>프로젝트 이름</label>
-            <InformationInput />
+            <InformationInput {...register("title")} />
+            {/* 오류 메세지 */}
+            <p style={{ color: "red" }}>{errors.title?.message}</p>
           </InformationWrap>
           <InformationWrap projectDetails={true}>
             <InformationLabel>프로젝트 내용</InformationLabel>
-            <InformationText />
+            <InformationText {...register("description")} />
+            {/* 오류 메세지 */}
+            <p style={{ color: "red" }}>{errors.description?.message}</p>
           </InformationWrap>
           <InformationWrap>
             <label>프로젝트 구성원</label>
@@ -116,7 +111,6 @@ function ProjectCreationPage() {
         </ProjectInformation>
       </ProjectCreationWrap>
       <ProjectCreationFormBT type="submit">생성하기</ProjectCreationFormBT>
-
       {/* AddModal을 위한 버튼 클릭 시 */}
       <AddModal
         isOpen={isAddModalOpen}
