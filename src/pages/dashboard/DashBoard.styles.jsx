@@ -4,8 +4,29 @@ export const DashBoardContainer = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 1400px;
-  width: 1200px;
-  max-height: 700px;
+  width: 1250px;
+`;
+
+export const DashBoardTitleWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  > span {
+    font-size: 24px;
+    font-weight: 700;
+  }
+`;
+
+export const DashBoardToggleWrap = styled.div`
+  button {
+    width: 85px;
+    height: 35px;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 16px;
+    font-weight: 500;
+  }
 `;
 
 export const ContainerWrap = styled.div`

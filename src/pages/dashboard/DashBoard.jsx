@@ -1,18 +1,27 @@
+import { ResponsiveBullet } from "@nivo/bullet";
+import dayjs from "dayjs";
+import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
 import {
   CompletionContainer,
   ContainerTitle,
   ContainerWrap,
   DashBoardContainer,
+  DashBoardTitleWrap,
+  DashBoardToggleWrap,
   MemberContainer,
   ProjectData,
   ProjectInfo,
 } from "./DashBoard.styles";
-import { ResponsiveBullet } from "@nivo/bullet";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
 
 const DashBoard = () => {
+  const today = dayjs().format("YYYY-MM-DD");
+  const endDate = dayjs("2025-01-08");
+  // const endDate = dayjs(project.deadLine); 백엔드 데이터 연동시
+  // 두 날짜 사이의 날짜 차이를 계산
+  const dDay = endDate.diff(today, "day");
+  console.log(dDay);
+
   const data = [
     {
       id: 1,
@@ -32,10 +41,18 @@ const DashBoard = () => {
 
   return (
     <DashBoardContainer>
-      <div>팀 프로젝트의 대시보드</div>
+      <DashBoardTitleWrap>
+        <span>팀 프로젝트의 대시보드</span>
+        <DashBoardToggleWrap>
+          <button>대시보드</button>
+          <button>구성원</button>
+        </DashBoardToggleWrap>
+      </DashBoardTitleWrap>
       <ContainerWrap style={{ marginTop: 30 }}>
         <CompletionContainer>
-          <ContainerTitle>달성률(D-18)</ContainerTitle>
+          <ContainerTitle>
+            달성률 (D-<span style={{ color: "red" }}>{dDay}</span>)
+          </ContainerTitle>
           <div>
             <div>
               <p>{data[0].title}</p>
@@ -101,7 +118,9 @@ const DashBoard = () => {
         </ProjectInfo>
         <ProjectData>
           <ContainerTitle>프로젝트 자료</ContainerTitle>
-          <div>자료 게시판</div>
+          <div>
+            <p>게시판</p>
+          </div>
         </ProjectData>
       </ContainerWrap>
     </DashBoardContainer>
