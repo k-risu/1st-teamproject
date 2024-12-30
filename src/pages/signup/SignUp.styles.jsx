@@ -190,4 +190,8 @@ export const ErrorsMsg = styled.p`
       ? "margin-left:100px;position: absolute; left:15px;bottom:200px;"
       : "0"};
   margin-left: ${(props) => (props.over14 ? "100px" : "0")};
+  ${(props) =>
+    props.email
+      ? "margin-left:100px;position: absolute; right:-200px;top:290px;"
+      : "0"};
 `;
