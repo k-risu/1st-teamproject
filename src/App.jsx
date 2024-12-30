@@ -12,6 +12,7 @@ import ProjectList from "./pages/projectlist/ProjectList";
 import SignIn from "./pages/signin/SignIn";
 import SignUp from "./pages/signup/SignUp";
 import StartingPage from "./pages/startingPage/StartingPage";
+import SigninRepw from "./pages/signin/SigninRepw";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
             <Route path="/startingpage" element={<StartingPage />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
+            {/* 새로운 비밀번호 재설정 페이지 */}
+            <Route path="/find-pw" element={<SigninRepw />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/myedit" element={<MyPageEdit />} />
             <Route path="/projectmembers" element={<ProjectMembers />} />
