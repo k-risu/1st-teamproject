@@ -20,6 +20,20 @@ const information = `
   }
 `;
 
+export const ProjectCreationForm = styled.form`
+  ${alignment};
+  flex-direction: column;
+  h1 {
+    font-size: 19.8px; // Reduced by 10%
+    margin-top: 2.7vw; // Reduced by 10%
+    margin-right: 49.5vw; // Reduced by 10%
+    margin-bottom: 5.4vh; // Reduced by 10%
+  }
+  width: 100%;
+  height: 100%;
+  background-color: #fbfbfb;
+`;
+
 export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -79,17 +93,6 @@ export const ModalContent = styled.div`
 
 export const ProjectCreationLayout = styled.div`
   background-color: #fcfbfb;
-`;
-
-export const ProjectCreationForm = styled.form`
-  ${alignment};
-  flex-direction: column;
-  h1 {
-    font-size: 19.8px; // Reduced by 10%
-    margin-top: 2.7vw; // Reduced by 10%
-    margin-right: 49.5vw; // Reduced by 10%
-    margin-bottom: 5.4vh; // Reduced by 10%
-  }
 `;
 
 export const ProjectCreationWrap = styled.div`
