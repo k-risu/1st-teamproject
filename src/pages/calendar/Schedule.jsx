@@ -6,27 +6,31 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import axios from "axios";
 import useModal from "../../hooks/useModal";
+import HoverModal from "./HoverModal";
 
 const Schedule = () => {
   const { Modal, open, close } = useModal();
   const [currentEvents, setCurrentEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [isInputModalOpen, setIsInputModalOpen] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState("");
   const [eventData, setEventData] = useState(null);
+  const [isInputModalOpen, setIsInputModalOpen] = useState(false);
+  const [hoverModal, setHoverModal] = useState(false);
 
   useEffect(() => {
     const date = dayjs().format("YYYYMM");
 
     const getEvents = async () => {
       try {
-        const res = await axios.get(`api/project?date=${date}&signedUserNo=2`);
+        const res = await axios.get(`api/main?date=${date}&signedUserNo=1`);
         const userCurrentEvents = res.data.projectList.map((item) => {
+          console.log(item);
           return {
             title: item.title,
             start: item.startAt,
-            end: item.deadline,
-            description: item.description,
+            end: dayjs(item.deadline).add(1, "day").format("YYYY-MM-DD"),
+            color: "",
+            textColor: "",
           };
         });
         console.log(userCurrentEvents);
@@ -78,6 +82,7 @@ const Schedule = () => {
   const eventClickHandler = (clickData) => {
     setSelectedEvent(clickData.event);
     open();
+    setHoverModal(true);
   };
 
   const confirmDeleteHandler = async () => {
@@ -98,7 +103,7 @@ const Schedule = () => {
     close();
   };
 
-  const eventHandler = (e) => {
+  const eventHandler = () => {
     // setCurrentEvents(e);
   };
 
@@ -108,9 +113,9 @@ const Schedule = () => {
         height={700}
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
-        editable={true}
-        selectable={true}
-        droppable={true}
+        // editable={true}
+        // selectable={true}
+        // droppable={true}
         headerToolbar={{
           left: "title",
           center: "",
@@ -121,7 +126,7 @@ const Schedule = () => {
         eventsSet={eventHandler}
         locale={"ko"}
         weekends={true}
-        dayMaxEvents={2}
+        dayMaxEvents={3}
         expandRows={true}
         buttonText={{
           today: "오늘",
@@ -152,6 +157,11 @@ const Schedule = () => {
               <button onClick={() => setIsInputModalOpen(false)}>취소</button>
             </div>
           </div>
+        </Modal>
+      )}
+      {hoverModal && (
+        <Modal>
+          <HoverModal />
         </Modal>
       )}
     </CalendarLayout>

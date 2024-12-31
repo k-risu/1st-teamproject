@@ -140,7 +140,8 @@ export const FindDiv = styled.div`
 `;
 export const SearchMember = styled(FaSistrix)`
   position: absolute;
+  display: flex;
   top: 25px;
-  right: 25px;
+  right: 15px;
   font-size: 30px;
 `;

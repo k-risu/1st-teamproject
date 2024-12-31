@@ -1,11 +1,14 @@
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import AddModal from "./AddModal";
 import { DateModal } from "./DateModal";
 import {
   AddTeamMemberBt,
-  Calendar,
   CalendarWrap,
   InformationInput,
   InformationLabel,
@@ -17,64 +20,82 @@ import {
   ProjectInformation,
   StyledLuCircleUser,
 } from "./ProjectCreationPage.styles";
+import { useNavigate } from "react-router-dom";
 
 function ProjectCreationPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // AddModal 상태
   const [isDateModalOpen, setIsDateModalOpen] = useState(false); // DateModal 상태
   const [teamMembers, setTeamMembers] = useState([]); // 팀 구성원 상태
+  const [eventData, setEventData] = useState({});
+  const [selectDate, setSelectDate] = useState("");
 
   const openAddModal = () => setIsAddModalOpen(true); // AddModal 열기
   const closeAddModal = () => setIsAddModalOpen(false); // AddModal 닫기
 
-  const openDateModal = () => setIsDateModalOpen(true); // DateModal 열기
-  const closeDateModal = () => setIsDateModalOpen(false); // DateModal 닫기
+  const openDateModal = () => {
+    setIsDateModalOpen(true); // DateModal 열기
+  };
+  const closeDateModal = () => {
+    setIsDateModalOpen(false); // DateModal 닫기
+  };
+
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     trigger,
-    getValues,
-    setValue, // setValue 사용
-    setError,
+    reset,
   } = useForm({
     mode: "onBlur",
   });
 
   const addTeamMember = () => {
-    console.log();
-
-    setTeamMembers((prev) => [...prev]);
+    closeAddModal();
   };
 
   const handleSubmitForm = async (data) => {
     try {
-      const formData = new FormData();
-      console.log(data);
-      console.log(teamMembers);
+      const payload = {
+        signedUserNo: 1,
+        title: data.title,
+        description: data.description,
+        startAt: eventData.startAt,
+        deadLine: eventData.deadLine,
+        memberNoList: teamMembers.map((item) => item.userNo),
+      };
 
-      formData.append(
-        "req",
-        JSON.stringify({
-          signedUserNo: data.signedUserNo,
-          title: data.title,
-          description: data.description,
-          startAt: data.startStr,
-          deadLine: data.endStr,
-          memberNoList: teamMembers,
-        }),
-      );
-
-      const res = await axios.post("/api/project/schedule", formData, {
+      const res = await axios.post(`/api/project`, payload, {
         headers: {
           "Content-Type": "application/json",
-          accept: "*/*",
         },
       });
-      console.log(res);
+
+      console.log("Response:", res);
+      alert("프로젝트가 성공적으로 생성되었습니다!");
+      navigate(`/schedule`);
     } catch (error) {
-      console.error(error);
+      console.error("Error submitting form:", error);
+      alert("프로젝트 생성 중 오류가 발생했습니다.");
+    } finally {
+      reset();
     }
+  };
+
+  const eventSelectHandler = (data) => {
+    const selectedDate = {
+      startAt: data.startStr,
+      deadLine: dayjs(data.endStr).subtract(1, "day").format("YYYY-MM-DD"),
+    };
+    setEventData(selectedDate);
+    openDateModal(selectedDate);
+  };
+
+  const eventDateHandler = (e) => {
+    setSelectDate(e);
+    console.log(e);
+    closeDateModal();
   };
 
   return (
@@ -83,10 +104,33 @@ function ProjectCreationPage() {
       <ProjectCreationWrap>
         <CalendarWrap>
           <label>프로젝트 기간</label>
-          <Calendar onClick={openDateModal}>달력</Calendar>
-          {/* DateModal 열기 */}
-          <DateModal isOpen={isDateModalOpen} closeModal={closeDateModal} />
-          {/* DateModal만 열림 */}
+          <FullCalendar
+            height={400}
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            editable={true}
+            selectable={true}
+            droppable={true}
+            headerToolbar={{
+              left: "title",
+              center: "",
+              right: "today,prev,next",
+            }}
+            locale={"ko"}
+            weekends={true}
+            expandRows={true}
+            buttonText={{
+              today: "오늘",
+            }}
+            select={eventSelectHandler}
+          />
+          {isDateModalOpen && (
+            <DateModal
+              isOpen={isDateModalOpen}
+              closeModal={closeDateModal}
+              setEventData={setEventData}
+            />
+          )}
         </CalendarWrap>
         <ProjectInformation>
           <InformationWrap>
@@ -116,6 +160,7 @@ function ProjectCreationPage() {
         isOpen={isAddModalOpen}
         closeModal={closeAddModal}
         addTeamMember={addTeamMember}
+        setTeamMembers={setTeamMembers}
       />
     </ProjectCreationForm>
   );

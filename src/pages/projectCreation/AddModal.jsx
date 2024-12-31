@@ -10,31 +10,17 @@ import {
 } from "./AddModal.styles";
 import axios from "axios";
 
-const AddModal = ({ isOpen, closeModal, addTeamMember }) => {
-  const [add, setAdd] = useState([]);
+const AddModal = ({ isOpen, closeModal, addTeamMember, setTeamMembers }) => {
+  const [memberList, setMemberList] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [searchInput, setSearchInput] = useState("");
 
   if (!isOpen) return null;
 
-  const handleAddMemberButton = (userInfo) => {
-    console.log(userInfo);
-
-    setAdd((prev) => [...prev, userInfo]);
+  const handleAddMemberButton = (data) => {
+    setTeamMembers((prev) => [...prev, data]);
+    setMemberList((prev) => [...prev, data.nickname]);
     setSearchInput("");
-  };
-
-  const handleAddMember = () => {
-    const member = {
-      userNo: userInfo.userNo,
-      nickname: userInfo.nickname,
-      pic: userInfo.pic,
-      existSchedule: userInfo.existSchedule,
-    };
-    console.log(userInfo);
-
-    addTeamMember((prev) => [...prev, member]);
-    closeModal();
   };
 
   const handleSearch = async (e) => {
@@ -64,7 +50,7 @@ const AddModal = ({ isOpen, closeModal, addTeamMember }) => {
         />
         <SearchMember
           onClick={() => {
-            handleAddMemberButton(userInfo.nickname);
+            handleAddMemberButton(userInfo);
           }}
         />
         <h2>구성원</h2>
@@ -72,7 +58,7 @@ const AddModal = ({ isOpen, closeModal, addTeamMember }) => {
         {userInfo && (
           <FindDiv
             onClcik={() => {
-              handleAddMemberButton(userInfo.nickname);
+              handleAddMemberButton(userInfo);
             }}
           >
             {userInfo?.pic === true ? <img src={userInfo?.pic} /> : <div></div>}
@@ -80,10 +66,10 @@ const AddModal = ({ isOpen, closeModal, addTeamMember }) => {
           </FindDiv>
         )}
         <div>
-          <ModalText readOnly value={[add]} />
+          <ModalText readOnly value={[memberList]} />
         </div>
         <ButtonWrapper>
-          <button type="button" onClick={handleAddMember}>
+          <button type="button" onClick={() => addTeamMember(userInfo)}>
             추가
           </button>
           <button type="button" onClick={closeModal}>
