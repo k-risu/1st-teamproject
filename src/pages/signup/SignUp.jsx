@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { SlArrowLeft } from "react-icons/sl";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import MailModal from "./MailModal";
 import {
@@ -60,6 +60,7 @@ function SignUp() {
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 여부
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기/닫기 상태
   const [over14, setOver14] = useState(false); // Over14 상태를 직접 관리
+  const navigate = useNavigate();
 
   const {
     register,
@@ -113,6 +114,7 @@ function SignUp() {
       }
 
       console.log("회원가입 성공:", response.data);
+      navigate("/signin");
       // 회원가입 후 처리 (로그인 페이지로 이동 등)
     } catch (error) {
       console.error("회원가입 실패:", error);

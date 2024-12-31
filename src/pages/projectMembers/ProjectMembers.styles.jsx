@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { SlOptionsVertical } from "react-icons/sl";
+import { FaCheck } from "react-icons/fa";
 
 // 상수들
 const topColor = "#fcc0b2";
@@ -21,6 +22,22 @@ export const MembersLayout = styled.div`
   height: 100vh;
   overflow-y: auto;
   padding-bottom: 20px;
+
+  &::-webkit-scrollbar {
+    width: 7px; /* 세로 스크롤바의 너비 */
+  }
+
+  &::-webkit-scrollbar-track {
+    /* background: #f1f1f1;  */
+    background: none;
+    border-radius: 10px; /* 스크롤바 트랙의 둥근 모서리 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888; /* 스크롤바 핸들의 색 */
+    border-radius: 10px; /* 핸들의 둥근 모서리 */
+    /* border: 3px solid #888; */
+  }
 `;
 
 export const ProjectTitle = styled.h1`
@@ -137,7 +154,7 @@ export const MemberInfoWrap = styled.div`
 `;
 
 // 할 일 목록 텍스트 스타일
-export const TaskList = styled.textarea`
+export const TaskList = styled.div`
   display: flex;
   margin: 0 auto;
   margin-top: 15px;
@@ -147,14 +164,57 @@ export const TaskList = styled.textarea`
   border: 2px solid #dedede;
   background-color: #dedede;
 
-  pointer-events: none;
-
-  &:focus {
-    outline: none;
-    border: 2px solid #67da6f;
-  }
+  flex-direction: column;
   height: 200px;
+  overflow-y: auto;
   resize: none;
+
+  &::-webkit-scrollbar {
+    width: 5px; /* 세로 스크롤바의 너비 */
+  }
+
+  &::-webkit-scrollbar-track {
+    /* background: #f1f1f1;  */
+    background: none;
+    border-radius: 10px; /* 스크롤바 트랙의 둥근 모서리 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888; /* 스크롤바 핸들의 색 */
+    border-radius: 10px; /* 핸들의 둥근 모서리 */
+    /* border: 3px solid #888; */
+  }
+
+  ul {
+    padding: 5px;
+  }
+
+  li {
+    display: flax;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    display: flex;
+    padding: 5px 10px;
+
+    justify-content: space-between;
+    span {
+      display: inline-block;
+      width: 195px;
+      text-align: center;
+    }
+
+    &:hover {
+      background-color: #999999;
+      cursor: pointer;
+    }
+  }
+`;
+export const CheckedIcon = styled(FaCheck)`
+  min-width: 20px; /* 추가 */
+  min-height: 20px;
+  font-size: 15px;
+  color: ${(props) => (props.checked ? "#77da69" : "#dedede")};
 `;
 
 // 진행 상황을 나타내는 바 스타일
