@@ -21,45 +21,47 @@ function MyPage() {
   const [userData, setUserData] = useState({
     nickname: "테스트 유저", // 임의 닉네임
     email: "testuser@example.com", // 임의 이메일
-    profilePic: "https://via.placeholder.com/150", // 기본 프로필 이미지 URL
+    pic: "https://via.placeholder.com/150", // 기본 프로필 이미지 URL
     userId: "testID123", // 임의 유저 ID
     userStatusMessage: "상태 메시지 테스트", // 임의 상태 메시지
     myInfo: true, // 정보 변경 버튼이 표시되도록 설정
   });
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  // 공통 API 호출 함수
-  const fetchUserData = async (isTargetUser = false) => {
-    const signedUserNo = cookies.signedUserNo; // 쿠키에서 signedUserNo 가져오기
-    const endpoint = isTargetUser
-      ? `/api/user?targetUserNo=${targetUserNo}&signedUserNo=${signedUserNo}`
-      : `/api/user`;
+  // 쿠키와 localStorage에서 데이터 가져오기
+  // const signedUserNo = cookies.signedUserNo || localStorage.getItem("userId");
+  const signedUserNo = 2;
 
-    if (!signedUserNo || (isTargetUser && !targetUserNo)) {
-      console.error("필수 값(signedUserNo, targetUserNo)이 누락되었습니다.");
+  // 공통 API 호출 함수
+  const fetchUserData = async () => {
+    const endpoint = "/api/user";
+
+    if (!signedUserNo) {
+      console.error("필수 값(signedUserNo)이 누락되었습니다.");
       return;
     }
 
     try {
-      const response = await axios.get(endpoint);
+      const response = await axios.get(endpoint, {
+        params: {
+          targetUserNo: targetUserNo || signedUserNo,
+          signedUserNo: signedUserNo,
+        },
+      });
 
       if (response.data.code === "OK") {
+        console.log(response.data);
+
         setUserData({
           nickname: response.data.nickname || "",
           email: response.data.email || "",
-          profilePic: response.data.pic || "",
+          pic: response.data.pic || "https://via.placeholder.com/150",
           userId: response.data.userId || "",
           userStatusMessage: response.data.statusMessage || "",
-          myInfo: response.data.myInfo || false,
+          myInfo: response.data.targetUserNo === response.data.signedUserNo,
         });
-      } else if (response.data.code === "NEU") {
-        console.error("유저 정보를 찾을 수 없습니다.");
-        setUserData((prev) => ({
-          ...prev,
-          myInfo: false,
-        }));
       } else {
-        console.error("알 수 없는 오류:", response.data);
+        console.error("유저 정보를 가져오는 중 오류 발생:", response.data);
       }
     } catch (error) {
       console.error("API 호출 에러:", error);
@@ -67,12 +69,8 @@ function MyPage() {
   };
 
   useEffect(() => {
-    if (targetUserNo) {
-      fetchUserData(true); // targetUserNo가 있는 경우 호출
-    } else {
-      fetchUserData(false); // targetUserNo가 없는 경우 호출
-    }
-  }, [targetUserNo, cookies.signedUserNo]);
+    fetchUserData();
+  }, [targetUserNo, signedUserNo]);
 
   const handleImageClick = () => setIsPopupOpen(true);
   const handleClosePopup = () => setIsPopupOpen(false);
@@ -84,9 +82,14 @@ function MyPage() {
       </Header>
       <Userinfo>
         <UserProfile>
-          {userData.profilePic ? (
+          {console.log(
+            `${import.meta.env.VITE_BASE_URL}/pic/user/${userData.targetUserNo}}`,
+          )}
+          console.log(userData);
+          {userData.pic ? (
             <img
-              src={userData.profilePic}
+              src={`${import.meta.env.VITE_BASE_URL}/pic/user/${userData.targetUserNo}/${userData.pic}`}
+              // src={userData.pic}
               alt="유저 프로필"
               style={{
                 borderRadius: "50%",
@@ -103,12 +106,12 @@ function MyPage() {
         </UserProfile>
         <Userpage>
           <UserDetail>
-            <Label>이메일</Label>
-            <Useremail>{userData.email || "이메일 정보 없음"}</Useremail>
-          </UserDetail>
-          <UserDetail>
             <Label>아이디</Label>
             <UserId>{userData.userId || "아이디 정보 없음"}</UserId>
+          </UserDetail>
+          <UserDetail>
+            <Label>이메일</Label>
+            <Useremail>{userData.email || "이메일 정보 없음"}</Useremail>
           </UserDetail>
           <UserDetail>
             <Label>닉네임</Label>
@@ -144,7 +147,7 @@ function MyPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={userData.profilePic}
+              src={userData.pic}
               alt="유저 프로필 확대"
               style={{ width: "300px", height: "300px", borderRadius: "50%" }}
             />

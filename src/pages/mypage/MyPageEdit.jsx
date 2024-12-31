@@ -15,6 +15,7 @@ import * as yup from "yup";
 import { useState } from "react";
 import { TbCameraHeart } from "react-icons/tb";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // 유효성 검증 스키마 정의
 const schema = yup.object().shape({
@@ -23,7 +24,7 @@ const schema = yup.object().shape({
 
 function MyPageEdit() {
   const [profilePic, setProfilePic] = useState(null); // 프로필 이미지 상태
-
+  const navigate = useNavigate(); // useNavigate 선언
   // react-hook-form 초기화
   const {
     register,
@@ -82,7 +83,9 @@ function MyPageEdit() {
       {/* 전체 컨테이너 크기 고정 */}
       {/* 헤더 영역 */}
       <Header>
-        <h2>마이 페이지</h2>
+        <h2 onClick={() => navigate("/mypage")} style={{ cursor: "pointer" }}>
+          마이 페이지
+        </h2>
       </Header>
       <ProfileWrapper>
         <label htmlFor="profile-upload">

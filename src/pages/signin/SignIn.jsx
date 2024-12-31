@@ -10,9 +10,9 @@ import {
   SigninContainer,
   SigninTitle,
 } from "./SignIn.styled";
-import SigninForm from "./SigninForm";
-import SigninID from "./SigninID";
-import SigninPw from "./SigninPw";
+import SigninForm from "./SignInForm";
+import SigninID from "./SignInID";
+import SigninPw from "./SignInPw";
 
 function SignIn() {
   // 상태 관리
@@ -63,7 +63,7 @@ function SignIn() {
         } else if (data.code === "IP") {
           setLoginError("비밀번호를 확인해주세요.");
         } else {
-          setLoginError("로그인 실패. 이메일 또는 비밀번호를 확인해주세요.");
+          setLoginError("로그인 실패. 아이디 또는 비밀번호를 확인해주세요.");
         }
       } catch (error) {
         console.error("로그인 오류:", error);

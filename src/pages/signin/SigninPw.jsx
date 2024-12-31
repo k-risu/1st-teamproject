@@ -80,7 +80,9 @@ function SigninPw({
       const result = await response.json();
       if (result.code === "OK") {
         alert("인증 성공!");
-        navigate("/find-pw"); // 비밀번호 재설정 페이지로 이동
+        navigate("/signin-repw", {
+          state: { email: emailFormik.values.email }, // 이메일 전달 // 비밀번호 재설정 페이지로 이동
+        });
       } else {
         setVerificationError("인증번호가 일치하지 않습니다.");
       }
