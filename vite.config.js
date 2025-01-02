@@ -7,7 +7,7 @@ const createProxy = (baseURL) => {
     "/api": {
       target: baseURL, // 기본 백엔드 URL
       changeOrigin: true,
-      rewrite: (path) => path.replace(/^\/api/, "/api"), // '/api' 유지
+      rewrite: (path) => path.replace(/^\/api/, ""), // '/api' 유지
     },
   };
 };

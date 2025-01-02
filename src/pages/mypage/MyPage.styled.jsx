@@ -1,5 +1,10 @@
 import styled from "@emotion/styled";
 
+export const UserId = styled.div`
+  font-size: 16px;
+  color: #333;
+`;
+
 // 헤더 영역 스타일
 export const Header = styled.div`
   display: flex;
