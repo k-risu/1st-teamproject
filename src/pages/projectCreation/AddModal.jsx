@@ -1,42 +1,39 @@
 import { useState } from "react";
-
 import {
   ButtonWrapper,
   ModalContent,
   ModalInput,
   ModalOverlay,
   ModalText,
-  DetailMember,
   FindDiv,
+  SearchMember,
 } from "./AddModal.styles";
 import axios from "axios";
 
-export const AddModal = ({ isOpen, closeModal, addTeamMember }) => {
-  if (!isOpen) return null; // 모달이 열리지 않으면 아무것도 렌더링하지 않음
-
-  // const { searchID, setSearchID } = useState("");
-  const [add, setAdd] = useState({});
+const AddModal = ({ isOpen, closeModal, addTeamMember, setTeamMembers }) => {
+  const [memberList, setMemberList] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
-  const handleAddMember = () => {
-    // 여기서 예시로 이메일을 팀원 데이터로 사용
-    const member = {
-      userNo: "1",
-      nickname: "John Doe",
-      pic: "",
-      existSchedule: "true",
-    };
+  const [searchInput, setSearchInput] = useState("");
 
-    // addTeamMember 콜백을 사용하여 부모 컴포넌트로 데이터 전달
-    addTeamMember(member);
-    closeModal(); // 모달 닫기
+  if (!isOpen) return null;
+
+  const handleAddMemberButton = (data) => {
+    setTeamMembers((prev) => [...prev, data]);
+    setMemberList((prev) => [...prev, data.nickname]);
+    setSearchInput("");
   };
-  const handleInputChange = async (e) => {
+
+  const handleSearch = async (e) => {
+    setSearchInput(e.target.value);
     try {
-      const userId = encodeURIComponent(e.target.value); // 인코딩
-      const response = await axios.get(`/api/project/search-user/${userId}`);
-      if (response.status === 200) {
-        console.log("성공 : ", response.data);
-        setUserInfo(response.data.user);
+      const seacrchNickname = encodeURIComponent(e.target.value);
+      const res = await axios.get(
+        `/api/project/search-user/${seacrchNickname}`,
+      );
+      console.log(res);
+
+      if (res.status === 200) {
+        setUserInfo(res.data.user);
       }
     } catch (error) {
       console.error("오류 발생:", error);
@@ -48,28 +45,31 @@ export const AddModal = ({ isOpen, closeModal, addTeamMember }) => {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <ModalInput
           placeholder="닉네임 또는 이메일로 검색해보세요"
-          onChange={handleInputChange}
-          userInfo={userInfo}
+          value={searchInput}
+          onChange={handleSearch}
         />
-        <DetailMember />
+        <SearchMember
+          onClick={() => {
+            handleAddMemberButton(userInfo);
+          }}
+        />
         <h2>구성원</h2>
-
         {/* 사용자 정보 출력 부분 */}
         {userInfo && (
-          <FindDiv>
-            {userInfo.pic === true ? (
-              <img src={userInfo.pic} />
-            ) : (
-              <div>없음</div>
-            )}
-            <span>{userInfo.nickname}</span>
+          <FindDiv
+            onClcik={() => {
+              handleAddMemberButton(userInfo);
+            }}
+          >
+            {userInfo?.pic === true ? <img src={userInfo?.pic} /> : <div></div>}
+            <span>{userInfo?.nickname}</span>
           </FindDiv>
         )}
         <div>
-          <ModalText readOnly />
+          <ModalText readOnly value={[memberList]} />
         </div>
         <ButtonWrapper>
-          <button type="button" onClick={handleAddMember}>
+          <button type="button" onClick={() => addTeamMember(userInfo)}>
             추가
           </button>
           <button type="button" onClick={closeModal}>
@@ -80,3 +80,5 @@ export const AddModal = ({ isOpen, closeModal, addTeamMember }) => {
     </ModalOverlay>
   );
 };
+
+export default AddModal;

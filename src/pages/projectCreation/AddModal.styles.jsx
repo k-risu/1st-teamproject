@@ -102,18 +102,16 @@ export const FindDiv = styled.div`
   width: 400px;
   border-radius: 0 0 5px 5px;
   border: 2px solid #f4f4f4;
-  /* border: 2px solid blue; */
   background-color: #f4f4f4;
-  /* background-color: blue; */
 
   left: 50px;
   top: 60px;
 
-  /* padding: 10px; */
   font-size: 16px;
   align-items: center;
-  /* justify-content: center; */
   cursor: pointer;
+  z-index: 99;
+
   &:hover {
     border: 2px solid #999999;
     background-color: #999999;
@@ -140,9 +138,10 @@ export const FindDiv = styled.div`
     padding: 10px;
   }
 `;
-export const DetailMember = styled(FaSistrix)`
+export const SearchMember = styled(FaSistrix)`
   position: absolute;
+  display: flex;
   top: 25px;
-  right: 25px;
+  right: 15px;
   font-size: 30px;
 `;
