@@ -3,8 +3,9 @@ import styled from "@emotion/styled";
 export const CalendarLayout = styled.section`
   max-width: 1440px;
   width: 1200px;
-  height: 700px;
+  height: 750px;
   background-color: white;
+  padding: 30px;
 
   .fc .fc-toolbar-title {
     font-weight: normal;

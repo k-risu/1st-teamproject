@@ -28,6 +28,8 @@ body {
   font-family: "chab";
   font-size: var(--font-size-base);
   color: var(--primary-color);
+
+  background: linear-gradient(#ffffff, #fffde4, #7fc3ff);
 }
 
 html,

@@ -27,7 +27,7 @@ function ProjectCreationPage() {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false); // DateModal 상태
   const [teamMembers, setTeamMembers] = useState([]); // 팀 구성원 상태
   const [eventData, setEventData] = useState({});
-  const [selectDate, setSelectDate] = useState("");
+  const [selectDate, setSelectDate] = useState([]);
 
   const openAddModal = () => setIsAddModalOpen(true); // AddModal 열기
   const closeAddModal = () => setIsAddModalOpen(false); // AddModal 닫기
@@ -48,7 +48,7 @@ function ProjectCreationPage() {
     trigger,
     reset,
   } = useForm({
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
   const addTeamMember = () => {
@@ -58,44 +58,46 @@ function ProjectCreationPage() {
   const handleSubmitForm = async (data) => {
     try {
       const payload = {
-        signedUserNo: 1,
+        signedUserNo: 62,
         title: data.title,
         description: data.description,
         startAt: eventData.startAt,
         deadLine: eventData.deadLine,
         memberNoList: teamMembers.map((item) => item.userNo),
       };
-
       const res = await axios.post(`/api/project`, payload, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      console.log("Response:", res);
+      console.log(res);
       alert("프로젝트가 성공적으로 생성되었습니다!");
       navigate(`/schedule`);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error(error);
       alert("프로젝트 생성 중 오류가 발생했습니다.");
+      return;
     } finally {
       reset();
     }
   };
 
-  const eventSelectHandler = (data) => {
+  const eventSelectHandler = async (data) => {
     const selectedDate = {
       startAt: data.startStr,
       deadLine: dayjs(data.endStr).subtract(1, "day").format("YYYY-MM-DD"),
     };
-    setEventData(selectedDate);
-    openDateModal(selectedDate);
+    await setEventData(selectedDate);
+    await openDateModal(selectedDate);
+    await setSelectDate({
+      ...selectedDate,
+      start: selectedDate.startAt,
+      end: selectedDate.deadLine,
+    });
   };
 
-  const eventDateHandler = (e) => {
+  const eventHandler = (e) => {
     setSelectDate(e);
-    console.log(e);
-    closeDateModal();
   };
 
   return (
@@ -110,7 +112,6 @@ function ProjectCreationPage() {
             initialView="dayGridMonth"
             editable={true}
             selectable={true}
-            droppable={true}
             headerToolbar={{
               left: "title",
               center: "",
@@ -123,12 +124,16 @@ function ProjectCreationPage() {
               today: "오늘",
             }}
             select={eventSelectHandler}
+            events={selectDate}
+            eventsSet={eventHandler}
           />
           {isDateModalOpen && (
             <DateModal
               isOpen={isDateModalOpen}
               closeModal={closeDateModal}
+              eventData={eventData}
               setEventData={setEventData}
+              setSelectDate={setSelectDate}
             />
           )}
         </CalendarWrap>

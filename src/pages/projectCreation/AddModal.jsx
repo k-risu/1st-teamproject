@@ -7,6 +7,7 @@ import {
   ModalText,
   FindDiv,
   SearchMember,
+  SearchProfile,
 } from "./AddModal.styles";
 import axios from "axios";
 
@@ -17,16 +18,22 @@ const AddModal = ({ isOpen, closeModal, addTeamMember, setTeamMembers }) => {
 
   if (!isOpen) return null;
 
-  const handleAddMemberButton = (data) => {
-    setTeamMembers((prev) => [...prev, data]);
-    setMemberList((prev) => [...prev, data.nickname]);
-    setSearchInput("");
+  const handleAddMemberButton = async (data) => {
+    console.log(data);
+
+    if (data === null) {
+      alert("해당 사용자를 찾을 수 없습니다");
+    } else {
+      setTeamMembers((prev) => [...prev, data]);
+      setMemberList((prev) => [...prev, data.nickname]);
+      setSearchInput("");
+    }
   };
 
-  const handleSearch = async (e) => {
-    setSearchInput(e.target.value);
+  const handleSearch = async () => {
     try {
-      const seacrchNickname = encodeURIComponent(e.target.value);
+      const seacrchNickname = encodeURIComponent(searchInput.trim());
+
       const res = await axios.get(
         `/api/project/search-user/${seacrchNickname}`,
       );
@@ -37,6 +44,13 @@ const AddModal = ({ isOpen, closeModal, addTeamMember, setTeamMembers }) => {
       }
     } catch (error) {
       console.error("오류 발생:", error);
+      alert("해당 사용자를 찾을 수 없습니다");
+    }
+  };
+
+  const handleKeyPress = async (e) => {
+    if (e.key === "Enter") {
+      await handleSearch();
     }
   };
 
@@ -46,11 +60,12 @@ const AddModal = ({ isOpen, closeModal, addTeamMember, setTeamMembers }) => {
         <ModalInput
           placeholder="닉네임 또는 이메일로 검색해보세요"
           value={searchInput}
-          onChange={handleSearch}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={(e) => handleKeyPress(e)}
         />
         <SearchMember
           onClick={() => {
-            handleAddMemberButton(userInfo);
+            handleSearch();
           }}
         />
         <h2>구성원</h2>
@@ -61,7 +76,13 @@ const AddModal = ({ isOpen, closeModal, addTeamMember, setTeamMembers }) => {
               handleAddMemberButton(userInfo);
             }}
           >
-            {userInfo?.pic === true ? <img src={userInfo?.pic} /> : <div></div>}
+            {userInfo?.pic === null ? (
+              <img src="public/profile8.jpg" />
+            ) : (
+              <img
+                src={`${import.meta.env.VITE_BASE_URL}/pic/user/${userInfo.userNo}/${userInfo.pic}`}
+              />
+            )}
             <span>{userInfo?.nickname}</span>
           </FindDiv>
         )}

@@ -14,6 +14,7 @@ const Schedule = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalXY, setModalXY] = useState({ x: -1000, y: -1000 });
   const [imageUrls, setImageUrls] = useState([]);
+  const [clickEventData, setClickEventData] = useState([]);
 
   const ModalLayout = styled.div`
     width: 250px;
@@ -34,7 +35,7 @@ const Schedule = () => {
 
     const getEvents = async () => {
       try {
-        const res = await axios.get(`api/main?date=${date}&signedUserNo=2`);
+        const res = await axios.get(`api/main?date=${date}&signedUserNo=62`);
         const userCurrentEvents = res.data.projectList.map((item) => {
           return {
             projectNo: item.projectNo,
@@ -49,6 +50,11 @@ const Schedule = () => {
 
         setCurrentEvents(userCurrentEvents);
         getMemberPics(userCurrentEvents);
+        setClickEventData(
+          userCurrentEvents.filter((item) => {
+            return item.projectNo, item.title;
+          }),
+        );
       } catch (error) {
         console.error("데이터 가져오기 실패 : ", error);
       }
@@ -56,36 +62,10 @@ const Schedule = () => {
     getEvents();
   }, []);
 
-  const date = dayjs().format("YYYYMM");
-
-  const getEvents = async () => {
-    try {
-      const res = await axios.get(`api/main?date=${date}&signedUserNo=2`);
-      const userCurrentEvents = res.data.projectList.map((item) => {
-        return {
-          projectNo: item.projectNo,
-          title: item.title,
-          start: item.startAt,
-          end: dayjs(item.deadline).add(1, "day").format("YYYY-MM-DD"),
-          color: "",
-          textColor: "",
-        };
-      });
-      console.log(userCurrentEvents);
-
-      setCurrentEvents(userCurrentEvents);
-      getMemberPics(userCurrentEvents);
-    } catch (error) {
-      console.error("데이터 가져오기 실패 : ", error);
-    }
-  };
-
   const getMemberPics = async (item) => {
-    console.log(item);
     const userProjectNo = await item.map((e) => {
       return e.projectNo;
     });
-    console.log(userProjectNo);
 
     // try {
     //   const res = await userProjectNo.map((item) => {
@@ -97,16 +77,13 @@ const Schedule = () => {
     //   setImageUrls(res.data.memberList);
 
     try {
-      // 비동기 요청 배열 생성
-      const requests = userProjectNo.map((projectNo) =>
+      const req = userProjectNo.map((projectNo) =>
         axios.get(`api/main/{projectNo}?projectNo=${projectNo}`),
       );
 
-      // 모든 비동기 요청 처리
-      const responses = await Promise.all(requests);
+      const res = await Promise.all(req);
 
-      // 결과에서 필요한 데이터 추출
-      const memberLists = responses.map((res) => res.data.memberList);
+      const memberLists = res.map((item) => item.data.memberList);
 
       console.log(memberLists);
       console.log(memberLists.flat());
@@ -133,13 +110,13 @@ const Schedule = () => {
     } else {
       setIsOpenModal(false);
     }
+    console.log("새로 요청됨", e.nativeEvent.target.textContent);
   };
 
   const clickModalHandler = (e) => {
     if (imageUrls.length === 0 && e.event) {
       getMemberPics();
       setImageUrls([]);
-      console.log(e);
     } else {
       return;
     }
@@ -147,7 +124,6 @@ const Schedule = () => {
 
   return (
     <CalendarLayout onClick={(e) => eventClickHandler(e)}>
-      {/* <CalendarLayout> */}
       <FullCalendar
         height={700}
         plugins={[dayGridPlugin, interactionPlugin]}
@@ -168,17 +144,13 @@ const Schedule = () => {
         events={currentEvents}
       />
       {isOpenModal && (
-        <ModalLayout modalXY={modalXY} currentEvents={currentEvents}>
-          <span>{currentEvents.title}의 구성원</span>
-          <Swiper
-            slidesPerView={4}
-            spaceBetween={20}
-            onClick={() => {
-              setIsOpenModal(true);
-            }}
-          >
-            {imageUrls.map((item) => (
-              <SwiperSlide key={item.userNo}>
+        <ModalLayout modalXY={modalXY}>
+          {clickEventData.map((item) => (
+            <span key={item.projectNo}>{item.title}의 구성원</span>
+          ))}
+          <Swiper slidesPerView={4} spaceBetween={20}>
+            {imageUrls.map((item, index) => (
+              <SwiperSlide key={index}>
                 <ProfileImage
                   src={
                     item.pic === null

@@ -6,7 +6,13 @@ import {
   ModalOverlay,
 } from "./DateModal.styles";
 
-export const DateModal = ({ isOpen, closeModal, setEventData }) => {
+export const DateModal = ({
+  isOpen,
+  closeModal,
+  eventData,
+  setEventData,
+  setSelectDate,
+}) => {
   if (!isOpen) return null; // 모달이 열리지 않으면 아무것도 렌더링하지 않음
 
   const {
@@ -17,16 +23,23 @@ export const DateModal = ({ isOpen, closeModal, setEventData }) => {
     mode: "onBlur",
   });
 
-  const dateSubmitHandler = (data) => {
+  const dateSubmitHandler = async (data) => {
     if (data.startAt && data.deadLine) {
       console.log(data);
 
       closeModal();
-      return setEventData({
-        ...data,
-        startAt: data.startAt,
-        deadLine: data.deadLine,
-      });
+      return (
+        await setEventData({
+          ...data,
+          startAt: data.startAt,
+          deadLine: data.deadLine,
+        }),
+        await setSelectDate({
+          ...data,
+          start: data.startAt,
+          end: data.deadLine,
+        })
+      );
     } else if (data.startAt === "") {
       console.log("시작일을 선택해주세요");
     } else if (data.deadLine === "") {
@@ -40,11 +53,19 @@ export const DateModal = ({ isOpen, closeModal, setEventData }) => {
         <h2>현재선택한 날짜를 확인해주세요</h2>
         <label>
           시작 일자
-          <ModalInput type="date" {...register("startAt")} />
+          <ModalInput
+            type="date"
+            defaultValue={eventData.startAt}
+            {...register("startAt")}
+          />
         </label>
         <label>
           종료 일자
-          <ModalInput type="date" {...register("deadLine")} />
+          <ModalInput
+            type="date"
+            defaultValue={eventData.deadLine}
+            {...register("deadLine")}
+          />
         </label>
         <ButtonWrapper>
           <button type="button" onClick={handleSubmit(dateSubmitHandler)}>
