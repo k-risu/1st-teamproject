@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useCookies } from "react-cookie";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -19,21 +19,20 @@ function MyPage() {
   const [cookies] = useCookies(["signedUserNo"]); // 쿠키에서 signedUserNo 가져오기
   const { targetUserNo } = useParams(); // URL에서 targetUserNo 가져오기
   const [userData, setUserData] = useState({
-    nickname: "테스트 유저", // 임의 닉네임
+    nickname: "로그인 전 테스트 유저", // 임의 닉네임
     email: "testuser@example.com", // 임의 이메일
     pic: "https://via.placeholder.com/150", // 기본 프로필 이미지 URL
-    userId: "testID123", // 임의 유저 ID
+    userId: "로그인 전 testID123", // 임의 유저 ID
     userStatusMessage: "상태 메시지 테스트", // 임의 상태 메시지
     myInfo: true, // 정보 변경 버튼이 표시되도록 설정
   });
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // 쿠키와 localStorage에서 데이터 가져오기
-  // const signedUserNo = cookies.signedUserNo || localStorage.getItem("userId");
-  const signedUserNo = 2;
+  const signedUserNo = cookies.signedUserNo || localStorage.getItem("userId");
 
-  // 공통 API 호출 함수
-  const fetchUserData = async () => {
+  // fetchUserData 함수 선언 (useCallback으로 변경)
+  const fetchUserData = useCallback(async () => {
     const endpoint = "/api/user";
 
     if (!signedUserNo) {
@@ -66,11 +65,11 @@ function MyPage() {
     } catch (error) {
       console.error("API 호출 에러:", error);
     }
-  };
+  }, [targetUserNo, signedUserNo]);
 
   useEffect(() => {
     fetchUserData();
-  }, [targetUserNo, signedUserNo]);
+  }, [fetchUserData]);
 
   const handleImageClick = () => setIsPopupOpen(true);
   const handleClosePopup = () => setIsPopupOpen(false);
@@ -82,15 +81,10 @@ function MyPage() {
       </Header>
       <Userinfo>
         <UserProfile>
-          {console.log(
-            `${import.meta.env.VITE_BASE_URL}/pic/user/${userData.targetUserNo}}`,
-          )}
-          console.log(userData);
           {userData.pic ? (
             <img
-              src={`${import.meta.env.VITE_BASE_URL}/pic/user/${userData.targetUserNo}/${userData.pic}`}
-              // src={userData.pic}
-              alt="유저 프로필"
+              src={`${import.meta.env.VITE_BASE_URL}/pic/user/${targetUserNo || signedUserNo}/${userData.pic}`}
+              alt="프로필"
               style={{
                 borderRadius: "50%",
                 width: "100px",
@@ -102,7 +96,7 @@ function MyPage() {
           ) : (
             <p>유저 사진이 없습니다.</p>
           )}
-          <p>{userData.userStatusMessage || "유저 사진 및 정보"}</p>
+          <p>{userData.userStatusMessage || "statusMessage 영역"}</p>
         </UserProfile>
         <Userpage>
           <UserDetail>
@@ -172,7 +166,7 @@ function MyPage() {
         <Footer>
           <button
             onClick={() => {
-              window.location.href = "/mypage/myedit";
+              window.location.href = `/mypage/myedit?targetUserNo=${signedUserNo}`;
             }}
           >
             정보 변경하기

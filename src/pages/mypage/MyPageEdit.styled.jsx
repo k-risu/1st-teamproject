@@ -90,3 +90,25 @@ export const SubmitButton = styled.button`
     color: white;
   }
 `;
+
+export const NicknameInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+export const CheckButton = styled.button`
+  background-color: ${({ isAvailable }) => (isAvailable ? "green" : "gray")};
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ isAvailable }) =>
+      isAvailable ? "#008000" : "#808080"};
+  }
+`;
