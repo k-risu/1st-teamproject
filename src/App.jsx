@@ -1,6 +1,7 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout";
+
 import MyPage from "./pages/mypage/MyPage";
 import MyPageEdit from "./pages/mypage/MyPageEdit";
 import ProjectCreationPage from "./pages/projectCreation/ProjectCreationPage";
@@ -25,7 +26,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
             {/* 새로운 비밀번호 재설정 페이지 */}
-            <Route path="/find-pw" element={<SigninRepw />} />
+            <Route path="/signin-repw" element={<SigninRepw />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/myedit" element={<MyPageEdit />} />
             <Route path="/projectmembers" element={<ProjectMembers />} />
