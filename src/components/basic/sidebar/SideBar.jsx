@@ -19,27 +19,28 @@ const SideBar = () => {
       <SideBarContainer className="SideBarContainer">
         <SideBarProfile>
           <SideBarProfileImg src="public\profile8.jpg" alt="profileImage" />
-          <p>단단무지</p>
+          <span>단단무지</span>
         </SideBarProfile>
         <SideBarMenuWrap>
           <SideBarMenu>
-            <BiHomeAlt style={{ fontSize: 35 }} />홈
+            <BiHomeAlt style={{ fontSize: 35 }} />
+            <p>홈</p>
           </SideBarMenu>
           <SideBarMenu>
             <BiCalendar style={{ fontSize: 35 }} />
-            일정
+            <p>일정</p>
           </SideBarMenu>
           <SideBarMenu>
             <BiBarChartSquare style={{ fontSize: 35 }} />
-            프로젝트
+            <p>프로젝트</p>
           </SideBarMenu>
           <SideBarMenu>
             <BiUserCircle style={{ fontSize: 35 }} />
-            마이페이지
+            <p>마이페이지</p>
           </SideBarMenu>
           <SideBarMenu>
             <BiLogOut style={{ fontSize: 35 }} />
-            로그아웃
+            <p>로그아웃</p>
           </SideBarMenu>
         </SideBarMenuWrap>
       </SideBarContainer>

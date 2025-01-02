@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
   position: relative;
-  max-width: 1600px;
+  max-width: 1500px;
   height: 100vh;
   margin: 0 auto;
   overflow-x: hidden;

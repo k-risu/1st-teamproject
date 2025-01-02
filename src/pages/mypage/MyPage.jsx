@@ -18,6 +18,7 @@ function MyPage() {
     nickname: "react그린이", // 기본 닉네임
     email: "reactgreen@example.com", // 기본 이메일
     profilePic: "https://via.placeholder.com/150", // 기본 프로필 이미지 URL
+    userId: "defaultID123", // 기본 유저 ID 추가
     userStatusMessage: "", // 기본 상태 메시지
   });
 
@@ -79,12 +80,16 @@ function MyPage() {
         {/* 유저 닉네임 및 이메일 정보 */}
         <Userpage>
           <UserDetail>
-            <Label>닉네임</Label>
-            <Usernickname>{userData.nickname}</Usernickname>
-          </UserDetail>
-          <UserDetail>
             <Label>이메일</Label>
             <Useremail>{userData.email}</Useremail>
+          </UserDetail>
+          <UserDetail>
+            <Label>아이디</Label>
+            <userId>{userData.userId}</userId>
+          </UserDetail>
+          <UserDetail>
+            <Label>닉네임</Label>
+            <Usernickname>{userData.nickname}</Usernickname>
           </UserDetail>
         </Userpage>
       </Userinfo>

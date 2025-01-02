@@ -20,6 +20,11 @@ export const SideBarProfile = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 10px;
+
+  span {
+    font-size: 18px;
+    font-weight: 500;
+  }
 `;
 
 export const SideBarProfileImg = styled.img`
@@ -51,6 +56,12 @@ export const SideBarMenu = styled.li`
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
   }
 `;
