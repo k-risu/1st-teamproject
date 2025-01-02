@@ -200,8 +200,16 @@ export const TaskList = styled.div`
     justify-content: space-between;
     span {
       display: inline-block;
+      width: 100%;
+      height: 100%;
+      user-select: none;
+      display: inline-block;
       width: 195px;
       text-align: center;
+    }
+    div {
+      width: 100%;
+      height: 100%;
     }
 
     &:hover {

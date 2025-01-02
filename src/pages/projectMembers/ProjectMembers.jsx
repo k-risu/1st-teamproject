@@ -1,6 +1,6 @@
-import { ResponsiveBullet } from "@nivo/bullet";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import AddNewTaskModal from "./AddNewTask";
 import MoreOptionsModal from "./MoreOptionsModal";
 import {
   Card,
@@ -19,7 +19,9 @@ import {
   TaskList,
 } from "./ProjectMembers.styles";
 import UnassignedMsg from "./UnassignedMsg";
-import AddNewTaskModal from "./AddNewtask";
+import renderProgressBar from "./renderProgressBar";
+import TaskDetails from "./TaskDetails";
+
 function ProjectMembers() {
   const projectNo = 1;
   const signedUserNo = 2;
@@ -29,7 +31,14 @@ function ProjectMembers() {
   const [openModalId, setOpenModalId] = useState(null);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const [msgModal, setMsgModal] = useState(false);
-  const [isAddNewTaskModalOpen, setAddNewTaskModalOpen] = useState(false);
+  const [openTaskModalFor, setOpenTaskModalFor] = useState(null);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedUserNo, setSelectedUserNo] = useState(null);
+  const [modalMode, setModalMode] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const [selectNickname, setSelectNickname] = useState(null);
+
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
@@ -45,45 +54,61 @@ function ProjectMembers() {
       } catch (error) {
         console.error("API 호출 오류:", error);
         setProjectTitle("단단무지");
-        setMembers([
-          // Mock data
-        ]);
         setLeaderNo(1);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProjectData();
   }, [projectNo, signedUserNo]);
-  const renderProgressBar = (scheduleList) => {
-    const totalTasks = scheduleList.length;
-    const completedTasks = scheduleList.filter((task) => task.checked).length;
-    const progressData = [
-      {
-        id: "progress",
-        ranges: [0, totalTasks],
-        measures: [completedTasks],
-        markers: [],
-      },
-    ];
-    return (
-      <div style={{ height: "50px", width: "250px", margin: "0 auto" }}>
-        <ResponsiveBullet
-          data={progressData}
-          margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-          spacing={46}
-          layout="horizontal"
-          titleAlign="start"
-          titleOffsetX={-70}
-          measureSize={0.3}
-          rangeColors={["#E8E8E8"]}
-          measureColors={["#67DA6F"]}
-        />
-      </div>
-    );
+
+  const handleCheck = async (scheduleNo) => {
+    try {
+      const response = await axios.post(
+        `/api/project/schedule/${scheduleNo}`,
+        null,
+        {
+          params: {
+            signedUserNo,
+            scheduleNo,
+          },
+        },
+      );
+      if (response.status === 200) {
+        if (response.data.code === "NF") {
+          console.log("권한없음");
+        } else {
+          console.log("체크 업데이트 성공:", response.data);
+
+          const projectResponse = await axios.get(`/api/project/${projectNo}`, {
+            params: { signedUserNo },
+          });
+
+          if (projectResponse.status === 200) {
+            const { memberList } = projectResponse.data.project;
+            setMembers(memberList);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("API 호출 오류:", error);
+    }
   };
-  const handleAddNewTask = (taskContent) => {
-    console.log("새 할일 내용:", taskContent);
-    setAddNewTaskModalOpen(false);
+
+  const refreshData = async () => {
+    try {
+      const response = await axios.get(`/api/project/${projectNo}`, {
+        params: { signedUserNo },
+      });
+      if (response.status === 200) {
+        const { memberList } = response.data.project;
+        setMembers(memberList || []);
+      }
+    } catch (error) {
+      console.error("데이터 갱신 오류:", error);
+    }
   };
+
   const openModal = (id, event) => {
     const { top, left, width } = event.target.getBoundingClientRect();
     setModalPosition({
@@ -92,8 +117,22 @@ function ProjectMembers() {
     });
     setOpenModalId(id);
   };
-  const closeModal = () => setOpenModalId(null);
+
+  const closeTaskModal = () => {
+    setOpenTaskModalFor(null);
+    setSelectedTask(null);
+    setModalMode(null);
+
+    refreshData();
+  };
+
+  const openTaskModal = (memberNo) => {
+    setOpenModalId(null);
+    setOpenTaskModalFor(memberNo);
+  };
+
   const msgCloseModal = () => setMsgModal(false);
+
   const chunkMembers = (members, chunkSize) => {
     const result = [];
     while (members.length % chunkSize !== 0) {
@@ -105,7 +144,18 @@ function ProjectMembers() {
     }
     return result;
   };
+
+  const openTaskModalForEdit = (taskData) => {
+    setSelectedTask(taskData);
+    setModalMode("edit");
+  };
+
   const memberChunks = chunkMembers(members, 4);
+
+  if (loading) {
+    return <div>데이터를 로딩 중입니다...</div>;
+  }
+
   return (
     <MembersLayout>
       <MembersLayoutTop>
@@ -118,7 +168,7 @@ function ProjectMembers() {
             type="button"
             sideProps={true}
             isOpenModal={openModalId}
-            closeModal={msgCloseModal}
+            closeModal={() => setMsgModal(false)}
             onClick={() => setMsgModal(true)}
           >
             대시보드
@@ -129,13 +179,16 @@ function ProjectMembers() {
         </MembersSection>
       </MembersLayoutTop>
       {msgModal && (
-        <UnassignedMsg isOpen={msgModal} closeModal={msgCloseModal} />
+        <UnassignedMsg
+          isOpen={msgModal}
+          closeModal={() => setMsgModal(false)}
+        />
       )}
       {memberChunks.map((chunk, chunkIndex) => (
         <Members key={chunkIndex}>
-          {chunk.map((member) =>
+          {chunk.map((member, index) =>
             member ? (
-              <Card key={member.userNo}>
+              <Card key={member.userNo || index}>
                 <CardTod />
                 <MemberInfo>
                   {member.pic !== null ? (
@@ -160,9 +213,24 @@ function ProjectMembers() {
                 <TaskList>
                   {member.scheduleList.map((schedule) => (
                     <ul key={schedule.scheduleNo}>
-                      <li>
-                        <span>{schedule.content}</span>
-                        <CheckedIcon checked={schedule.checked} />
+                      <li
+                        onClick={() => {
+                          setSelectedUserNo(member.userNo);
+                          setSelectNickname(member.nickname);
+                          setSelectedTask(schedule);
+                          setModalMode("view");
+                        }}
+                      >
+                        <div>
+                          <span>{schedule.content}</span>
+                        </div>
+                        <CheckedIcon
+                          checked={schedule.checked}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCheck(schedule.scheduleNo);
+                          }}
+                        />
                       </li>
                     </ul>
                   ))}
@@ -175,24 +243,50 @@ function ProjectMembers() {
                   role={signedUserNo === leaderNo ? signedUserNo : false}
                   signedUserNo={signedUserNo}
                   memberRole={member.userNo}
-                  onAddNewTask={() => {
-                    setAddNewTaskModalOpen(true);
-                    closeModal();
-                  }}
+                  projectNo={projectNo}
+                  onAddNewTask={() => openTaskModal(member.userNo)}
                 />
+                {openTaskModalFor === member.userNo && (
+                  <AddNewTaskModal
+                    isOpen={openTaskModalFor === member.userNo}
+                    closeModal={closeTaskModal}
+                    projectNo={projectNo}
+                    signedUserNo={signedUserNo}
+                    memberRole={member.userNo}
+                    isLeader={signedUserNo === leaderNo}
+                  />
+                )}
               </Card>
             ) : (
-              <Card key={chunkIndex} dummy={true} />
+              <Card key={index} dummy={true} />
             ),
           )}
         </Members>
       ))}
-      <AddNewTaskModal
-        isOpen={isAddNewTaskModalOpen}
-        closeModal={() => setAddNewTaskModalOpen(false)}
-        onSubmit={handleAddNewTask}
-      />
+      {selectedTask && modalMode === "view" && (
+        <TaskDetails
+          scheduleNo={selectedTask.scheduleNo}
+          closeModal={closeTaskModal}
+          onEdit={openTaskModalForEdit}
+          signedUserNo={signedUserNo}
+          nickname={selectNickname}
+        />
+      )}
+
+      {selectedTask && modalMode === "edit" && (
+        <AddNewTaskModal
+          isOpen={true}
+          closeModal={closeTaskModal}
+          initialData={selectedTask}
+          projectNo={projectNo}
+          signedUserNo={signedUserNo}
+          scheduleNo={selectedTask.scheduleNo}
+          userNo={selectedUserNo}
+          mode="edit"
+        />
+      )}
     </MembersLayout>
   );
 }
+
 export default ProjectMembers;

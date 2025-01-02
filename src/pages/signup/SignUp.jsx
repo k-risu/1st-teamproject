@@ -112,9 +112,8 @@ function SignUp() {
         });
         return;
       }
-
       console.log("회원가입 성공:", response.data);
-      navigate("/signin");
+      // navigate("/signin");
       // 회원가입 후 처리 (로그인 페이지로 이동 등)
     } catch (error) {
       console.error("회원가입 실패:", error);

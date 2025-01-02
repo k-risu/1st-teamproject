@@ -12,6 +12,8 @@ const MoreOptionsModal = ({
   memberRole,
   role,
   onAddNewTask,
+  projectNo, // projectNo 추가
+  isLeader, // 리더 여부
 }) => {
   if (!isOpenModal) return null;
   const roleCheck = () => {
@@ -62,6 +64,7 @@ const MoreOptionsModal = ({
     }
     return null;
   };
+
   return <ModalOverlay onClick={closeModal}>{roleCheck()}</ModalOverlay>;
 };
 export default MoreOptionsModal;
