@@ -20,7 +20,7 @@ export const MainContainer = styled.div`
 `;
 
 export const Main = styled.div`
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.05);
   display: flex;
   width: 90%;
   height: 100vh;

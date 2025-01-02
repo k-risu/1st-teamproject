@@ -11,7 +11,10 @@ const Layout = ({ children }) => {
         {pathname === "/schedule" ||
         pathname === "/projectcreationpage" ||
         pathname === "/project" ||
-        pathname === "/projectlist" ? (
+        pathname === "/projectlist" ||
+        pathname === "/projectmembers" ||
+        pathname === "/mypage" ||
+        pathname === "/mypage/edit" ? (
           <SideBar />
         ) : (
           <></>
@@ -20,7 +23,10 @@ const Layout = ({ children }) => {
           {pathname === "/schedule" ||
           pathname === "/projectcreationpage" ||
           pathname === "/project" ||
-          pathname === "/projectlist" ? (
+          pathname === "/projectlist" ||
+          pathname === "/projectmembers" ||
+          pathname === "/mypage" ||
+          pathname === "/mypage/edit" ? (
             <Header />
           ) : (
             <></>

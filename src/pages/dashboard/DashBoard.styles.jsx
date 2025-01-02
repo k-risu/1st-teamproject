@@ -85,3 +85,9 @@ export const ProjectData = styled.div`
     /* box-shadow: 8px 16px 16px hsl(0deg 0% 0% / 0.25); */
   }
 `;
+
+export const SlideImage = styled.img`
+  display: flex;
+  width: 50px;
+  height: 50px;
+`;
