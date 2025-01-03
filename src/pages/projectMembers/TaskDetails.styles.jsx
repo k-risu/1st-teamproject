@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { FaExchangeAlt } from "react-icons/fa";
+import { RiDeleteBin6Fill } from "react-icons/ri";
 
 // 모달 오버레이 스타일
 export const ModalOverlay = styled.div`
@@ -29,32 +30,6 @@ export const ModalContent = styled.div`
 
   align-items: center;
   text-align: left;
-
-  h2 {
-    padding-left: 40px;
-    margin-bottom: 10px;
-    font-size: 24px;
-    align-self: flex-start;
-  }
-
-  div {
-    width: 400px;
-    display: flex;
-    justify-content: center;
-    gap: 75px;
-    /* width: 100%; */
-  }
-
-  div > button {
-    background-color: #dfdfdf;
-    color: #000;
-    padding: 5px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 15px;
-    margin-top: 15px;
-  }
 `;
 export const ModalInput = styled.input`
   width: 400px;
@@ -88,6 +63,49 @@ export const ModalText = styled.textarea`
     outline: none;
   }
 `;
+export const UserinfoWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  /* padding-left: 40px; */
+  margin-bottom: 10px;
+  h2 {
+    margin-left: 40px;
+    font-size: 24px;
+    align-self: flex-start;
+  }
+  div {
+    align-items: center;
+    justify-content: center;
+    margin-right: 40px;
+  }
+`;
 export const ChangeIcon = styled(FaExchangeAlt)`
-  font-size: 16px;
+  font-size: 20px;
+  margin-right: 5px;
+  cursor: pointer;
+`;
+export const DeleteIcon = styled(RiDeleteBin6Fill)`
+  font-size: 20px;
+  margin-left: 10px;
+  margin-right: 5px;
+  cursor: pointer;
+`;
+export const BtWrap = styled.div`
+  width: 400px;
+  display: flex;
+  justify-content: center;
+  gap: 75px;
+
+  & > button {
+    background-color: #dfdfdf !important;
+    color: #000 !important;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: 15px;
+  }
 `;
