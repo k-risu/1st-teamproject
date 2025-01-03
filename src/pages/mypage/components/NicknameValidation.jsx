@@ -1,20 +1,20 @@
-import { NicknameInput, CheckButton } from "./MyPageEdit.styled";
+import { NicknameInput, CheckButton } from "../MyPageEdit.styled";
 
 function NicknameValidation({
   nickname,
   isEditable,
   isNicknameChecked,
   handleCheckNickname,
-  onNicknameChange, // onChange 핸들러 추가
+  onNicknameChange,
 }) {
   return (
     <div>
-      <label htmlFor="nickname">닉네임</label>
+      <label htmlFor="nickname"></label>
       <NicknameInput
         id="nickname"
         type="text"
         value={nickname || ""}
-        onChange={onNicknameChange} // onChange 추가
+        onChange={onNicknameChange}
         disabled={!isEditable}
       />
       {isEditable && (

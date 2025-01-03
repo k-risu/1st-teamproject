@@ -2,10 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { ModalInput } from "./AddNewtask.styles";
 import {
+  BtWrap,
   ChangeIcon,
+  DeleteIcon,
   ModalContent,
   ModalOverlay,
   ModalText,
+  UserinfoWrap,
 } from "./TaskDetails.styles";
 
 const TaskDetails = ({
@@ -14,6 +17,8 @@ const TaskDetails = ({
   onEdit,
   signedUserNo,
   nickname,
+  openChangeTaskUserModal,
+  openDeleteModal,
 }) => {
   const [taskData, setTaskData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -69,15 +74,19 @@ const TaskDetails = ({
   return (
     <ModalOverlay onClick={closeModal}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
-        <h2>{nickname}</h2>
-        {/* <ChangeIcon /> */}
+        <UserinfoWrap>
+          <h2>{nickname}</h2>
+          <div>
+            <ChangeIcon onClick={() => openChangeTaskUserModal(taskData)} />
+            <DeleteIcon onClick={openDeleteModal} />
+          </div>
+        </UserinfoWrap>
         <ModalInput readOnly value={taskData.content} />
         <ModalText readOnly value={taskData.detail || ""} />
-
-        <div>
+        <BtWrap>
           <button onClick={() => editBt(taskData)}>수정</button>
           <button onClick={closeModal}>닫기</button>
-        </div>
+        </BtWrap>
       </ModalContent>
     </ModalOverlay>
   );

@@ -18,6 +18,7 @@ const AddTaskModal = ({
   memberRole,
   userNo,
   scheduleNo,
+  refreshData,
 }) => {
   const [taskContent, setTaskContent] = useState("");
   const [taskDetail, setTaskDetail] = useState("");
@@ -52,8 +53,8 @@ const AddTaskModal = ({
         const response = await axios.post("/api/project/schedule", taskData);
         if (response.status === 200) {
           console.log(taskData);
-
           console.log("할 일 등록 성공:", response.data);
+          refreshData();
           // onSubmit(response.data.newTask, memberRole); // 새 할 일 반환
         }
       } else if (mode === "edit") {
@@ -110,7 +111,7 @@ const AddTaskModal = ({
         {mode !== "view" && (
           <div>
             <button onClick={handleSubmit}>
-              {mode === "add" ? "등록" : "수정"}
+              {mode === "add" ? "등록" : "완료"}
             </button>
             <button onClick={closeModal}>취소</button>
           </div>

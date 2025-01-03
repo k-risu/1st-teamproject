@@ -18,9 +18,10 @@ export const MembersLayout = styled.div`
   align-items: center;
   /* margin: auto; */
   background-color: #fbfbfb;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
+  /* overflow-x: auto; */
   padding-bottom: 20px;
 
   &::-webkit-scrollbar {
@@ -190,7 +191,6 @@ export const TaskList = styled.div`
   }
 
   li {
-    display: flax;
     align-items: center;
     border-radius: 10px;
     background-color: #f5f5f5;
@@ -198,16 +198,9 @@ export const TaskList = styled.div`
     padding: 5px 10px;
 
     justify-content: space-between;
-    span {
-      display: inline-block;
-      width: 100%;
-      height: 100%;
-      user-select: none;
-      display: inline-block;
-      width: 195px;
-      text-align: center;
-    }
+
     div {
+      text-align: center;
       width: 100%;
       height: 100%;
     }
@@ -218,8 +211,16 @@ export const TaskList = styled.div`
     }
   }
 `;
+export const Task = styled.span`
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  width: 195px;
+  ${(props) => (props.memberLock === 1 ? "color:#808080" : "")}
+`;
 export const CheckedIcon = styled(FaCheck)`
-  min-width: 20px; /* 추가 */
+  min-width: 20px;
   min-height: 20px;
   font-size: 15px;
   color: ${(props) => (props.checked ? "#77da69" : "#dedede")};
@@ -251,5 +252,6 @@ export const BottomMembers = styled.div`
   display: flex;
   flex-wrap: nowrap;
   /* justify-content: space-between; */
+
   gap: 20px;
 `;

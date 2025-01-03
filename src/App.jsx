@@ -25,14 +25,14 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
             {/* 새로운 비밀번호 재설정 페이지 */}
-            <Route path="/signin-repw" element={<SigninRepw />} />
+            <Route path="/signin/repw" element={<SigninRepw />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/myedit" element={<MyPageEdit />} />
-            <Route path="/project/members" element={<ProjectMembers />} />
-            <Route path="/project/create" element={<ProjectCreationPage />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/project" element={<DashBoard />} />
             <Route path="/project/list" element={<ProjectList />} />
+            <Route path="/project/members" element={<ProjectMembers />} />
+            <Route path="/project/create" element={<ProjectCreationPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

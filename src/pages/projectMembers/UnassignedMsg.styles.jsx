@@ -27,7 +27,7 @@ export const ModalOverlay = styled.div`
     color: #ff0000;
   }
 `;
-export const MoreOptionsIcon = styled(GoAlert)`
+export const AlertIcon = styled(GoAlert)`
   font-size: 55px;
   color: #ff1e00;
 `;

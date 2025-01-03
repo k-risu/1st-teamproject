@@ -14,6 +14,7 @@ const MoreOptionsModal = ({
   onAddNewTask,
   projectNo, // projectNo 추가
   isLeader, // 리더 여부
+  onOpenDeleteModal,
 }) => {
   if (!isOpenModal) return null;
   const roleCheck = () => {
@@ -28,9 +29,7 @@ const MoreOptionsModal = ({
         >
           <OptionButton onClick={onAddNewTask}>새 할일 등록</OptionButton>
           <Separator />
-          <OptionButton onClick={() => console.log("제외하기 클릭!")}>
-            제외하기
-          </OptionButton>
+          <OptionButton onClick={onOpenDeleteModal}>제외하기</OptionButton>
         </ModalContent>
       );
     }
@@ -58,7 +57,7 @@ const MoreOptionsModal = ({
         >
           <OptionButton onClick={onAddNewTask}>새 할일 등록</OptionButton>
           <Separator />
-          <OptionButton onClick={closeModal}>나가기</OptionButton>
+          <OptionButton onClick={onOpenDeleteModal}>나가기</OptionButton>
         </ModalContent>
       );
     }
