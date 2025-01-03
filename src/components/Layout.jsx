@@ -1,37 +1,48 @@
 import { useLocation } from "react-router-dom";
 import Header from "./basic/header/index";
 import SideBar from "./basic/sidebar/SideBar";
-import { Container, Main, MainContainer } from "./Layout.styles";
+import { Container, FullMain, Main, MainContainer } from "./Layout.styles";
 
 const Layout = ({ children }) => {
   const { pathname } = useLocation();
   return (
     <>
-      <Container className="Container">
+      <Container>
         {pathname === "/schedule" ||
-        pathname === "/projectcreationpage" ||
         pathname === "/project" ||
-        pathname === "/projectlist" ||
-        pathname === "/projectmembers" ||
+        pathname === "/project/create" ||
+        pathname === "/project/list" ||
+        pathname === "/project/members" ||
         pathname === "/mypage" ||
         pathname === "/mypage/edit" ? (
           <SideBar />
         ) : (
           <></>
         )}
-        <MainContainer className="MainContainer">
+        <MainContainer>
           {pathname === "/schedule" ||
-          pathname === "/projectcreationpage" ||
           pathname === "/project" ||
-          pathname === "/projectlist" ||
-          pathname === "/projectmembers" ||
+          pathname === "/project/create" ||
+          pathname === "/project/list" ||
+          pathname === "/project/members" ||
           pathname === "/mypage" ||
           pathname === "/mypage/edit" ? (
             <Header />
           ) : (
             <></>
           )}
-          <Main className="Main">{children}</Main>
+
+          {pathname === "/schedule" ||
+          pathname === "/project" ||
+          pathname === "/project/create" ||
+          pathname === "/project/list" ||
+          pathname === "/project/members" ||
+          pathname === "/mypage" ||
+          pathname === "/mypage/edit" ? (
+            <Main>{children}</Main>
+          ) : (
+            <FullMain>{children}</FullMain>
+          )}
         </MainContainer>
       </Container>
     </>

@@ -18,16 +18,15 @@ const AddModal = ({ isOpen, closeModal, addTeamMember, setTeamMembers }) => {
 
   if (!isOpen) return null;
 
-  const handleAddMemberButton = async (data) => {
-    console.log(data);
+  const handleAddMemberButton = async () => {
+    console.log(userInfo);
 
-    if (data === null) {
-      alert("해당 사용자를 찾을 수 없습니다");
-    } else {
-      setTeamMembers((prev) => [...prev, data]);
-      setMemberList((prev) => [...prev, data.nickname]);
-      setSearchInput("");
-    }
+    alert(`${userInfo.nickname} 유저를 추가했습니다`);
+
+    setTeamMembers((prev) => [...prev, userInfo.userNo]);
+    setMemberList((prev) => [...prev, userInfo.nickname]);
+    setSearchInput("");
+    setUserInfo(null);
   };
 
   const handleSearch = async () => {
@@ -61,7 +60,7 @@ const AddModal = ({ isOpen, closeModal, addTeamMember, setTeamMembers }) => {
           placeholder="닉네임 또는 이메일로 검색해보세요"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          onKeyDown={(e) => handleKeyPress(e)}
+          onKeyDown={() => handleKeyPress()}
         />
         <SearchMember
           onClick={() => {
@@ -72,8 +71,8 @@ const AddModal = ({ isOpen, closeModal, addTeamMember, setTeamMembers }) => {
         {/* 사용자 정보 출력 부분 */}
         {userInfo && (
           <FindDiv
-            onClcik={() => {
-              handleAddMemberButton(userInfo);
+            onClick={() => {
+              handleAddMemberButton();
             }}
           >
             {userInfo?.pic === null ? (

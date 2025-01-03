@@ -7,6 +7,8 @@ export const CalendarLayout = styled.section`
   background-color: white;
   padding: 30px;
 
+  /* pointer-events: none; */
+
   .fc .fc-toolbar-title {
     font-weight: normal;
   }
@@ -52,9 +54,25 @@ export const CalendarLayout = styled.section`
   }
 `;
 
+export const ModalTitle = styled.div`
+  width: 100%;
+  height: 30%;
+  padding: 5px 10px;
+  background-color: skyblue;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  color: black;
+
+  span {
+    cursor: pointer;
+  }
+`;
+
 export const ProfileImage = styled.img`
   width: 50px;
   height: 50px;
   border-radius: 50px;
   margin-top: 10px;
+
+  cursor: pointer;
 `;

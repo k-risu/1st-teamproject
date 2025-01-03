@@ -8,8 +8,7 @@ export const SideBarContainer = styled.div`
   height: 100vh;
   align-items: center;
   position: absolute;
-  border-left: 1px solid black;
-  border-right: 1px solid black;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
   gap: 30px;
 
   background-color: white;

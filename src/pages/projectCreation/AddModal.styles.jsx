@@ -114,7 +114,7 @@ export const FindDiv = styled.div`
 
   &:hover {
     border: 2px solid #999999;
-    background-color: #999999;
+    background-color: rgb(153, 153, 153);
   }
 
   img {

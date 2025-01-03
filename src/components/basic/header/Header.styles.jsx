@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 
 export const HeaderContainer = styled.div`
+  display: flex;
   width: 100%;
   height: 100%;
-  display: flex;
   justify-content: space-between;
 `;
 

@@ -7,7 +7,9 @@ import FullCalendar from "@fullcalendar/react";
 import dayjs from "dayjs";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { CalendarLayout, ProfileImage } from "./Schedule.styles";
+import { CalendarLayout, ModalTitle, ProfileImage } from "./Schedule.styles";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 const Schedule = () => {
   const [currentEvents, setCurrentEvents] = useState([]);
@@ -16,14 +18,20 @@ const Schedule = () => {
   const [imageUrls, setImageUrls] = useState([]);
   const [clickEventData, setClickEventData] = useState([]);
 
+  const [isMouseOver, setIsMouseOver] = useState(false);
+
+  const [cookies] = useCookies(["signedUserNo"]);
+
+  const navigate = useNavigate();
+
   const ModalLayout = styled.div`
     width: 250px;
     height: 120px;
     background-color: whitesmoke;
     position: fixed;
-    border: 1px solid black;
+    border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 3px;
-    padding: 10px 10px;
+
     left: ${(props) => `${props.modalXY.x}px`};
     top: ${(props) => `${props.modalXY.y}px`};
 
@@ -32,10 +40,13 @@ const Schedule = () => {
 
   useEffect(() => {
     const date = dayjs().format("YYYYMM");
+    const signedUserNo = cookies.signedUserNo;
 
     const getEvents = async () => {
       try {
-        const res = await axios.get(`api/main?date=${date}&signedUserNo=62`);
+        const res = await axios.get(
+          `api/main?date=${date}&signedUserNo=${signedUserNo}`,
+        );
         const userCurrentEvents = res.data.projectList.map((item) => {
           return {
             projectNo: item.projectNo,
@@ -56,7 +67,7 @@ const Schedule = () => {
           }),
         );
       } catch (error) {
-        console.error("데이터 가져오기 실패 : ", error);
+        console.log(error);
       }
     };
     getEvents();
@@ -122,8 +133,46 @@ const Schedule = () => {
     }
   };
 
+  // const mouseOverHandler = async (e) => {
+  //   const classList = [...e.nativeEvent.target.classList];
+
+  //   const clickModalHandler = (e) => {
+  //     if (imageUrls.length === 0 && e.event) {
+  //       getMemberPics();
+  //       setImageUrls([]);
+  //     } else {
+  //       return;
+  //     }
+  //   };
+
+  //   setIsMouseOver(true);
+  //   if (isMouseOver === false) return;
+
+  //   if (
+  //     classList.filter(
+  //       (item) => item === "fc-event-title" || item === "fc-h-event",
+  //     ).length !== 0
+  //   ) {
+  //     setModalXY({
+  //       x: e.clientX,
+  //       y: e.clientY,
+  //     });
+  //     setIsOpenModal(true);
+  //     await clickModalHandler(e);
+  //     console.log("마우스오버");
+  //   }
+
+  //   setTimeout(() => {
+  //     setIsMouseOver(false);
+  //   }, 1000);
+  // };
+
   return (
-    <CalendarLayout onClick={(e) => eventClickHandler(e)}>
+    <CalendarLayout
+      onClick={(e) => eventClickHandler(e)}
+      // onMouseOver={(e) => mouseOverHandler(e)}
+      // onMouseOut={() => setIsOpenModal(false)}
+    >
       <FullCalendar
         height={700}
         plugins={[dayGridPlugin, interactionPlugin]}
@@ -145,10 +194,18 @@ const Schedule = () => {
       />
       {isOpenModal && (
         <ModalLayout modalXY={modalXY}>
-          {clickEventData.map((item) => (
-            <span key={item.projectNo}>{item.title}의 구성원</span>
-          ))}
-          <Swiper slidesPerView={4} spaceBetween={20}>
+          <ModalTitle>
+            {clickEventData.map((item) => (
+              <span key={item.projectNo} onClick={() => navigate(`/project`)}>
+                {item.title}의 구성원
+              </span>
+            ))}
+          </ModalTitle>
+          <Swiper
+            slidesPerView={4}
+            spaceBetween={20}
+            style={{ padding: "5px 10px" }}
+          >
             {imageUrls.map((item, index) => (
               <SwiperSlide key={index}>
                 <ProfileImage
@@ -158,6 +215,7 @@ const Schedule = () => {
                       : `${import.meta.env.VITE_BASE_URL}/pic/user/${item.userNo}/${item.pic}`
                   }
                   alt="구성원 프로필 이미지"
+                  onClick={() => navigate(`/mypage`)}
                 />
               </SwiperSlide>
             ))}

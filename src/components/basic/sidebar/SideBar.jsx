@@ -19,13 +19,13 @@ import {
 
 const SideBar = () => {
   const [userData, setUserData] = useState({});
-  const [cookies, setCookie, removeCookie] = useCookies("signedUserNo");
+  const [cookies, removeCookie] = useCookies("signedUserNo");
   const navigate = useNavigate();
 
   useEffect(() => {
     const getUserData = async () => {
       const res = await axios.get(
-        `api/user?targetUserNo=${cookies.signedUserNo}&signedUserNo=${cookies.signedUserNo}`,
+        `api/user?targetUserNo=${cookies.signedUserNo}&signedUserNo=${cookies.signedUserNo}&page=my`,
       );
       setUserData({ ...res.data });
     };

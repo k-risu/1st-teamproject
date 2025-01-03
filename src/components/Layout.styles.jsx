@@ -8,7 +8,7 @@ export const Container = styled.div`
   overflow-x: hidden;
   overflow-y: hidden;
   display: flex;
-  border-right: 1px solid black;
+  /* border-right: 1px solid black; */
   background-color: white;
 
   box-shadow:
@@ -28,6 +28,18 @@ export const Main = styled.div`
   background-color: rgba(0, 0, 0, 0.05);
   display: flex;
   width: 90%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+`;
+
+export const FullMain = styled.div`
+  background-color: rgba(0, 0, 0, 0.05);
+  display: flex;
+  width: 100%;
   height: 100vh;
   justify-content: center;
   align-items: center;
