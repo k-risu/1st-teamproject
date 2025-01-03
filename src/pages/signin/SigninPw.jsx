@@ -66,8 +66,9 @@ function SigninPw({
       alert("인증번호를 입력해주세요.");
       return;
     }
-
     console.log("인증번호 유효성 통과, POST 요청 진행");
+    setIsVerifying(true); // 인증 시작
+
     try {
       const response = await fetch("/api/mail", {
         method: "POST",
@@ -78,10 +79,11 @@ function SigninPw({
         }),
       });
       const result = await response.json();
+
       if (result.code === "OK") {
         alert("인증 성공!");
-        navigate("/signin-repw", {
-          state: { email: emailFormik.values.email }, // 이메일 전달 // 비밀번호 재설정 페이지로 이동
+        navigate("/signin/repw", {
+          state: { email: emailFormik.values.email }, // 이메일 전달
         });
       } else {
         setVerificationError("인증번호가 일치하지 않습니다.");
@@ -89,6 +91,8 @@ function SigninPw({
     } catch (error) {
       console.error("인증 확인 오류:", error);
       alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setIsVerifying(false); // 인증 완료 후 상태 복구
     }
   };
 

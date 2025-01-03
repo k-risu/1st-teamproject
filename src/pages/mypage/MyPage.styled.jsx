@@ -13,7 +13,7 @@ export const Header = styled.div`
   padding: 20px;
   font-size: 15px;
   font-weight: bold;
-  max-width: 800px;
+  max-width: 700px;
   background-color: white;
   margin: 0 auto;
   margin-bottom: 100px;
@@ -26,7 +26,7 @@ export const Userinfo = styled.div`
   align-items: start; /* 중앙 정렬 */
   padding-right: 250px;
   gap: 20px; /* 프로필과 정보 간 간격 */
-  max-width: 800px; /* 전체 영역의 너비 */
+  max-width: 700px; /* 전체 영역의 너비 */
   background-color: white;
   margin: 0 auto;
 `;
@@ -74,7 +74,7 @@ export const Useremail = styled.div`
 export const Footer = styled.div`
   display: flex;
   justify-content: center; /* 중앙 정렬 */
-  max-width: 800px; /* 전체 영역의 너비 */
+  max-width: 700px; /* 전체 영역의 너비 */
   background-color: white;
   margin: 0 auto;
   margin-top: 50px;
