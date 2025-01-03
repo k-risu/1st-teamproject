@@ -165,6 +165,41 @@ function SignUp() {
     setValue("Over14", isChecked); // react-hook-form에 값 설정
     trigger("Over14"); // validation을 다시 실행하여 오류 메시지 업데이트
   };
+  const handleIdCheck = async () => {
+    const nickname = getValues("nickname");
+
+    const isIdValid = await trigger("nickname");
+    if (!isIdValid) {
+      return;
+    }
+
+    try {
+      // GET 요청에서 쿼리 문자열로 데이터 전달
+      const response = await axios.get(
+        `/api/user/sign-up?userId=${encodeURIComponent(nickname)}`,
+        {
+          headers: {
+            accept: "*/*", // 서버가 기대하는 Accept 헤더 설정
+          },
+        },
+      );
+
+      if (response.data.code === "DPI") {
+        setError("nickname", {
+          type: "manual",
+          message: "중복된 아이디입니다.",
+        });
+      } else if (response.data.code === "OK") {
+        alert("사용 가능한 아이디입니다.");
+      }
+    } catch (error) {
+      console.error("중복 확인 요청 중 오류 발생:", error);
+      setError("nickname", {
+        type: "manual",
+        message: "중복 확인 요청에 실패했습니다.",
+      });
+    }
+  };
 
   return (
     <SignUpLayout>
@@ -214,7 +249,9 @@ function SignUp() {
                 <ErrorsMsg>{errors.nickname?.message}</ErrorsMsg>
               </MgsWrap>
             </SignUpField>
-            <DuplicateCheckBt type="button">중복확인</DuplicateCheckBt>
+            <DuplicateCheckBt type="button" onClick={handleIdCheck}>
+              중복확인
+            </DuplicateCheckBt>
           </SignUpFieldDCBT>
 
           <SignUpField>
