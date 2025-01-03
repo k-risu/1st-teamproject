@@ -11,14 +11,20 @@ function NicknameValidation({
   handleCheckNickname,
   onNicknameChange,
 }) {
+  const handleNicknameChange = (e) => {
+    const cleanNickname = e.target.value.replace(/#/g, ""); // `#` 자동 제거
+    onNicknameChange({ target: { value: cleanNickname } });
+  };
+
   return (
     <NicknameContainer>
       <NicknameInput
         id="nickname"
         type="text"
         value={nickname || ""}
-        onChange={onNicknameChange}
+        onChange={handleNicknameChange}
         disabled={!isEditable}
+        placeholder="닉네임을 입력하세요 (특수문자 # 사용 불가)"
       />
       {isEditable && (
         <CheckButton

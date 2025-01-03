@@ -48,13 +48,13 @@ function UserForm({
         />
       </InputWrapper>
       {isEditable && (
-        // <SubmitButton
-        //   type="submit"
-        //   disabled={!isEditable}
-        //   title={!isEditable ? "수정할 수 없습니다." : ""}
-        // >
-        //   정보변경 하기
-        // </SubmitButton>
+        <SubmitButton
+          type="submit"
+          disabled={!isEditable}
+          title={!isEditable ? "수정할 수 없습니다." : ""}
+        >
+          정보변경 하기
+        </SubmitButton>
       )}
     </EditForm>
   );

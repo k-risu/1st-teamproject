@@ -75,21 +75,6 @@ export const Label = styled.label`
   margin-right: 10px; /* 입력 필드와의 간격 */
 `;
 
-/// 입력 필드 영역 (사용자 입력을 받는 곳)
-export const InputField = styled.input`
-  width: 400px; /* 동일한 너비 설정 */
-  padding: 10px; /* 내부 여백 */
-  margin-bottom: 10px; /* 하단 여백 */
-  border: 1px solid #ddd; /* 외곽선 색상 */
-  border-radius: 8px; /* 둥근 모서리 */
-  font-size: 14px; /* 글자 크기 */
-
-  &:focus {
-    border-color: #007bff; /* 포커스 시 외곽선 색상 */
-    outline: none; /* 기본 아웃라인 제거 */
-  }
-`;
-
 // 닉네임 입력 및 중복 확인 버튼을 포함하는 컨테이너
 export const NicknameInput = styled.input`
   width: 400px; /* 동일한 너비 설정 */
@@ -123,19 +108,33 @@ export const InputWrapper = styled.div`
   margin-bottom: 10px; /* 하단 여백 */
   margin: 0 auto;
 `;
+/// 입력 필드 영역 (사용자 입력을 받는 곳)
+export const InputField = styled.input`
+  max-width: 400px;
+  flex: 1; /* 남은 공간을 모두 차지 */
+  padding: 10px; /* 내부 여백 */
+  border: 1px solid #ddd; /* 외곽선 색상 */
+  border-radius: 8px; /* 둥근 모서리 */
+  font-size: 14px; /* 글자 크기 */
+  height: 40px; /* 버튼과 동일한 높이 설정 */
 
-// 중복 확인 버튼 (닉네임 중복 여부를 확인하는 버튼)
+  &:focus {
+    border-color: #007bff; /* 포커스 시 외곽선 색상 */
+    outline: none; /* 기본 아웃라인 제거 */
+  }
+`;
+
+/// 중복 확인 버튼 (닉네임 중복 여부를 확인하는 버튼)
 export const CheckButton = styled.button`
   padding: 10px 15px; /* 버튼의 상하, 좌우 여백 */
+  height: 40px; /* 입력 필드와 동일한 높이 설정 */
   background-color: ${({ isAvailable }) =>
     isAvailable ? "green" : "gray"}; /* 사용 가능 여부에 따라 색상 변경 */
   color: white;
   border: none;
-  border-radius: 5px;
-  font-size: 14px; /* 글자 크기에 맞춘 폰트 */
+  border-radius: 8px;
+  font-size: 14px; /* 글자 크기 */
   white-space: nowrap; /* 글자 줄바꿈 방지 */
-  cursor: ${({ isAvailable }) => (isAvailable ? "pointer" : "not-allowed")};
-  opacity: ${({ isAvailable }) => (isAvailable ? 1 : 0.6)};
 
   &:hover {
     background-color: ${({ isAvailable }) =>
