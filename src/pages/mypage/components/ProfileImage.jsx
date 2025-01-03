@@ -1,17 +1,17 @@
 import { TbCameraHeart } from "react-icons/tb";
-import { useMemo } from "react";
+import { useMemo, useId } from "react";
 
-function ProfileImage({
-  pic,
-  targetUserNo,
-  handleImageChange,
-  inputId = "profile-upload",
-}) {
+function ProfileImage({ pic, targetUserNo, handleImageChange }) {
+  const uniqueId = useId();
+  const inputId = `profile-upload-${uniqueId}`;
+
+  const DEFAULT_PROFILE_IMAGE = "https://via.placeholder.com/150";
+
   const profileImageSrc = useMemo(() => {
-    if (pic) return URL.createObjectURL(pic);
-    if (targetUserNo)
+    if (pic instanceof File) return URL.createObjectURL(pic);
+    if (targetUserNo && pic)
       return `${import.meta.env.VITE_BASE_URL}/pic/user/${targetUserNo}/${pic}`;
-    return "https://via.placeholder.com/150";
+    return DEFAULT_PROFILE_IMAGE;
   }, [pic, targetUserNo]);
 
   return (
