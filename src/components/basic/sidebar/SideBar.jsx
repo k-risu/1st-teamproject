@@ -4,7 +4,6 @@ import { useCookies } from "react-cookie";
 import {
   BiBarChartSquare,
   BiCalendar,
-  BiHomeAlt,
   BiLogOut,
   BiUserCircle,
 } from "react-icons/bi";
@@ -24,9 +23,12 @@ const SideBar = () => {
 
   useEffect(() => {
     const getUserData = async () => {
-      const res = await axios.get(
-        `api/user?targetUserNo=${cookies.signedUserNo}&signedUserNo=${cookies.signedUserNo}`,
-      );
+      const res = await axios.get(`api/user`, {
+        params: {
+          targetUserNo: cookies.signedUserNo,
+          signedUserNo: cookies.signedUserNo,
+        },
+      });
       setUserData({ ...res.data });
     };
     getUserData();
@@ -54,15 +56,11 @@ const SideBar = () => {
           </span>
         </SideBarProfile>
         <SideBarMenuWrap>
-          {/* <SideBarMenu>
-            <BiHomeAlt style={{ fontSize: 35 }} />
-            <p>홈</p>
-          </SideBarMenu> */}
-          <SideBarMenu>
+          <SideBarMenu onClick={() => navigate(`/schedule`)}>
             <BiCalendar style={{ fontSize: 35 }} />
             <p>Home</p>
           </SideBarMenu>
-          <SideBarMenu>
+          <SideBarMenu onClick={() => navigate(`/project`)}>
             <BiBarChartSquare style={{ fontSize: 35 }} />
             <p>Project</p>
           </SideBarMenu>

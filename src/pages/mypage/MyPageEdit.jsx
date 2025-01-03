@@ -39,6 +39,7 @@ function MyPageEdit() {
     if (file) {
       setPic(file);
     }
+    console.log(file);
   };
 
   const handleCheckNickname = async () => {
@@ -69,15 +70,27 @@ function MyPageEdit() {
     e.preventDefault();
     try {
       const formData = new FormData();
-      formData.append("targetUserNo", targetUserNo);
-      formData.append("nickname", userInfo.nickname.trim());
-      formData.append("statusMessage", userInfo.statusMessage.trim());
-      if (pic) formData.append("pic", pic);
+      const binary = new Blob([pic], { type: "image/jpeg" });
+
+      formData.append(
+        "req",
+        JSON.stringify({
+          targetUserNo: parseInt(targetUserNo),
+          nickname: userInfo.nickname.trim(),
+          statusMessage: userInfo.statusMessage,
+        }),
+      );
+
+      // formData.append("targetUserNo", targetUserNo);
+      // formData.append("nickname", userInfo.nickname.trim());
+      // formData.append("statusMessage", userInfo.statusMessage);
+
+      pic && formData.append("pic", binary, pic);
 
       console.log("전송 데이터:", [...formData.entries()]);
 
-      const response = await axios.put("/api/user", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const response = await axios.put(`/api/user`, formData, {
+        headers: { "Content-Type": "multipart/form-data", Accept: "*" },
       });
 
       if (response.data.code === "OK") {

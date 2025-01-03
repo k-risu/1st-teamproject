@@ -63,14 +63,16 @@ function ProjectCreationPage() {
   };
 
   const handleSubmitForm = async (data) => {
+    console.log(teamMembers);
+
     try {
       const payload = {
-        signedUserNo: 62,
+        signedUserNo: cookies.signedUserNo,
         title: data.title,
         description: data.description,
         startAt: eventData.startAt,
         deadLine: eventData.deadLine,
-        memberNoList: teamMembers.map((item) => item.userNo),
+        memberNoList: teamMembers.map((item) => item),
       };
       const res = await axios.post(`/api/project`, payload, {
         headers: {

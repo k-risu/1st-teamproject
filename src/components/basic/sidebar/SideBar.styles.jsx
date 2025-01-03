@@ -10,6 +10,9 @@ export const SideBarContainer = styled.div`
   position: absolute;
   border-right: 1px solid rgba(0, 0, 0, 0.2);
   gap: 30px;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.19),
+    0 6px 6px rgba(0, 0, 0, 0.23);
 
   background-color: white;
 `;
@@ -35,6 +38,8 @@ export const SideBarProfileImg = styled.img`
   height: 80px;
   border-radius: 50px;
   margin-top: 100px;
+  padding: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
 export const SideBarMenuWrap = styled.ul`
@@ -45,9 +50,11 @@ export const SideBarMenuWrap = styled.ul`
 export const SideBarMenu = styled.li`
   display: flex;
   justify-content: flex-start;
+  padding-left: 20px;
   align-items: center;
   width: 100%;
-  padding: 10px 25px;
+  height: 60px;
+  gap: 5px;
 
   font-size: 14px;
   font-weight: 700;

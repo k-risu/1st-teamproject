@@ -8,16 +8,29 @@ import {
 } from "./ProjectList.styles";
 import { FaCircle, FaRegUser } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+import { isLogin } from "../../utils/isLogin";
 
 const ProjectList = () => {
   const [projectList, setProjectList] = useState([]);
+  const [cookies] = useCookies();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    isLogin({ navigate, cookies });
+  }, []);
 
   useEffect(() => {
     const getProjectList = async () => {
       try {
-        const res = await axios.get(`api/project?signedUserNo=62&page=0`);
+        const res = await axios.get(`/api/project`, {
+          params: {
+            signedUserNo: cookies.signedUserNo,
+          },
+        });
         console.log(res);
-        console.log(res.data.projectList);
+
         setProjectList(res.data.projectList);
       } catch (error) {
         console.log(error);
@@ -26,12 +39,25 @@ const ProjectList = () => {
     getProjectList();
   }, []);
 
+  const goProjectNo = (e) => {
+    console.log(e);
+
+    navigate(`/project/dashboard`, {
+      state: {
+        projectNo: e,
+      },
+    });
+  };
+
   return (
     <Container>
       <ContainerTitle>내가 진행중인 프로젝트</ContainerTitle>
 
       {projectList.map((item) => (
-        <ProjectListWrap key={item.projectNo}>
+        <ProjectListWrap
+          key={item.projectNo}
+          onClick={() => goProjectNo(item.projectNo)}
+        >
           <Projects>
             <ProjectDataSubtitle>프로젝트명</ProjectDataSubtitle>
             <div>

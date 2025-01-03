@@ -14,7 +14,7 @@ export const Container = styled.div`
 export const ContainerTitle = styled.p`
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
   justify-content: flex-start;
 `;
 
@@ -23,12 +23,12 @@ export const ProjectListWrap = styled.ul`
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
 `;
 
 export const Projects = styled.li`
   display: flex;
-  width: 40%;
+  width: 400px;
   max-height: 500px;
   justify-content: space-between;
   align-items: center;
@@ -36,6 +36,7 @@ export const Projects = styled.li`
   div {
     display: flex;
     align-items: center;
+    gap: 5px;
   }
 `;
 
