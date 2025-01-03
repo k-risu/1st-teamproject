@@ -15,7 +15,7 @@ const ProjectList = () => {
   useEffect(() => {
     const getProjectList = async () => {
       try {
-        const res = await axios.get(`api/project?signedUserNo=1&page=0`);
+        const res = await axios.get(`api/project?signedUserNo=62&page=0`);
         console.log(res);
         console.log(res.data.projectList);
         setProjectList(res.data.projectList);

@@ -114,7 +114,7 @@ export const FindDiv = styled.div`
 
   &:hover {
     border: 2px solid #999999;
-    background-color: #999999;
+    background-color: rgb(153, 153, 153);
   }
 
   img {
@@ -123,8 +123,8 @@ export const FindDiv = styled.div`
     display: inline-block;
     width: 30px;
     height: 30px;
+    border-radius: 50px;
     background-color: #c0c0c0;
-    border-radius: 5px;
   }
   div {
     margin-left: 5px;
@@ -144,4 +144,10 @@ export const SearchMember = styled(FaSistrix)`
   top: 25px;
   right: 15px;
   font-size: 30px;
+`;
+
+export const SearchProfile = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
 `;

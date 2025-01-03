@@ -7,22 +7,31 @@ import FullCalendar from "@fullcalendar/react";
 import dayjs from "dayjs";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { CalendarLayout, ProfileImage } from "./Schedule.styles";
+import { CalendarLayout, ModalTitle, ProfileImage } from "./Schedule.styles";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 const Schedule = () => {
   const [currentEvents, setCurrentEvents] = useState([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalXY, setModalXY] = useState({ x: -1000, y: -1000 });
   const [imageUrls, setImageUrls] = useState([]);
+  const [clickEventData, setClickEventData] = useState([]);
+
+  const [isMouseOver, setIsMouseOver] = useState(false);
+
+  const [cookies] = useCookies(["signedUserNo"]);
+
+  const navigate = useNavigate();
 
   const ModalLayout = styled.div`
     width: 250px;
     height: 120px;
     background-color: whitesmoke;
     position: fixed;
-    border: 1px solid black;
+    border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 3px;
-    padding: 10px 10px;
+
     left: ${(props) => `${props.modalXY.x}px`};
     top: ${(props) => `${props.modalXY.y}px`};
 
@@ -31,10 +40,13 @@ const Schedule = () => {
 
   useEffect(() => {
     const date = dayjs().format("YYYYMM");
+    const signedUserNo = cookies.signedUserNo;
 
     const getEvents = async () => {
       try {
-        const res = await axios.get(`api/main?date=${date}&signedUserNo=2`);
+        const res = await axios.get(
+          `api/main?date=${date}&signedUserNo=${signedUserNo}`,
+        );
         const userCurrentEvents = res.data.projectList.map((item) => {
           return {
             projectNo: item.projectNo,
@@ -49,43 +61,22 @@ const Schedule = () => {
 
         setCurrentEvents(userCurrentEvents);
         getMemberPics(userCurrentEvents);
+        setClickEventData(
+          userCurrentEvents.filter((item) => {
+            return item.projectNo, item.title;
+          }),
+        );
       } catch (error) {
-        console.error("데이터 가져오기 실패 : ", error);
+        console.log(error);
       }
     };
     getEvents();
   }, []);
 
-  const date = dayjs().format("YYYYMM");
-
-  const getEvents = async () => {
-    try {
-      const res = await axios.get(`api/main?date=${date}&signedUserNo=2`);
-      const userCurrentEvents = res.data.projectList.map((item) => {
-        return {
-          projectNo: item.projectNo,
-          title: item.title,
-          start: item.startAt,
-          end: dayjs(item.deadline).add(1, "day").format("YYYY-MM-DD"),
-          color: "",
-          textColor: "",
-        };
-      });
-      console.log(userCurrentEvents);
-
-      setCurrentEvents(userCurrentEvents);
-      getMemberPics(userCurrentEvents);
-    } catch (error) {
-      console.error("데이터 가져오기 실패 : ", error);
-    }
-  };
-
   const getMemberPics = async (item) => {
-    console.log(item);
     const userProjectNo = await item.map((e) => {
       return e.projectNo;
     });
-    console.log(userProjectNo);
 
     // try {
     //   const res = await userProjectNo.map((item) => {
@@ -97,16 +88,13 @@ const Schedule = () => {
     //   setImageUrls(res.data.memberList);
 
     try {
-      // 비동기 요청 배열 생성
-      const requests = userProjectNo.map((projectNo) =>
+      const req = userProjectNo.map((projectNo) =>
         axios.get(`api/main/{projectNo}?projectNo=${projectNo}`),
       );
 
-      // 모든 비동기 요청 처리
-      const responses = await Promise.all(requests);
+      const res = await Promise.all(req);
 
-      // 결과에서 필요한 데이터 추출
-      const memberLists = responses.map((res) => res.data.memberList);
+      const memberLists = res.map((item) => item.data.memberList);
 
       console.log(memberLists);
       console.log(memberLists.flat());
@@ -133,21 +121,58 @@ const Schedule = () => {
     } else {
       setIsOpenModal(false);
     }
+    console.log("새로 요청됨", e.nativeEvent.target.textContent);
   };
 
   const clickModalHandler = (e) => {
     if (imageUrls.length === 0 && e.event) {
       getMemberPics();
       setImageUrls([]);
-      console.log(e);
     } else {
       return;
     }
   };
 
+  // const mouseOverHandler = async (e) => {
+  //   const classList = [...e.nativeEvent.target.classList];
+
+  //   const clickModalHandler = (e) => {
+  //     if (imageUrls.length === 0 && e.event) {
+  //       getMemberPics();
+  //       setImageUrls([]);
+  //     } else {
+  //       return;
+  //     }
+  //   };
+
+  //   setIsMouseOver(true);
+  //   if (isMouseOver === false) return;
+
+  //   if (
+  //     classList.filter(
+  //       (item) => item === "fc-event-title" || item === "fc-h-event",
+  //     ).length !== 0
+  //   ) {
+  //     setModalXY({
+  //       x: e.clientX,
+  //       y: e.clientY,
+  //     });
+  //     setIsOpenModal(true);
+  //     await clickModalHandler(e);
+  //     console.log("마우스오버");
+  //   }
+
+  //   setTimeout(() => {
+  //     setIsMouseOver(false);
+  //   }, 1000);
+  // };
+
   return (
-    <CalendarLayout onClick={(e) => eventClickHandler(e)}>
-      {/* <CalendarLayout> */}
+    <CalendarLayout
+      onClick={(e) => eventClickHandler(e)}
+      // onMouseOver={(e) => mouseOverHandler(e)}
+      // onMouseOut={() => setIsOpenModal(false)}
+    >
       <FullCalendar
         height={700}
         plugins={[dayGridPlugin, interactionPlugin]}
@@ -168,17 +193,21 @@ const Schedule = () => {
         events={currentEvents}
       />
       {isOpenModal && (
-        <ModalLayout modalXY={modalXY} currentEvents={currentEvents}>
-          <span>{currentEvents.title}의 구성원</span>
+        <ModalLayout modalXY={modalXY}>
+          <ModalTitle>
+            {clickEventData.map((item) => (
+              <span key={item.projectNo} onClick={() => navigate(`/project`)}>
+                {item.title}의 구성원
+              </span>
+            ))}
+          </ModalTitle>
           <Swiper
             slidesPerView={4}
             spaceBetween={20}
-            onClick={() => {
-              setIsOpenModal(true);
-            }}
+            style={{ padding: "5px 10px" }}
           >
-            {imageUrls.map((item) => (
-              <SwiperSlide key={item.userNo}>
+            {imageUrls.map((item, index) => (
+              <SwiperSlide key={index}>
                 <ProfileImage
                   src={
                     item.pic === null
@@ -186,6 +215,7 @@ const Schedule = () => {
                       : `${import.meta.env.VITE_BASE_URL}/pic/user/${item.userNo}/${item.pic}`
                   }
                   alt="구성원 프로필 이미지"
+                  onClick={() => navigate(`/mypage`)}
                 />
               </SwiperSlide>
             ))}

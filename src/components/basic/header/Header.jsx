@@ -19,7 +19,10 @@ const Header = () => {
         <BreadCrumb />
         <HeaderMenuWrap>
           <HeaderButton>
-            <BiAddToQueue style={{ fontSize: 30 }} />
+            <BiAddToQueue
+              style={{ fontSize: 30 }}
+              onClick={() => navigate(`/project/create`)}
+            />
           </HeaderButton>
           <HeaderButton>
             <BiMessage style={{ fontSize: 30 }} />

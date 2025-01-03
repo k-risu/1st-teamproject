@@ -1,25 +1,57 @@
-import { SideBarProfileImg } from "./SideBar.styles";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import {
+  BiBarChartSquare,
+  BiCalendar,
+  BiHomeAlt,
+  BiLogOut,
+  BiUserCircle,
+} from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 import {
   SideBarContainer,
   SideBarMenu,
   SideBarMenuWrap,
   SideBarProfile,
+  SideBarProfileImg,
 } from "./SideBar.styles";
-import {
-  BiHomeAlt,
-  BiCalendar,
-  BiBarChartSquare,
-  BiUserCircle,
-  BiLogOut,
-} from "react-icons/bi";
 
 const SideBar = () => {
+  const [userData, setUserData] = useState({});
+  const [cookies, removeCookie] = useCookies("signedUserNo");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const res = await axios.get(
+        `api/user?targetUserNo=${cookies.signedUserNo}&signedUserNo=${cookies.signedUserNo}&page=my`,
+      );
+      setUserData({ ...res.data });
+    };
+    getUserData();
+  }, []);
+
+  const removeCookieHandler = () => {
+    removeCookie("signedUserNo");
+    navigate("/signin");
+  };
+
   return (
     <>
       <SideBarContainer className="SideBarContainer">
         <SideBarProfile>
-          <SideBarProfileImg src="public\profile8.jpg" alt="profileImage" />
-          <span>단단무지</span>
+          <SideBarProfileImg
+            src={
+              userData.pic === null
+                ? "public/profile8.jpg"
+                : `${import.meta.env.VITE_BASE_URL}/pic/user/${cookies.signedUserNo}/${userData.pic}`
+            }
+            alt="profileImage"
+          />
+          <span>
+            {userData.nickname?.substring(0, userData.nickname?.indexOf("#"))}
+          </span>
         </SideBarProfile>
         <SideBarMenuWrap>
           <SideBarMenu>
@@ -38,7 +70,7 @@ const SideBar = () => {
             <BiUserCircle style={{ fontSize: 35 }} />
             <p>마이페이지</p>
           </SideBarMenu>
-          <SideBarMenu>
+          <SideBarMenu onClick={(e) => removeCookieHandler(e)}>
             <BiLogOut style={{ fontSize: 35 }} />
             <p>로그아웃</p>
           </SideBarMenu>
