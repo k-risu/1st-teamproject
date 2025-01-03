@@ -1,4 +1,8 @@
-import { NicknameInput, CheckButton } from "../MyPageEdit.styled";
+import {
+  NicknameInput,
+  CheckButton,
+  NicknameContainer,
+} from "../MyPageEdit.styled";
 
 function NicknameValidation({
   nickname,
@@ -8,8 +12,7 @@ function NicknameValidation({
   onNicknameChange,
 }) {
   return (
-    <div>
-      <label htmlFor="nickname"></label>
+    <NicknameContainer>
       <NicknameInput
         id="nickname"
         type="text"
@@ -26,7 +29,7 @@ function NicknameValidation({
           {isNicknameChecked ? "사용 가능" : "중복 확인"}
         </CheckButton>
       )}
-    </div>
+    </NicknameContainer>
   );
 }
 

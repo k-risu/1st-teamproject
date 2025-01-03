@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ProfileImage from "./components/ProfileImage";
 import UserForm from "./components/UserForm";
 import useFetchUserInfo from "./hooks/useFetchUserInfo";
-import { Header, ProfileWrapper } from "./MyPageEdit.styled";
+import { Container, Header, ProfileWrapper } from "./MyPageEdit.styled";
 
 function MyPageEdit() {
   const [pic, setPic] = useState(null);
@@ -97,7 +97,7 @@ function MyPageEdit() {
   };
 
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+    <Container>
       <Header>
         <h2>정보 변경 페이지</h2>
       </Header>
@@ -124,7 +124,7 @@ function MyPageEdit() {
         isEditable
         handleSubmit={handleSubmit}
       />
-    </div>
+    </Container>
   );
 }
 
