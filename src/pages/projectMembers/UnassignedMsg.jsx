@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { ModalOverlay } from "./UnassignedMsg.styles";
-import { MoreOptionsIcon } from "./UnassignedMsg.styles";
+import { AlertIcon, ModalOverlay } from "./UnassignedMsg.styles";
 
 const UnassignedMsg = ({ isOpen, closeModal }) => {
   useEffect(() => {
@@ -18,7 +17,7 @@ const UnassignedMsg = ({ isOpen, closeModal }) => {
   return (
     <ModalOverlay onClick={closeModal}>
       <div>
-        <MoreOptionsIcon />
+        <AlertIcon />
         <span>아직 담당자가 부여되지 않는 목표가 존재합니다.</span>
       </div>
     </ModalOverlay>
