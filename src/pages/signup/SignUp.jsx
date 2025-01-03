@@ -1,16 +1,19 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { SlArrowLeft } from "react-icons/sl";
+
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import MailModal from "./MailModal";
 import {
   AlreadyMemberBt,
+  ArrowLeft,
   BackBt,
   DuplicateCheckBt,
+  EmailErrorsMsg,
   ErrorsMsg,
+  MgsOver14Wrap,
   MgsWrap,
   Over14CheckBox,
   Over14Label,
@@ -65,14 +68,14 @@ function SignUp() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitted },
     trigger,
     getValues,
     setValue, // setValue 사용
     setError,
   } = useForm({
     resolver: yupResolver(loginSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
   // 회원가입 폼 제출 처리 함수
@@ -113,7 +116,10 @@ function SignUp() {
         return;
       }
       console.log("회원가입 성공:", response.data);
-      // navigate("/signin");
+
+      if (response.data.code === "OK") {
+        navigate("/signin");
+      }
       // 회원가입 후 처리 (로그인 페이지로 이동 등)
     } catch (error) {
       console.error("회원가입 실패:", error);
@@ -122,6 +128,9 @@ function SignUp() {
 
   // 이메일 인증 버튼 클릭 시
   const handleEmailVerification = async () => {
+    setIsModalOpen(true); // 모달 먼저 열기
+    setIsEmailVerified(false); // 초기화
+
     const isEmailValid = await trigger("email");
     if (isEmailValid) {
       try {
@@ -131,10 +140,7 @@ function SignUp() {
         );
 
         if (response.status === 200) {
-          console.log("성공 : ", response.data);
-          setIsModalOpen(true); // 인증 성공 시 모달 열기
-          setIsEmailVerified(true);
-          setValue("emailVerified", true); // 이메일 인증 상태를 true로 설정
+          console.log("인증 요청 성공:", response.data);
         } else {
           console.log("인증 요청 실패");
         }
@@ -142,14 +148,14 @@ function SignUp() {
         console.error("인증 요청 중 오류 발생:", error);
       }
     } else {
-      console.log("이메일이 유효하지 않습니다.");
+      console.log("유효하지 않은 이메일입니다.");
     }
   };
 
   // 인증 성공 시 이메일 인증 완료 상태로 변경
   const handleVerificationSuccess = () => {
-    setIsEmailVerified(true);
-    setValue("emailVerified", true); // 인증 성공 시 emailVerified 상태 변경
+    setValue("emailVerified", true); // react-hook-form에 상태 전달
+    setIsModalOpen(false); // 모달 닫기
   };
 
   // Over14 체크박스를 클릭하면 오류 메시지가 사라짐
@@ -165,7 +171,7 @@ function SignUp() {
       <SignUpForm onSubmit={handleSubmit(handleSubmitForm)}>
         <SignUpTop>
           <BackBt>
-            <SlArrowLeft />
+            <ArrowLeft onClick={() => navigate(-1)} />
           </BackBt>
           <SignUpText>회원가입</SignUpText>
         </SignUpTop>
@@ -182,6 +188,7 @@ function SignUp() {
                 <ErrorsMsg>{errors.email?.message}</ErrorsMsg>
               </MgsWrap>
             </SignUpField>
+
             <DuplicateCheckBt
               type="button"
               onClick={handleEmailVerification}
@@ -189,6 +196,11 @@ function SignUp() {
             >
               {isEmailVerified ? "인증완료" : "이메일 인증"}
             </DuplicateCheckBt>
+            <EmailErrorsMsg>
+              {isSubmitted && !isEmailVerified && (
+                <ErrorsMsg>이메일 인증이 필요합니다.</ErrorsMsg>
+              )}
+            </EmailErrorsMsg>
           </SignUpFieldDCBT>
 
           <SignUpFieldDCBT>
@@ -242,9 +254,11 @@ function SignUp() {
           <div>&nbsp;&nbsp;14세 이상입니다.</div>
         </Over14Label>
         {/* 오류 메시지는 Over14 체크박스가 체크되지 않았을 때만 표시 */}
-        {errors.Over14 && (
-          <ErrorsMsg over14={true}>{errors.Over14?.message}</ErrorsMsg>
-        )}
+        <MgsOver14Wrap>
+          {errors.Over14 && (
+            <ErrorsMsg over14={true}>{errors.Over14?.message}</ErrorsMsg>
+          )}
+        </MgsOver14Wrap>
 
         <SignUpBtWrap>
           <Link to="/signin">
@@ -252,11 +266,6 @@ function SignUp() {
           </Link>
           <SignUpBt type="submit">회원가입하기</SignUpBt>
         </SignUpBtWrap>
-
-        {/* 이메일 인증 메시지 표시 */}
-        {!isEmailVerified && (
-          <ErrorsMsg email={true}>이메일 인증이 필요합니다.</ErrorsMsg>
-        )}
       </SignUpForm>
 
       {/* 이메일 인증 모달 */}
@@ -265,6 +274,7 @@ function SignUp() {
         onClose={() => setIsModalOpen(false)}
         onVerificationSuccess={handleVerificationSuccess}
         email={getValues("email")}
+        setIsEmailVerified={setIsEmailVerified}
       />
     </SignUpLayout>
   );

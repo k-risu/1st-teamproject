@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { SlArrowLeft } from "react-icons/sl";
 
 const textFieldStyle = `
   border-radius: 20px;
@@ -100,6 +101,7 @@ export const SignUpFieldDCBT = styled.div`
   ${alignment}
   height: 65px;
   margin-bottom: 30px;
+  position: relative; /* 추가 */
 `;
 export const DuplicateCheckBt = styled.button`
   /* position: absolute; */
@@ -185,13 +187,30 @@ export const MgsWrap = styled.div`
 `;
 export const ErrorsMsg = styled.p`
   color: red;
-  ${(props) =>
-    props.over14
-      ? "margin-left:100px;position: absolute; left:15px;bottom:200px;"
-      : "0"};
-  margin-left: ${(props) => (props.over14 ? "100px" : "0")};
-  ${(props) =>
-    props.email
-      ? "margin-left:100px;position: absolute; right:-200px;top:290px;"
-      : "0"};
+
+  margin-left: 0;
+
+  white-space: nowrap; /* 텍스트가 줄바꿈되지 않고 한 줄로 유지됨 */
+  display: inline; /* 텍스트를 인라인으로 표시 */
+`;
+export const MgsOver14Wrap = styled.p`
+  position: relative;
+  display: flex; /* 플렉스 레이아웃으로 변경 */
+  justify-content: flex-start; /* 가로 방향으로 정렬 */
+  align-items: center; /* 세로 방향으로 가운데 정렬 */
+  left: 110px;
+  top: 10px;
+`;
+export const EmailErrorsMsg = styled.p`
+  position: absolute; /* 부모를 기준으로 위치 */
+  top: 20px;
+  right: -200px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: red; /* 에러 메시지 강조 */
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+`;
+export const ArrowLeft = styled(SlArrowLeft)`
+  cursor: pointer;
 `;

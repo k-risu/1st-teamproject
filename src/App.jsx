@@ -5,7 +5,7 @@ import Layout from "./components/Layout";
 import Schedule from "./pages/calendar/Schedule";
 import DashBoard from "./pages/dashboard/DashBoard";
 import MyPage from "./pages/mypage/MyPage";
-import MyPageEdit from "./pages/mypage/MyPageEdit";
+// import MyPageEdit from "./pages/mypage/MyPageEdit";
 import NotFound from "./pages/NotFound";
 import ProjectCreationPage from "./pages/projectCreation/ProjectCreationPage";
 import ProjectList from "./pages/projectlist/ProjectList";
@@ -27,7 +27,7 @@ function App() {
             {/* 새로운 비밀번호 재설정 페이지 */}
             <Route path="/signin/repw" element={<SigninRepw />} />
             <Route path="/mypage" element={<MyPage />} />
-            <Route path="/mypage/myedit" element={<MyPageEdit />} />
+            {/* <Route path="/mypage/myedit" element={<MyPageEdit />} /> */}
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/project" element={<DashBoard />} />
             <Route path="/project/list" element={<ProjectList />} />
