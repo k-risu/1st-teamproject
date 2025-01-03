@@ -25,7 +25,7 @@ const SideBar = () => {
   useEffect(() => {
     const getUserData = async () => {
       const res = await axios.get(
-        `api/user?targetUserNo=${cookies.signedUserNo}&signedUserNo=${cookies.signedUserNo}&page=my`,
+        `api/user?targetUserNo=${cookies.signedUserNo}&signedUserNo=${cookies.signedUserNo}`,
       );
       setUserData({ ...res.data });
     };
@@ -54,25 +54,25 @@ const SideBar = () => {
           </span>
         </SideBarProfile>
         <SideBarMenuWrap>
-          <SideBarMenu>
+          {/* <SideBarMenu>
             <BiHomeAlt style={{ fontSize: 35 }} />
             <p>홈</p>
-          </SideBarMenu>
+          </SideBarMenu> */}
           <SideBarMenu>
             <BiCalendar style={{ fontSize: 35 }} />
-            <p>일정</p>
+            <p>Home</p>
           </SideBarMenu>
           <SideBarMenu>
             <BiBarChartSquare style={{ fontSize: 35 }} />
-            <p>프로젝트</p>
+            <p>Project</p>
           </SideBarMenu>
-          <SideBarMenu>
+          <SideBarMenu onClick={() => navigate(`/mypage`)}>
             <BiUserCircle style={{ fontSize: 35 }} />
-            <p>마이페이지</p>
+            <p>MyPage</p>
           </SideBarMenu>
           <SideBarMenu onClick={(e) => removeCookieHandler(e)}>
             <BiLogOut style={{ fontSize: 35 }} />
-            <p>로그아웃</p>
+            <p>LogOut</p>
           </SideBarMenu>
         </SideBarMenuWrap>
       </SideBarContainer>

@@ -25,7 +25,6 @@ export const ProjectCreationForm = styled.form`
   flex-direction: column;
   h1 {
     font-size: 19.8px; // Reduced by 10%
-    margin-top: 2.7vw; // Reduced by 10%
     margin-right: 49.5vw; // Reduced by 10%
     margin-bottom: 5.4vh; // Reduced by 10%
   }
@@ -97,6 +96,7 @@ export const ProjectCreationLayout = styled.div`
 
 export const ProjectCreationWrap = styled.div`
   display: flex;
+
   label {
     font-size: 19.8px; // Reduced by 10%
     font-weight: 550;
@@ -107,7 +107,10 @@ export const ProjectCreationWrap = styled.div`
 export const CalendarWrap = styled.div`
   display: flex;
   flex-direction: column;
-  margin-right: calc(9px + 4.5vw); // Reduced by 10%
+  width: 50%;
+  height: 600px;
+  margin-right: 50px;
+
   label {
     margin-bottom: 3.6vh; // Reduced by 10%
   }
@@ -126,11 +129,13 @@ export const InformationWrap = styled.div`
   align-items: ${(props) => (props.projectDetails ? "none" : "center")};
   margin-top: 3.6px; // Reduced by 10%
   margin-bottom: 4.5vh; // Reduced by 10%
-  max-width: 612px; // Reduced by 10%
+  max-width: 650px; // Reduced by 10%
+  padding: 10px;
 `;
 
 export const InformationLabel = styled.label`
   margin-top: 4.5px; // Reduced by 10%
+  text-wrap: nowrap;
 `;
 
 export const InformationInput = styled.input`

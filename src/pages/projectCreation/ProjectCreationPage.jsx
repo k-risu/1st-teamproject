@@ -3,7 +3,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import axios from "axios";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import AddModal from "./AddModal";
 import { DateModal } from "./DateModal";
@@ -21,6 +21,9 @@ import {
   StyledLuCircleUser,
 } from "./ProjectCreationPage.styles";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { isLogin } from "../../utils/isLogin";
+import Swal from "sweetalert2";
 
 function ProjectCreationPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // AddModal 상태
@@ -39,13 +42,17 @@ function ProjectCreationPage() {
     setIsDateModalOpen(false); // DateModal 닫기
   };
 
+  const [cookies] = useCookies("signedUserNo");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    isLogin({ navigate, cookies });
+  }, []);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    trigger,
     reset,
   } = useForm({
     mode: "onSubmit",
@@ -71,8 +78,24 @@ function ProjectCreationPage() {
         },
       });
       console.log(res);
-      alert("프로젝트가 성공적으로 생성되었습니다!");
-      navigate(`/schedule`);
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "success",
+        title: "프로젝트가 생성되었습니다!",
+      });
+      setTimeout(() => {
+        navigate(`/schedule`);
+      }, 3000);
     } catch (error) {
       console.error(error);
       alert("프로젝트 생성 중 오류가 발생했습니다.");
@@ -107,7 +130,7 @@ function ProjectCreationPage() {
         <CalendarWrap>
           <label>프로젝트 기간</label>
           <FullCalendar
-            height={400}
+            height={500}
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             editable={true}
