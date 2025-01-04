@@ -97,7 +97,7 @@ function MyPageEdit() {
         formData.append("pic", pic);
       } else if (userInfo.pic && typeof userInfo.pic === "string") {
         // 기존 `pic`이 문자열 경로일 경우 유지
-        formData.append("existingPic", userInfo.pic); // 백엔드에서 기존 이미지 유지하는 키 필요
+        formData.append("pic", userInfo.pic); // 백엔드에서 기존 이미지 유지하는 키 필요
       }
 
       console.log("📌 최종 전송 데이터:", [...formData.entries()]); // 데이터 확인 로그

@@ -79,7 +79,6 @@ export const Label = styled.label`
 export const NicknameInput = styled.input`
   width: 400px; /* 동일한 너비 설정 */
   padding: 10px; /* 내부 여백 */
-  margin-bottom: 10px; /* 하단 여백 */
   border: 1px solid #ddd; /* 외곽선 색상 */
   border-radius: 8px; /* 둥근 모서리 */
   font-size: 14px; /* 글자 크기 */
@@ -96,7 +95,6 @@ export const NicknameContainer = styled.div`
   justify-content: space-between; /* 입력 필드와 버튼 간격 유지 */
   gap: 10px; /* 필드와 버튼 간 간격 */
   max-width: 700px; /* 최대 너비 설정 */
-  margin-bottom: 10px; /* 하단 여백 */
 `;
 
 // 입력 필드와 버튼을 포함하는 컨테이너 (닉네임 입력 및 중복 확인 버튼 포함)
@@ -129,8 +127,8 @@ export const CheckButton = styled.button`
   padding: 10px 15px; /* 버튼의 상하, 좌우 여백 */
   height: 40px; /* 입력 필드와 동일한 높이 설정 */
   background-color: ${({ isAvailable }) =>
-    isAvailable ? "green" : "gray"}; /* 사용 가능 여부에 따라 색상 변경 */
-  color: white;
+    isAvailable ? "skyblue" : "#f4f4f4"}; /* 사용 가능 여부에 따라 색상 변경 */
+  color: black;
   border: none;
   border-radius: 8px;
   font-size: 14px; /* 글자 크기 */
@@ -138,7 +136,7 @@ export const CheckButton = styled.button`
 
   &:hover {
     background-color: ${({ isAvailable }) =>
-      isAvailable ? "#008000" : "#808080"}; /* 호버 시 색상 변경 */
+      isAvailable ? "#008000" : "#276fdb"}; /* 호버 시 색상 변경 */
   }
 `;
 
@@ -152,7 +150,7 @@ export const SubmitButton = styled.button`
   font-size: 16px;
   cursor: pointer;
   white-space: nowrap;
-  flex-shrink: 0;
+  flex-shrink: 0; /* 크기 유지 */
   margin: 0 auto;
 
   &:hover {
