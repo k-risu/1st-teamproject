@@ -26,6 +26,8 @@ import renderProgressBar from "./renderProgressBar";
 import TaskDetails from "./TaskDetails";
 import ChangeTaskUser from "./Modal/ChangeTaskUser";
 import DeleteModal from "./Modal/DeleteModal";
+import { useNavigate } from "react-router-dom";
+import { isLogin } from "../../utils/isLogin";
 
 function ProjectMembers() {
   const projectNo = 1;
@@ -49,6 +51,8 @@ function ProjectMembers() {
   const [loading, setLoading] = useState(true);
   const [selectNickname, setSelectNickname] = useState(null);
 
+  const [isTask, setIsTask] = useState(null);
+
   const signedUserNo = cookies.signedUserNo; // 쿠키에서 signedUserNo 값 추출
 
   useEffect(() => {
@@ -65,14 +69,20 @@ function ProjectMembers() {
         }
       } catch (error) {
         console.error("API 호출 오류:", error);
-        setProjectTitle("단단무지");
-        setLeaderNo(1);
+        setProjectTitle("");
+        setLeaderNo("");
       } finally {
         setLoading(false);
       }
     };
     fetchProjectData();
   }, [projectNo, signedUserNo]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    isLogin({ navigate, cookies });
+  }, []);
 
   const handleCheck = async (scheduleNo) => {
     try {
@@ -209,6 +219,7 @@ function ProjectMembers() {
   const openDeleteModal = (userNo) => {
     setDeleteModalFor(userNo);
     setDeleteModal(true);
+    // console.log(signedUserNo, leaderNo);
   };
 
   if (loading) {
@@ -224,11 +235,12 @@ function ProjectMembers() {
         </ProjectTitle>
         <MembersSection>
           <MembersSectionBT
+            onClick={() => navigate("/project")}
             type="button"
             sideProps={true}
-            isOpenModal={openModalId}
-            closeModal={() => setMsgModal(false)}
-            onClick={() => setMsgModal(true)}
+            // isOpenModal={openModalId}
+            // closeModal={() => setMsgModal(false)}
+            // onClick={() => setMsgModal(true)}
           >
             대시보드
           </MembersSectionBT>
@@ -347,6 +359,8 @@ function ProjectMembers() {
           nickname={selectNickname}
           openChangeTaskUserModal={openChangeTaskUserModal}
           openDeleteModal={openDeleteModal}
+          isLeader={signedUserNo === leaderNo}
+          setIsTask={setIsTask}
         />
       )}
 
@@ -358,6 +372,7 @@ function ProjectMembers() {
           projectNo={projectNo}
           signedUserNo={signedUserNo}
           scheduleNo={selectedTask.scheduleNo}
+          refreshData={refreshData}
           userNo={selectedUserNo}
           mode="edit"
         />
@@ -379,6 +394,8 @@ function ProjectMembers() {
           signedUserNo={signedUserNo}
           refreshData={refreshData}
           allCloseModal={closeDeleteModal}
+          setisTask={setIsTask}
+          isTask={isTask}
           closeModal={() => setDeleteModal(null)}
         />
       )}

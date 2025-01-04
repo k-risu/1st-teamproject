@@ -125,6 +125,12 @@ function ProjectCreationPage() {
     setSelectDate(e);
   };
 
+  // 쿠키의 signedUserNo에 값이 없으면 로그인 하라는 알림창과 함께 이전 페이지로 이동
+
+  useEffect(() => {
+    isLogin({ navigate, cookies });
+  }, []);
+
   return (
     <ProjectCreationForm onSubmit={handleSubmit(handleSubmitForm)}>
       <h1>새 프로젝트 시작하기</h1>

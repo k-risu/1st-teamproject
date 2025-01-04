@@ -10,6 +10,8 @@ const DeleteModal = ({
   isLeader,
   projectNo,
   checkUnassignedTasks,
+  isTask,
+  setisTask,
 }) => {
   const handleDeleteTask = async () => {
     try {
@@ -18,6 +20,7 @@ const DeleteModal = ({
       });
       if (response.status === 200 && response.data.code === "OK") {
         console.log("항목이 삭제 되었습니다.");
+        setisTask(false);
         allCloseModal();
         refreshData();
       } else {
@@ -53,7 +56,7 @@ const DeleteModal = ({
   return (
     <ModalOverlay onClick={allCloseModal}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
-        {scheduleNo === true ? (
+        {isTask === true ? (
           <h2>이 할일을 삭제하시겠습니까?</h2>
         ) : isLeader ? (
           <h2>프로젝트에서 제외하시겠습니까?</h2>
@@ -62,7 +65,7 @@ const DeleteModal = ({
         )}
         <AlertIcon />
         <div>
-          {memberRole === signedUserNo ? (
+          {isTask === true ? (
             <button onClick={handleDeleteTask}>삭제</button>
           ) : isLeader ? (
             <button onClick={handleLeaveProject}>제외</button>

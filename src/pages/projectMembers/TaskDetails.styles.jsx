@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { FaExchangeAlt } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import { FiEdit } from "react-icons/fi";
 
 // 모달 오버레이 스타일
 export const ModalOverlay = styled.div`
@@ -83,13 +84,14 @@ export const UserinfoWrap = styled.div`
 `;
 export const ChangeIcon = styled(FaExchangeAlt)`
   font-size: 20px;
-  margin-right: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
   cursor: pointer;
 `;
 export const DeleteIcon = styled(RiDeleteBin6Fill)`
   font-size: 20px;
   margin-left: 10px;
-  margin-right: 5px;
+  margin-right: 10px;
   cursor: pointer;
 `;
 export const BtWrap = styled.div`
@@ -108,4 +110,10 @@ export const BtWrap = styled.div`
     font-size: 15px;
     margin-top: 15px;
   }
+`;
+export const EditIcon = styled(FiEdit)`
+  font-size: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  cursor: pointer;
 `;

@@ -38,6 +38,8 @@ const ChangeTaskUser = ({
       });
 
       if (response.status === 200) {
+        console.log(scheduleNo, signedUserNo, selectedUser, projectNo);
+
         closeModal(); // 모달 닫기
         refreshData();
       }
@@ -47,8 +49,8 @@ const ChangeTaskUser = ({
   };
 
   return (
-    <ModalOverlay onClick={closeModal}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+    <ModalOverlay>
+      <ModalContent>
         <h2>변경할 팀원 선택</h2>
         <ul>
           <li>
