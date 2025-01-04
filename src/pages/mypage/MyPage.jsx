@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useCookies } from "react-cookie";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import axios from "axios";
 import {
@@ -17,6 +17,8 @@ import {
 } from "./MyPage.styled";
 
 function MyPage() {
+  const location = useLocation();
+  const [clickUserNo, setClickUserNo] = useState(location.state?.targetUserNo);
   const [cookies] = useCookies(["signedUserNo"]); // 쿠키에서 signedUserNo 가져오기
   const { targetUserNo } = useParams(); // URL에서 targetUserNo 가져오기
   const [userData, setUserData] = useState({
@@ -44,7 +46,7 @@ function MyPage() {
     try {
       const response = await axios.get(endpoint, {
         params: {
-          targetUserNo: targetUserNo || signedUserNo,
+          targetUserNo: targetUserNo || clickUserNo,
           signedUserNo: signedUserNo,
         },
       });

@@ -18,6 +18,7 @@ const Schedule = () => {
   const [modalXY, setModalXY] = useState({ x: -1000, y: -1000 });
   const [imageUrls, setImageUrls] = useState([]);
   const [clickEventData, setClickEventData] = useState([]);
+  const [clickProjectNo, setClickProjectNo] = useState(0);
 
   const [isMouseOver, setIsMouseOver] = useState(false);
 
@@ -84,10 +85,7 @@ const Schedule = () => {
 
   const getMemberPics = async (item) => {
     try {
-      console.log(item);
       const res = await axios.get(`/api/main/{projectNo}?projectNo=${item}`);
-      console.log(res);
-
       setImageUrls(res.data.memberList);
     } catch (error) {
       console.log(error);
@@ -121,9 +119,6 @@ const Schedule = () => {
 
   const clickModalHandler = async (e) => {
     setImageUrls([]);
-    console.log(e);
-    console.log(e.event.title);
-    console.log(currentEvents);
     const clickEventTitle = e.event.title;
     const clickProjectData = await currentEvents.filter(
       (item) => clickEventTitle === item.title,
@@ -131,6 +126,7 @@ const Schedule = () => {
     const clickProjectNo = clickProjectData[0].projectNo;
 
     console.log(clickProjectData[0].projectNo);
+    setClickProjectNo(clickProjectData[0].projectNo);
 
     if (imageUrls.length === 0 && e.event) {
       getMemberPics(clickProjectNo);
@@ -155,7 +151,7 @@ const Schedule = () => {
 
     navigate(`/mypage`, {
       state: {
-        userNo: e,
+        targetUserNo: e,
       },
     });
   };
@@ -222,14 +218,18 @@ const Schedule = () => {
       {isOpenModal && (
         <ModalLayout modalXY={modalXY}>
           <ModalTitle>
-            {clickEventData.map((item) => (
-              <span
-                key={item.projectNo}
-                onClick={() => clickProjectHandler(item.projectNo)}
-              >
-                {item.title}의 구성원
-              </span>
-            ))}
+            {clickEventData.map((item) => {
+              if (clickProjectNo === item.projectNo) {
+                return (
+                  <span
+                    key={item.projectNo}
+                    onClick={() => clickProjectHandler(item.projectNo)}
+                  >
+                    {item.title}의 구성원
+                  </span>
+                );
+              }
+            })}
           </ModalTitle>
           <Swiper
             slidesPerView={4}

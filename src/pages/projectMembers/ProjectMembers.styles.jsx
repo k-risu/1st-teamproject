@@ -66,7 +66,7 @@ export const MembersLayoutTop = styled.div`
   margin-top: 50px;
 `;
 export const MembersSection = styled.div`
-  width: 160px;
+  width: 200px;
   display: flex;
   margin-right: 70px;
 `;

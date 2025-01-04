@@ -28,7 +28,7 @@ const Header = () => {
             <img src="public\logo-mock.png" alt="logo" />
           </HeaderLogo>
         )}
-        <BreadCrumb />
+        {/* <BreadCrumb /> */}
         <HeaderMenuWrap>
           <HeaderButton onClick={() => navigate(`/project/create`)}>
             <BiAddToQueue style={{ fontSize: 30 }} />

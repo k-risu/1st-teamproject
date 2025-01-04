@@ -24,15 +24,22 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { isLogin } from "../../utils/isLogin";
+import {
+  MembersSection,
+  MembersSectionBT,
+} from "../projectMembers/ProjectMembers.styles";
+import ToggleButton from "../../components/ToggleButton";
 
 const DashBoard = () => {
   const location = useLocation();
-
-  const [projectData, setProjectData] = useState({});
-  const [memberList, setMemberList] = useState([]);
   const [clickProjectNo, setclickProjectNo] = useState(
     location.state?.projectNo,
   );
+
+  const [projectData, setProjectData] = useState({});
+  const [memberList, setMemberList] = useState([]);
+
+  const [activeButton, setActiveButton] = useState("left");
 
   const navigate = useNavigate();
   const [cookies] = useCookies(["signedUserNo"]);
@@ -82,26 +89,34 @@ const DashBoard = () => {
   ];
 
   const projectCompleteHandler = async () => {
-    const completeData = { ...projectData.projectNo };
-    console.log(completeData);
-
     try {
       const res = await axios.post(
-        `api/project/${projectData.projectNo}?signedUserNo=62`,
+        `/api/project/${projectData.projectNo}`,
+        {},
+        {
+          params: {
+            signedUserNo: cookies.signedUserNo,
+          },
+        },
       );
       console.log(res);
       alert(`${projectData.title}를 완료하셨습니다!`);
+      navigate(`/project`);
     } catch (error) {
       console.log(error);
     }
   };
 
   const projectDeleteHandler = async () => {
-    const deleteData = { ...projectData, projectNo };
+    const deleteData = {
+      ...projectData,
+      projectNo: projectData.projectNo,
+      signedUserNo: cookies.signedUserNo,
+    };
     console.log(deleteData);
 
     try {
-      const res = await axios.delete(`api/project`, {
+      const res = await axios.delete(`/api/project`, {
         headers: {
           "Content-Type": "application/json",
           Accept: "*/*",
@@ -134,14 +149,27 @@ const DashBoard = () => {
     }
   };
 
+  const goProjectMembers = (e) => {
+    console.log(e);
+    setActiveButton("right");
+
+    navigate(`/project/members`, {
+      state: {
+        projectNo: e,
+      },
+    });
+  };
+
   return (
     <DashBoardContainer>
       <DashBoardTitleWrap>
         <span>{projectData.title}의 대시보드</span>
-        <DashBoardToggleWrap>
-          <button>대시보드</button>
-          <button>구성원</button>
-        </DashBoardToggleWrap>
+        <ToggleButton
+          leftLabel="대시보드"
+          rightLabel="구성원"
+          activeButton={activeButton}
+          onRightClick={() => goProjectMembers(clickProjectNo)}
+        />
       </DashBoardTitleWrap>
       <ContainerWrap style={{ marginTop: 30 }}>
         <CompletionContainer>
@@ -207,12 +235,6 @@ const DashBoard = () => {
           <ContainerTitle>프로젝트 세부내용</ContainerTitle>
           <div>{projectData.description}</div>
         </ProjectInfo>
-        {/* <ProjectData>
-          <ContainerTitle>프로젝트 자료</ContainerTitle>
-          <div>
-            <p>게시판</p>
-          </div>
-        </ProjectData> */}
         <ProjectData>
           <ButtonSection>
             <ButtonWrap>

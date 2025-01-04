@@ -26,11 +26,17 @@ import renderProgressBar from "./renderProgressBar";
 import TaskDetails from "./TaskDetails";
 import ChangeTaskUser from "./Modal/ChangeTaskUser";
 import DeleteModal from "./Modal/DeleteModal";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { isLogin } from "../../utils/isLogin";
+import ToggleButton from "../../components/ToggleButton";
 
-function ProjectMembers() {
-  const projectNo = 1;
+const ProjectMembers = () => {
+  const location = useLocation();
+
+  const [clickProjectNo, setclickProjectNo] = useState(
+    location.state?.projectNo,
+  );
+
   const [cookies] = useCookies(["signedUserNo"]); // 쿠키 가져오기
   // const signedUserNo = 2;
   const [projectTitle, setProjectTitle] = useState("");
@@ -53,12 +59,14 @@ function ProjectMembers() {
 
   const [isTask, setIsTask] = useState(null);
 
+  const [activeButton, setActiveButton] = useState("right");
+
   const signedUserNo = cookies.signedUserNo; // 쿠키에서 signedUserNo 값 추출
 
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
-        const response = await axios.get(`/api/project/${projectNo}`, {
+        const response = await axios.get(`/api/project/${clickProjectNo}`, {
           params: { signedUserNo },
         });
         if (response.status === 200) {
@@ -76,7 +84,7 @@ function ProjectMembers() {
       }
     };
     fetchProjectData();
-  }, [projectNo, signedUserNo]);
+  }, [clickProjectNo, signedUserNo]);
 
   const navigate = useNavigate();
 
@@ -102,9 +110,12 @@ function ProjectMembers() {
         } else {
           console.log("체크 업데이트 성공:", response.data);
 
-          const projectResponse = await axios.get(`/api/project/${projectNo}`, {
-            params: { signedUserNo },
-          });
+          const projectResponse = await axios.get(
+            `/api/project/${clickProjectNo}`,
+            {
+              params: { signedUserNo },
+            },
+          );
 
           if (projectResponse.status === 200) {
             const { memberList } = projectResponse.data.project;
@@ -119,7 +130,7 @@ function ProjectMembers() {
 
   const refreshData = async () => {
     try {
-      const response = await axios.get(`/api/project/${projectNo}`, {
+      const response = await axios.get(`/api/project/${clickProjectNo}`, {
         params: { signedUserNo },
       });
       if (response.status === 200) {
@@ -132,7 +143,7 @@ function ProjectMembers() {
   };
   const checkUnassignedTasks = async () => {
     try {
-      const response = await axios.get(`/api/project/${projectNo}`, {
+      const response = await axios.get(`/api/project/${clickProjectNo}`, {
         params: { signedUserNo },
       });
 
@@ -226,6 +237,17 @@ function ProjectMembers() {
     return <div>데이터를 로딩 중입니다...</div>;
   }
 
+  const goProjectDashBoard = (e) => {
+    console.log(e);
+    setActiveButton("left");
+
+    navigate(`/project/dashboard`, {
+      state: {
+        projectNo: e,
+      },
+    });
+  };
+
   return (
     <MembersLayout>
       <MembersLayoutTop>
@@ -234,7 +256,7 @@ function ProjectMembers() {
           <span>{projectTitle}</span>의 구성원
         </ProjectTitle>
         <MembersSection>
-          <MembersSectionBT
+          {/* <MembersSectionBT
             onClick={() => navigate("/project")}
             type="button"
             sideProps={true}
@@ -246,7 +268,13 @@ function ProjectMembers() {
           </MembersSectionBT>
           <MembersSectionBT type="button" sideProps={false}>
             구성원
-          </MembersSectionBT>
+          </MembersSectionBT> */}
+          <ToggleButton
+            leftLabel="대시보드"
+            rightLabel="구성원"
+            activeButton={activeButton}
+            onLeftClick={() => goProjectDashBoard(clickProjectNo)}
+          />
         </MembersSection>
       </MembersLayoutTop>
       {msgModal && (
@@ -317,13 +345,13 @@ function ProjectMembers() {
                   role={signedUserNo === leaderNo ? signedUserNo : false}
                   signedUserNo={signedUserNo}
                   memberRole={member.userNo}
-                  projectNo={projectNo}
+                  projectNo={clickProjectNo}
                   onOpenDeleteModal={() => openDeleteModal(member.userNo)}
                   onAddNewTask={() => openTaskModal(member.userNo)}
                 />
                 {deleteModalFor && deleteModalFor === member.userNo && (
                   <DeleteModal
-                    projectNo={projectNo}
+                    projectNo={clickProjectNo}
                     signedUserNo={signedUserNo}
                     refreshData={refreshData}
                     allCloseModal={closeDeleteModal}
@@ -336,7 +364,7 @@ function ProjectMembers() {
                   <AddNewTaskModal
                     isOpen={openTaskModalFor === member.userNo}
                     closeModal={closeTaskModal}
-                    projectNo={projectNo}
+                    projectNo={clickProjectNo}
                     signedUserNo={signedUserNo}
                     memberRole={member.userNo}
                     refreshData={refreshData}
@@ -369,7 +397,7 @@ function ProjectMembers() {
           isOpen={true}
           closeModal={closeTaskModal}
           initialData={selectedTask}
-          projectNo={projectNo}
+          projectNo={clickProjectNo}
           signedUserNo={signedUserNo}
           scheduleNo={selectedTask.scheduleNo}
           refreshData={refreshData}
@@ -380,7 +408,7 @@ function ProjectMembers() {
       {selectedTask && changeTaskUserModal && (
         <ChangeTaskUser
           selectedTask={selectedTask}
-          projectNo={projectNo}
+          projectNo={clickProjectNo}
           signedUserNo={signedUserNo}
           scheduleNo={selectedTask.scheduleNo}
           members={members}
@@ -401,6 +429,6 @@ function ProjectMembers() {
       )}
     </MembersLayout>
   );
-}
+};
 
 export default ProjectMembers;
