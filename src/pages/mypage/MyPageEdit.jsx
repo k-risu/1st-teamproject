@@ -39,6 +39,7 @@ function MyPageEdit() {
     if (file) {
       setPic(file);
     }
+    console.log(file);
   };
 
   const handleCheckNickname = async () => {

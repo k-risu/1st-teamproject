@@ -26,7 +26,6 @@ const AddModal = ({ isOpen, closeModal, addTeamMember, setTeamMembers }) => {
     setTeamMembers((prev) => [...prev, userInfo.userNo]);
     setMemberList((prev) => [...prev, userInfo.nickname]);
     setSearchInput("");
-    setUserInfo(null);
   };
 
   const handleSearch = async () => {

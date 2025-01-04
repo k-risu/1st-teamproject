@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
         {pathname === "/schedule" ||
         pathname === "/project" ||
         pathname === "/project/create" ||
-        pathname === "/project/list" ||
+        pathname === "/project/dashboard" ||
         pathname === "/project/members" ||
         pathname === "/mypage" ||
         pathname === "/mypage/edit" ? (
@@ -23,7 +23,7 @@ const Layout = ({ children }) => {
           {pathname === "/schedule" ||
           pathname === "/project" ||
           pathname === "/project/create" ||
-          pathname === "/project/list" ||
+          pathname === "/project/dashboard" ||
           pathname === "/project/members" ||
           pathname === "/mypage" ||
           pathname === "/mypage/edit" ? (
@@ -35,7 +35,7 @@ const Layout = ({ children }) => {
           {pathname === "/schedule" ||
           pathname === "/project" ||
           pathname === "/project/create" ||
-          pathname === "/project/list" ||
+          pathname === "/project/dashboard" ||
           pathname === "/project/members" ||
           pathname === "/mypage" ||
           pathname === "/mypage/edit" ? (

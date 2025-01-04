@@ -63,14 +63,16 @@ function ProjectCreationPage() {
   };
 
   const handleSubmitForm = async (data) => {
+    console.log(teamMembers);
+
     try {
       const payload = {
-        signedUserNo: 62,
+        signedUserNo: cookies.signedUserNo,
         title: data.title,
         description: data.description,
         startAt: eventData.startAt,
         deadLine: eventData.deadLine,
-        memberNoList: teamMembers.map((item) => item.userNo),
+        memberNoList: teamMembers.map((item) => item),
       };
       const res = await axios.post(`/api/project`, payload, {
         headers: {
@@ -122,6 +124,12 @@ function ProjectCreationPage() {
   const eventHandler = (e) => {
     setSelectDate(e);
   };
+
+  // 쿠키의 signedUserNo에 값이 없으면 로그인 하라는 알림창과 함께 이전 페이지로 이동
+
+  useEffect(() => {
+    isLogin({ navigate, cookies });
+  }, []);
 
   return (
     <ProjectCreationForm onSubmit={handleSubmit(handleSubmitForm)}>

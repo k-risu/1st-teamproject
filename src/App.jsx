@@ -29,10 +29,13 @@ function App() {
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/myedit" element={<MyPageEdit />} />
             <Route path="/schedule" element={<Schedule />} />
-            <Route path="/project" element={<DashBoard />} />
-            <Route path="/project/list" element={<ProjectList />} />
-            <Route path="/project/members" element={<ProjectMembers />} />
-            <Route path="/project/create" element={<ProjectCreationPage />} />
+            <Route path="/project">
+              <Route index element={<ProjectList />} />
+              <Route path="dashboard" element={<DashBoard />} />
+              <Route path="members" element={<ProjectMembers />} />
+              <Route path="create" element={<ProjectCreationPage />} />
+            </Route>
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

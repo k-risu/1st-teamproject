@@ -16,7 +16,7 @@ import SigninPw from "./SignInPw";
 
 function SignIn() {
   // 상태 관리
-  const [cookies, setCookie] = useCookies(["token"]); // 쿠키 관리 상태 추가
+  const [cookies, setCookie] = useCookies(); // 쿠키 관리 상태 추가
   const navigate = useNavigate(); // 페이지 이동 관리
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
@@ -53,10 +53,8 @@ function SignIn() {
           setLoginError("");
 
           // signedUserNo를 쿠키에 저장
-          setCookie("signedUserNo", data.signedUserNo, { path: "/" });
+          setCookie("signedUserNo", data.signedUserNo);
 
-          // token도 쿠키에 저장
-          setCookie("token", data.token, { path: "/" }); // 로그인 토큰을 쿠키에 저장
           navigate("/schedule"); // 마이페이지로 이동
         } else if (data.code === "IE") {
           setLoginError("아이디를 확인해주세요.");

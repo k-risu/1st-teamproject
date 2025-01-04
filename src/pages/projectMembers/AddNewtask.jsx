@@ -40,6 +40,7 @@ const AddTaskModal = ({
     if (!taskContent.trim()) return;
 
     let taskData = {
+      signedUserNo: signedUserNo,
       sighInUserNo: signedUserNo,
       scheduleUserNo: memberRole,
       projectNo,
@@ -70,6 +71,7 @@ const AddTaskModal = ({
 
         const response = await axios.put(`/api/project/schedule`, taskData);
         if (response.status === 200) {
+          refreshData();
           console.log("할 일 수정 성공:", response.data);
           console.log(response.data);
 
@@ -85,8 +87,8 @@ const AddTaskModal = ({
   if (!isOpen) return null;
 
   return (
-    <ModalOverlay onClick={closeModal}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+    <ModalOverlay>
+      <ModalContent>
         <h2>
           {mode === "add"
             ? "할 일 등록"

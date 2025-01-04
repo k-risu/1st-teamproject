@@ -5,6 +5,7 @@ import {
   BtWrap,
   ChangeIcon,
   DeleteIcon,
+  EditIcon,
   ModalContent,
   ModalOverlay,
   ModalText,
@@ -19,6 +20,8 @@ const TaskDetails = ({
   nickname,
   openChangeTaskUserModal,
   openDeleteModal,
+  isLeader,
+  setIsTask,
 }) => {
   const [taskData, setTaskData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -72,19 +75,28 @@ const TaskDetails = ({
   }
 
   return (
-    <ModalOverlay onClick={closeModal}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+    <ModalOverlay>
+      <ModalContent>
         <UserinfoWrap>
           <h2>{nickname}</h2>
           <div>
-            <ChangeIcon onClick={() => openChangeTaskUserModal(taskData)} />
-            <DeleteIcon onClick={openDeleteModal} />
+            <EditIcon onClick={() => editBt(taskData)} />
+            {isLeader ? (
+              <ChangeIcon onClick={() => openChangeTaskUserModal(taskData)} />
+            ) : (
+              ""
+            )}
+            <DeleteIcon
+              onClick={() => {
+                openDeleteModal();
+                setIsTask(true);
+              }}
+            />
           </div>
         </UserinfoWrap>
         <ModalInput readOnly value={taskData.content} />
         <ModalText readOnly value={taskData.detail || ""} />
         <BtWrap>
-          <button onClick={() => editBt(taskData)}>수정</button>
           <button onClick={closeModal}>닫기</button>
         </BtWrap>
       </ModalContent>

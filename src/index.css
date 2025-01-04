@@ -7,7 +7,10 @@
   --fc-highlight-color: rgb(169, 222, 249, 0.5);
   --fc-today-bg-color: rgb(255, 205, 178, 0.5);
 }
-
+@font-face {
+  font-family: "GmarketSansMedium";
+  src: url("public/GmarketSansMedium.woff");
+}
 * {
   margin: 0;
   padding: 0;
@@ -25,7 +28,8 @@ html {
   font-size: 16px;
 }
 body {
-  font-family: "chab";
+  font-family: "GmarketSansMedium";
+  font-weight: 500;
   font-size: var(--font-size-base);
   color: var(--primary-color);
 

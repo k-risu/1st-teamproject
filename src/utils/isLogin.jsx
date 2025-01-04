@@ -8,7 +8,7 @@ export const isLogin = async ({ navigate, cookies }) => {
       toast: true,
       position: "center",
       showConfirmButton: false,
-      timer: 3000,
+      timer: 2000,
       timerProgressBar: true,
       didOpen: (toast) => {
         toast.onmouseenter = Swal.stopTimer;
@@ -20,7 +20,7 @@ export const isLogin = async ({ navigate, cookies }) => {
       title: "로그인이 필요합니다",
     });
     setTimeout(() => {
-      navigate(-1);
+      navigate(`/signin`);
     }, 2000);
   } else {
     return;

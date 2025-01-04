@@ -10,6 +10,7 @@ import "swiper/css";
 import { CalendarLayout, ModalTitle, ProfileImage } from "./Schedule.styles";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { isLogin } from "../../utils/isLogin";
 
 const Schedule = () => {
   const [currentEvents, setCurrentEvents] = useState([]);
@@ -21,8 +22,11 @@ const Schedule = () => {
   const [isMouseOver, setIsMouseOver] = useState(false);
 
   const [cookies] = useCookies(["signedUserNo"]);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    isLogin({ navigate, cookies });
+  }, []);
 
   const ModalLayout = styled.div`
     width: 250px;
@@ -44,9 +48,12 @@ const Schedule = () => {
 
     const getEvents = async () => {
       try {
-        const res = await axios.get(
-          `api/main?date=${date}&signedUserNo=${signedUserNo}`,
-        );
+        const res = await axios.get(`/api/main`, {
+          params: {
+            date: date,
+            signedUserNo: signedUserNo,
+          },
+        });
         const userCurrentEvents = res.data.projectList.map((item) => {
           return {
             projectNo: item.projectNo,
@@ -57,6 +64,8 @@ const Schedule = () => {
             textColor: "",
           };
         });
+
+        console.log(res);
         console.log(userCurrentEvents);
 
         setCurrentEvents(userCurrentEvents);
@@ -74,31 +83,12 @@ const Schedule = () => {
   }, []);
 
   const getMemberPics = async (item) => {
-    const userProjectNo = await item.map((e) => {
-      return e.projectNo;
-    });
-
-    // try {
-    //   const res = await userProjectNo.map((item) => {
-    //     return axios.get(`api/main/{projectNo}?projectNo=${item}`);
-    //   });
-
-    //   console.log(res);
-
-    //   setImageUrls(res.data.memberList);
-
     try {
-      const req = userProjectNo.map((projectNo) =>
-        axios.get(`api/main/{projectNo}?projectNo=${projectNo}`),
-      );
+      console.log(item);
+      const res = await axios.get(`/api/main/{projectNo}?projectNo=${item}`);
+      console.log(res);
 
-      const res = await Promise.all(req);
-
-      const memberLists = res.map((item) => item.data.memberList);
-
-      console.log(memberLists);
-      console.log(memberLists.flat());
-      setImageUrls(memberLists.flat());
+      setImageUrls(res.data.memberList);
     } catch (error) {
       console.log(error);
     }
@@ -120,17 +110,54 @@ const Schedule = () => {
       await clickModalHandler(e);
     } else {
       setIsOpenModal(false);
+      if (imageUrls.length === 0) {
+        return;
+      } else {
+        setImageUrls([]);
+      }
     }
     console.log("새로 요청됨", e.nativeEvent.target.textContent);
   };
 
-  const clickModalHandler = (e) => {
+  const clickModalHandler = async (e) => {
+    setImageUrls([]);
+    console.log(e);
+    console.log(e.event.title);
+    console.log(currentEvents);
+    const clickEventTitle = e.event.title;
+    const clickProjectData = await currentEvents.filter(
+      (item) => clickEventTitle === item.title,
+    );
+    const clickProjectNo = clickProjectData[0].projectNo;
+
+    console.log(clickProjectData[0].projectNo);
+
     if (imageUrls.length === 0 && e.event) {
-      getMemberPics();
+      getMemberPics(clickProjectNo);
       setImageUrls([]);
     } else {
       return;
     }
+  };
+
+  const clickProjectHandler = (e) => {
+    console.log(e);
+
+    navigate(`/project/dashboard`, {
+      state: {
+        projectNo: e,
+      },
+    });
+  };
+
+  const clickUserHandler = (e) => {
+    console.log(e);
+
+    navigate(`/mypage`, {
+      state: {
+        userNo: e,
+      },
+    });
   };
 
   // const mouseOverHandler = async (e) => {
@@ -196,7 +223,10 @@ const Schedule = () => {
         <ModalLayout modalXY={modalXY}>
           <ModalTitle>
             {clickEventData.map((item) => (
-              <span key={item.projectNo} onClick={() => navigate(`/project`)}>
+              <span
+                key={item.projectNo}
+                onClick={() => clickProjectHandler(item.projectNo)}
+              >
                 {item.title}의 구성원
               </span>
             ))}
@@ -215,7 +245,7 @@ const Schedule = () => {
                       : `${import.meta.env.VITE_BASE_URL}/pic/user/${item.userNo}/${item.pic}`
                   }
                   alt="구성원 프로필 이미지"
-                  onClick={() => navigate(`/mypage`)}
+                  onClick={() => clickUserHandler(item.userNo)}
                 />
               </SwiperSlide>
             ))}

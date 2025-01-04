@@ -21,24 +21,35 @@ import {
 } from "./DashBoard.styles";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { isLogin } from "../../utils/isLogin";
 
 const DashBoard = () => {
+  const location = useLocation();
+
   const [projectData, setProjectData] = useState({});
   const [memberList, setMemberList] = useState([]);
+  const [clickProjectNo, setclickProjectNo] = useState(
+    location.state?.projectNo,
+  );
 
   const navigate = useNavigate();
+  const [cookies] = useCookies(["signedUserNo"]);
 
-  const projectNo = 34;
-  const signedUserNo = 62;
+  useEffect(() => {
+    isLogin({ navigate, cookies });
+  }, []);
 
   useEffect(() => {
     const getProject = async () => {
       try {
-        const res = await axios.get(
-          `api/project/${projectNo}?signedUserNo=${signedUserNo}`,
-        );
-        console.log(res.data.project);
+        const res = await axios.get(`/api/project/${clickProjectNo}`, {
+          params: {
+            signedUserNo: cookies.signedUserNo,
+          },
+        });
+        console.log(res);
         setProjectData(res.data.project);
         setMemberList(res.data.project.memberList);
       } catch (error) {
@@ -86,7 +97,7 @@ const DashBoard = () => {
   };
 
   const projectDeleteHandler = async () => {
-    const deleteData = { ...projectData, projectNo, signedUserNo };
+    const deleteData = { ...projectData, projectNo };
     console.log(deleteData);
 
     try {
