@@ -1,3 +1,4 @@
+import { checkUnassignedTasks, refreshData } from "../projectMemberUtils";
 import { AlertIcon, ModalContent, ModalOverlay } from "./DeleteModal.styles";
 import axios from "axios";
 
@@ -5,13 +6,14 @@ const DeleteModal = ({
   allCloseModal,
   scheduleNo,
   signedUserNo,
-  refreshData,
   memberRole,
   isLeader,
   projectNo,
-  checkUnassignedTasks,
   isTask,
-  setisTask,
+  setIsTask,
+  setMembers,
+  setMsgModal,
+  closeTaskModalFor,
 }) => {
   const handleDeleteTask = async () => {
     try {
@@ -20,9 +22,13 @@ const DeleteModal = ({
       });
       if (response.status === 200 && response.data.code === "OK") {
         console.log("항목이 삭제 되었습니다.");
-        setisTask(false);
+        setIsTask((prevState) => ({
+          ...prevState,
+          isTask: false,
+        }));
         allCloseModal();
-        refreshData();
+        closeTaskModalFor();
+        refreshData(projectNo, signedUserNo, setMembers);
       } else {
         console.log("삭제 하지 못했습니다.");
       }
@@ -41,20 +47,34 @@ const DeleteModal = ({
       });
       if (response.status === 200 && response.data.code === "OK") {
         console.log("프로젝트에서 나갔습니다.");
-        await checkUnassignedTasks();
+        console.log(projectNo, signedUserNo, setMembers);
+
+        await checkUnassignedTasks(
+          projectNo,
+          signedUserNo,
+          setMembers,
+          setMsgModal,
+        );
         allCloseModal();
-        refreshData();
+        refreshData(projectNo, signedUserNo, setMembers);
       } else {
         console.log("나가지 못했습니다.");
       }
     } catch (err) {
       console.log("API 호출 중 오류가 발생했습니다.", err);
-      console.log(memberRole, signedUserNo, projectNo);
     }
   };
 
   return (
-    <ModalOverlay onClick={allCloseModal}>
+    <ModalOverlay
+      onClick={() => {
+        allCloseModal,
+          setIsTask((prevState) => ({
+            ...prevState,
+            isTask: false,
+          }));
+      }}
+    >
       <ModalContent onClick={(e) => e.stopPropagation()}>
         {isTask === true ? (
           <h2>이 할일을 삭제하시겠습니까?</h2>
