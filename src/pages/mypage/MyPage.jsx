@@ -53,7 +53,13 @@ function MyPage() {
         console.log(response.data);
 
         setUserData({
-          nickname: response.data.nickname || "",
+          nickname: response.data.nickname
+            ? response.data.nickname
+                .replace(/#0000/g, "")
+                .split("#")
+                .slice(0, 2)
+                .join("#")
+            : "", // `#0000` 제거 후 저장
           email: response.data.email || "",
           pic: response.data.pic || "https://via.placeholder.com/150",
           userId: response.data.userId || "",
