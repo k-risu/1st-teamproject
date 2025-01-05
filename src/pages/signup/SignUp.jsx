@@ -32,7 +32,7 @@ import {
 
 // 유효성 검사 스키마
 const loginSchema = yup.object({
-  nickname: yup.string().required("닉네임은 필수 입니다."),
+  nickname: yup.string().required("아이디은 필수 입니다."),
   email: yup
     .string()
     .email("유효한 이메일을 입력하세요.")
@@ -63,6 +63,7 @@ function SignUp() {
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 여부
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기/닫기 상태
   const [over14, setOver14] = useState(false); // Over14 상태를 직접 관리
+  // const [isEmail, setIsEmail] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -128,11 +129,13 @@ function SignUp() {
 
   // 이메일 인증 버튼 클릭 시
   const handleEmailVerification = async () => {
-    setIsModalOpen(true); // 모달 먼저 열기
-    setIsEmailVerified(false); // 초기화
-
     const isEmailValid = await trigger("email");
+    // setIsEmail(isEmailValid);
+    // console.log(isEmailValid);
+
     if (isEmailValid) {
+      setIsModalOpen(true); // 모달 먼저 열기
+      setIsEmailVerified(false); // 초기화
       try {
         const email = getValues("email");
         const response = await axios.get(

@@ -11,6 +11,7 @@ import {
   CardImg,
   CardTod,
   CheckedIcon,
+  CrownIcon,
   MemberInfo,
   MemberInfoWrap,
   Members,
@@ -151,7 +152,7 @@ const ProjectMembers = () => {
         />
       );
     } else {
-      return <CardImg noImage />;
+      return <CardImg src="../../../public/default_profile.png" noImage />;
     }
   }, []);
 
@@ -169,14 +170,16 @@ const ProjectMembers = () => {
   const renderMoreOptionsIcon = useCallback(
     (signedUserNo, member, leaderNo, moreOptionsOpenModal) => {
       if (signedUserNo === member.userNo || signedUserNo === leaderNo) {
-        return (
-          <MoreOptionsIcon
-            onClick={(e) => {
-              console.log("클릭된 멤버의 e:", e); // 클릭된 멤버만 출력
-              moreOptionsOpenModal(member.userNo, e); // 클릭한 멤버의 ID만 넘겨줌
-            }}
-          />
-        );
+        if (member.lock === 0) {
+          return (
+            <MoreOptionsIcon
+              onClick={(e) => {
+                console.log("클릭된 멤버의 e:", e); // 클릭된 멤버만 출력
+                moreOptionsOpenModal(member.userNo, e); // 클릭한 멤버의 ID만 넘겨줌
+              }}
+            />
+          );
+        }
       }
       return null;
     },
@@ -237,6 +240,7 @@ const ProjectMembers = () => {
               <Card key={member.userNo || index}>
                 <CardTod />
                 <MemberInfo>
+                  {leaderNo === member.userNo ? <CrownIcon /> : ""}
                   {renderCardImg(member.userNo, member.pic, member.nickname)}
                   {renderMemberInfoWrap(member, leaderNo)}
                   {renderMoreOptionsIcon(
