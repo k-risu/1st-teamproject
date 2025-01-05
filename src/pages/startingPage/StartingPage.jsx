@@ -7,7 +7,9 @@ function StartingPage() {
   return (
     <>
       <Auth>
-        <LogoImg />
+        <LogoImg>
+          <img src="public/로고400x400.png" />
+        </LogoImg>
         <Link to={`/signup`}>
           <SignUpBt>회원가입</SignUpBt>
         </Link>

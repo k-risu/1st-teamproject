@@ -17,7 +17,7 @@ const Header = () => {
               navigate("/");
             }}
           >
-            <img src="public\logo-mock.png" alt="logo" />
+            <img src="public/로고100x100.png" alt="logo" />
           </HeaderLogo>
         ) : (
           <HeaderLogo
@@ -25,7 +25,7 @@ const Header = () => {
               navigate("/schedule");
             }}
           >
-            <img src="public\logo-mock.png" alt="logo" />
+            <img src="public/로고100x100.png" alt="logo" />
           </HeaderLogo>
         )}
         {/* <BreadCrumb /> */}
