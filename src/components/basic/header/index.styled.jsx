@@ -1,25 +1,15 @@
 import styled from "@emotion/styled";
 
-export const SideBarContainer = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  width: 10%;
-  height: 100vh;
-  align-items: center;
-  position: absolute;
-  border-right: 1px solid black;
-  gap: 30px;
-
-  background-color: whitesmoke;
-`;
-
 export const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   height: 80px;
   width: 90%;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
   background-color: white;
+
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.01),
+    0 6px 6px rgba(0, 0, 0, 0.05);
 `;

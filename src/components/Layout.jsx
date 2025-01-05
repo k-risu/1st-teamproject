@@ -1,18 +1,51 @@
+import { useLocation } from "react-router-dom";
 import Header from "./basic/header/index";
-import { SideBarContainer } from "./basic/header/index.styled";
 import SideBar from "./basic/sidebar/SideBar";
-import { Container, Main, MainContainer } from "./Layout.styles";
+import { Container, FullMain, Main, MainContainer } from "./Layout.styles";
 
 const Layout = ({ children }) => {
+  const { pathname } = useLocation();
   return (
     <>
-      <Container className="Container">
-        <SideBarContainer className="SideBarContainer">
+      <Container>
+        {pathname === "/schedule" ||
+        pathname === "/project" ||
+        pathname === "/project/create" ||
+        pathname === "/project/edit" ||
+        pathname === "/project/dashboard" ||
+        pathname === "/project/members" ||
+        pathname === "/mypage" ||
+        pathname === "/mypage/edit" ? (
           <SideBar />
-        </SideBarContainer>
-        <MainContainer className="MainContainer">
-          <Header></Header>
-          <Main className="Main">{children}</Main>
+        ) : (
+          <></>
+        )}
+        <MainContainer>
+          {pathname === "/schedule" ||
+          pathname === "/project" ||
+          pathname === "/project/create" ||
+          pathname === "/project/edit" ||
+          pathname === "/project/dashboard" ||
+          pathname === "/project/members" ||
+          pathname === "/mypage" ||
+          pathname === "/mypage/edit" ? (
+            <Header />
+          ) : (
+            <></>
+          )}
+
+          {pathname === "/schedule" ||
+          pathname === "/project" ||
+          pathname === "/project/create" ||
+          pathname === "/project/edit" ||
+          pathname === "/project/dashboard" ||
+          pathname === "/project/members" ||
+          pathname === "/mypage" ||
+          pathname === "/mypage/edit" ? (
+            <Main>{children}</Main>
+          ) : (
+            <FullMain>{children}</FullMain>
+          )}
         </MainContainer>
       </Container>
     </>

@@ -8,10 +8,10 @@ function StartingPage() {
     <>
       <Auth>
         <LogoImg />
-        <Link to="/">
+        <Link to={`/signup`}>
           <SignUpBt>회원가입</SignUpBt>
         </Link>
-        <Link to="/">
+        <Link to={`/signin`}>
           <LoginBt>로그인</LoginBt>
         </Link>
       </Auth>

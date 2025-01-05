@@ -1,43 +1,81 @@
-import { SideBarMenu, SideBarMenuWrap, SideBarProfile } from "./SideBar.styles";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import {
-  BiHomeAlt,
-  BiCalendar,
   BiBarChartSquare,
-  BiUserCircle,
+  BiCalendar,
   BiLogOut,
+  BiUserCircle,
 } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
+import {
+  SideBarContainer,
+  SideBarMenu,
+  SideBarMenuWrap,
+  SideBarProfile,
+  SideBarProfileImg,
+} from "./SideBar.styles";
 
 const SideBar = () => {
+  const [userData, setUserData] = useState({});
+  const [cookies, removeCookie] = useCookies("signedUserNo");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const res = await axios.get(`/api/user`, {
+        params: {
+          targetUserNo: cookies.signedUserNo,
+          signedUserNo: cookies.signedUserNo,
+        },
+      });
+      console.log(res);
+
+      setUserData({ ...res.data });
+    };
+    getUserData();
+  }, []);
+
+  const removeCookieHandler = () => {
+    removeCookie("signedUserNo");
+    navigate("/signin");
+  };
+
   return (
     <>
-      <div>
-        <SideBarProfile
-          src="public\profile-image-mock.jpg"
-          alt="profileImage"
-        />
-        <p>단단무지</p>
-      </div>
-      <SideBarMenuWrap>
-        <SideBarMenu>
-          <BiHomeAlt style={{ fontSize: 30 }} />홈
-        </SideBarMenu>
-        <SideBarMenu>
-          <BiCalendar style={{ fontSize: 30 }} />
-          일정
-        </SideBarMenu>
-        <SideBarMenu>
-          <BiBarChartSquare style={{ fontSize: 40 }} />
-          프로젝트
-        </SideBarMenu>
-        <SideBarMenu>
-          <BiUserCircle style={{ fontSize: 45 }} />
-          마이페이지
-        </SideBarMenu>
-        <SideBarMenu>
-          <BiLogOut style={{ fontSize: 40 }} />
-          로그아웃
-        </SideBarMenu>
-      </SideBarMenuWrap>
+      <SideBarContainer className="SideBarContainer">
+        <SideBarProfile>
+          <SideBarProfileImg
+            src={
+              userData.pic === null
+                ? "public/default_profile.jpg"
+                : `${import.meta.env.VITE_BASE_URL}/pic/user/${cookies.signedUserNo}/${userData.pic}`
+            }
+            alt="profileImage"
+          />
+          <span>
+            {userData.nickname?.substring(0, userData.nickname?.indexOf("#"))}
+          </span>
+        </SideBarProfile>
+        <SideBarMenuWrap>
+          <SideBarMenu onClick={() => navigate(`/schedule`)}>
+            <BiCalendar style={{ fontSize: 35 }} />
+            <p>Home</p>
+          </SideBarMenu>
+          <SideBarMenu onClick={() => navigate(`/project`)}>
+            <BiBarChartSquare style={{ fontSize: 35 }} />
+            <p>Project</p>
+          </SideBarMenu>
+          <SideBarMenu onClick={() => navigate(`/mypage`)}>
+            <BiUserCircle style={{ fontSize: 35 }} />
+            <p>MyPage</p>
+          </SideBarMenu>
+          <SideBarMenu onClick={(e) => removeCookieHandler(e)}>
+            <BiLogOut style={{ fontSize: 35 }} />
+            <p>LogOut</p>
+          </SideBarMenu>
+        </SideBarMenuWrap>
+      </SideBarContainer>
     </>
   );
 };
