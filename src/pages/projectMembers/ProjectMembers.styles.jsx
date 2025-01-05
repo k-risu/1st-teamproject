@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { SlOptionsVertical } from "react-icons/sl";
 import { FaCheck } from "react-icons/fa";
+import { FaCrown } from "react-icons/fa6";
 
 // 상수들
 const topColor = "#fcc0b2";
@@ -150,7 +151,7 @@ export const MemberInfoWrap = styled.div`
   }
   span {
     font-size: 12px;
-    color: #c0c0c0;
+    color: #333333;
   }
 `;
 
@@ -254,4 +255,11 @@ export const BottomMembers = styled.div`
   /* justify-content: space-between; */
 
   gap: 20px;
+`;
+export const CrownIcon = styled(FaCrown)`
+  position: absolute;
+  color: #e8d001;
+  font-size: 20px;
+  top: 10px;
+  left: 23px;
 `;
