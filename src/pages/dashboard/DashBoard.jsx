@@ -130,23 +130,20 @@ const DashBoard = () => {
       navigate(-1);
     }
   };
+  const goProjectEdit = async (e) => {
+    console.log(e);
 
-  const projectEditHandler = async () => {
-    const editData = { ...projectData };
-
-    try {
-      // const res = await axios.put(`api/project`, {
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Accept: "*/*",
-      //   },
-      //   data: editData,
-      // });
-      console.log("프로젝트 정보를 수정합니다");
-      navigate(`/project/edit`);
-    } catch (error) {
-      console.log(error);
-    }
+    console.log("프로젝트 정보를 수정합니다");
+    navigate(`/project/edit`, {
+      state: {
+        projectNo: e.projectNo,
+        title: e.title,
+        description: e.description,
+        startAt: e.startAt,
+        deadLine: e.deadLine,
+        memberList: e.memberList,
+      },
+    });
   };
 
   const goProjectMembers = (e) => {
@@ -156,6 +153,15 @@ const DashBoard = () => {
     navigate(`/project/members`, {
       state: {
         projectNo: e,
+      },
+    });
+  };
+  const goUserPage = (e) => {
+    console.log(e);
+
+    navigate(`/mypage`, {
+      state: {
+        targetUserNo: e,
       },
     });
   };
@@ -218,11 +224,11 @@ const DashBoard = () => {
                   <SlideImage
                     src={
                       item.pic === null
-                        ? `public/profile8.jpg`
+                        ? "public/default_profile.jpg"
                         : `${import.meta.env.VITE_BASE_URL}/pic/user/${item.userNo}/${item.pic}`
                     }
                     alt="유저 프로필"
-                    onClick={() => navigate(`mypage`)}
+                    onClick={() => goUserPage(item.userNo)}
                   />
                 </SwiperSlide>
               ))}
@@ -241,7 +247,7 @@ const DashBoard = () => {
               <ButtonDescription style={{ textDecorationLine: "underline" }}>
                 프로젝트 정보를 수정하고 싶다면?
               </ButtonDescription>
-              <ButtonTitle onClick={() => projectEditHandler()}>
+              <ButtonTitle onClick={() => goProjectEdit(projectData)}>
                 프로젝트 수정하기
               </ButtonTitle>
             </ButtonWrap>

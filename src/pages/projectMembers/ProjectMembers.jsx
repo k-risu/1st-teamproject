@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-
 import { useLocation, useNavigate } from "react-router-dom";
 import { isLogin } from "../../utils/isLogin";
 import DeleteModal from "./Modal/DeleteModal";
@@ -23,6 +22,7 @@ import {
   Task,
   TaskList,
 } from "./ProjectMembers.styles";
+
 import { chunkMembers, handleCheck } from "./projectMemberUtils";
 
 import React from "react";
@@ -189,7 +189,6 @@ const ProjectMembers = () => {
 
   const goProjectDashBoard = (e) => {
     console.log(e);
-
     setActiveButton("left");
 
     navigate(`/project/dashboard`, {

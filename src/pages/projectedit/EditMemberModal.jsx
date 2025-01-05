@@ -9,18 +9,20 @@ import {
   SearchMember,
   SearchProfile,
   FindUserData,
-} from "./AddModal.styles";
+} from "../projectCreation/AddModal.styles";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const AddModal = ({
+const EditMemberModal = ({
   isOpen,
   closeModal,
   addTeamMember,
   teamMembers,
   setTeamMembers,
 }) => {
-  const [memberList, setMemberList] = useState([]);
+  const [memberList, setMemberList] = useState([
+    teamMembers.map((item) => item.nickname),
+  ]);
   const [userInfo, setUserInfo] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
@@ -34,22 +36,7 @@ const AddModal = ({
       0,
       clickUserData[0].nickname?.indexOf("#"),
     );
-    // const checkNickname = memberList.filter((item) => {
-    //   return item === userNickname;
-    // });
-    console.log(userNickname);
-    // console.log(checkNickname);
-    console.log(memberList);
 
-    // if (
-    //   memberList.filter((item) => {
-    //     console.log(item);
-
-    //     return item === userNickname;
-    //   })
-    // ) {
-    //   alert("이미 존재하는 사용자입니다");
-    // } else {
     const Toast = Swal.mixin({
       toast: true,
       position: "center",
@@ -65,11 +52,10 @@ const AddModal = ({
       icon: "success",
       title: `${userNickname}님을 추가했어요`,
     });
-    setTeamMembers((prev) => [...prev, clickUserData[0].userNo]);
+    setTeamMembers((prev) => [...prev, userInfo]);
     setMemberList((prev) => [...prev, userNickname]);
     setSearchInput("");
     setUserInfo([]);
-    // }
   };
 
   const handleSearch = async () => {
@@ -104,12 +90,6 @@ const AddModal = ({
     }
   };
 
-  // const handleKeyPress = async (e) => {
-  //   if (e.key === "Enter") {
-  //     await handleSearch();
-  //   }
-  // };
-
   return (
     <ModalOverlay onClick={closeModal}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -117,7 +97,6 @@ const AddModal = ({
           placeholder="닉네임을 검색해보세요"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          // onKeyDown={() => handleKeyPress()}
         />
         <SearchMember
           onClick={() => {
@@ -175,4 +154,4 @@ const AddModal = ({
   );
 };
 
-export default AddModal;
+export default EditMemberModal;

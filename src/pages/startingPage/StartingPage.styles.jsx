@@ -36,11 +36,15 @@ const buttonStyle = `
 // `;
 
 export const LogoImg = styled.div`
-  height: 268px;
-  width: 268px;
-  background-color: #7d7f87;
-  margin-bottom: 43px;
-  border-radius: 43px;
+  border-radius: 50px;
+  margin-bottom: 100px;
+  background-color: transparent;
+
+  img {
+    height: 300px;
+    width: 300px;
+    filter: drop-shadow(10px 6px 6px #c3c3c3);
+  }
 `;
 
 export const SignUpBt = styled.button`

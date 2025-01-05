@@ -83,9 +83,13 @@ const Schedule = () => {
     getEvents();
   }, []);
 
-  const getMemberPics = async (item) => {
+  const getMemberPics = async (e) => {
     try {
-      const res = await axios.get(`/api/main/{projectNo}?projectNo=${item}`);
+      const res = await axios.get(`/api/main/{projectNo}`, {
+        params: {
+          projectNo: e,
+        },
+      });
       setImageUrls(res.data.memberList);
     } catch (error) {
       console.log(error);
@@ -108,31 +112,25 @@ const Schedule = () => {
       await clickModalHandler(e);
     } else {
       setIsOpenModal(false);
-      if (imageUrls.length === 0) {
-        return;
-      } else {
-        setImageUrls([]);
-      }
+      setImageUrls([]);
     }
     console.log("새로 요청됨", e.nativeEvent.target.textContent);
   };
 
   const clickModalHandler = async (e) => {
-    setImageUrls([]);
     const clickEventTitle = e.event.title;
     const clickProjectData = await currentEvents.filter(
       (item) => clickEventTitle === item.title,
     );
     const clickProjectNo = clickProjectData[0].projectNo;
 
-    console.log(clickProjectData[0].projectNo);
     setClickProjectNo(clickProjectData[0].projectNo);
 
     if (imageUrls.length === 0 && e.event) {
       getMemberPics(clickProjectNo);
       setImageUrls([]);
     } else {
-      return;
+      setImageUrls([]);
     }
   };
 

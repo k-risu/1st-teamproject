@@ -38,7 +38,6 @@ export const SideBarProfileImg = styled.img`
   height: 80px;
   border-radius: 50px;
   margin-top: 100px;
-  padding: 5px;
   border: 1px solid rgba(0, 0, 0, 0.2);
 `;
 

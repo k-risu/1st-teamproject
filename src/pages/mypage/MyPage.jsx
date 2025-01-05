@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useCookies } from "react-cookie";
-import { useLocation, useParams } from "react-router-dom";
-
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Footer,
@@ -24,15 +23,15 @@ function MyPage() {
   const [userData, setUserData] = useState({
     nickname: "로그인 전 테스트 유저", // 임의 닉네임
     email: "testuser@example.com", // 임의 이메일
-    pic: "https://via.placeholder.com/150", // 기본 프로필 이미지 URL
+    pic: "public/default_profile.jpg", // 기본 프로필 이미지 URL
     userId: "로그인 전 testID123", // 임의 유저 ID
     userStatusMessage: "상태 메시지 테스트", // 임의 상태 메시지
     myInfo: true, // 정보 변경 버튼이 표시되도록 설정
   });
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // 쿠키와 localStorage에서 데이터 가져오기
-  const signedUserNo = cookies.signedUserNo || localStorage.getItem("userId");
+  const signedUserNo = cookies.signedUserNo;
 
   // fetchUserData 함수 선언 (useCallback으로 변경)
   const fetchUserData = useCallback(async () => {
@@ -46,14 +45,14 @@ function MyPage() {
     try {
       const response = await axios.get(endpoint, {
         params: {
-          targetUserNo: targetUserNo || clickUserNo,
+          targetUserNo: clickUserNo ? clickUserNo : signedUserNo,
           signedUserNo: signedUserNo,
         },
       });
+      console.log(response);
 
       if (response.data.code === "OK") {
         console.log(response.data);
-
         setUserData({
           nickname: response.data.nickname
             ? response.data.nickname
@@ -63,7 +62,7 @@ function MyPage() {
                 .join("#")
             : "", // `#0000` 제거 후 저장
           email: response.data.email || "",
-          pic: response.data.pic || "https://via.placeholder.com/150",
+          pic: response.data.pic || "public/default_profile.jpg",
           userId: response.data.userId || "",
           userStatusMessage: response.data.statusMessage || "",
           myInfo: response.data.targetUserNo === response.data.signedUserNo,
@@ -83,6 +82,16 @@ function MyPage() {
   const handleImageClick = () => setIsPopupOpen(true);
   const handleClosePopup = () => setIsPopupOpen(false);
 
+  const userEditClick = (e) => {
+    console.log(e);
+
+    // navigate(`/mypage`, {
+    //   state: {
+    //     targetUserNo: e,
+    //   },
+    // });
+  };
+
   return (
     <div>
       <Header>
@@ -95,7 +104,7 @@ function MyPage() {
               src={`${import.meta.env.VITE_BASE_URL}/pic/user/${targetUserNo || signedUserNo}/${userData.pic}`}
               alt="프로필"
               style={{
-                borderRadius: "50%",
+                borderRadius: "50px",
                 width: "100px",
                 height: "100px",
                 cursor: "pointer",
@@ -174,9 +183,10 @@ function MyPage() {
       {userData.myInfo && (
         <Footer>
           <button
-            onClick={() => {
-              window.location.href = `/mypage/myedit?targetUserNo=${signedUserNo}`;
-            }}
+            // onClick={() => {
+            //   window.location.href = `/mypage/myedit?targetUserNo=${signedUserNo}`;
+            // }}
+            onClick={() => userEditClick(userData)}
           >
             정보 변경하기
           </button>

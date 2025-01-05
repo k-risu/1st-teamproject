@@ -1,13 +1,13 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout";
-
 import Schedule from "./pages/calendar/Schedule";
 import DashBoard from "./pages/dashboard/DashBoard";
 import MyPage from "./pages/mypage/MyPage";
 import MyPageEdit from "./pages/mypage/MyPageEdit";
 import NotFound from "./pages/NotFound";
 import ProjectCreationPage from "./pages/projectCreation/ProjectCreationPage";
+import ProjectEditPage from "./pages/projectedit/ProjectEditPage";
 import ProjectList from "./pages/projectlist/ProjectList";
 import ProjectMembers from "./pages/projectMembers/ProjectMembers";
 import SignIn from "./pages/signin/SignIn";
@@ -34,6 +34,7 @@ function App() {
               <Route path="dashboard" element={<DashBoard />} />
               <Route path="members" element={<ProjectMembers />} />
               <Route path="create" element={<ProjectCreationPage />} />
+              <Route path="edit" element={<ProjectEditPage />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

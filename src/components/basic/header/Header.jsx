@@ -17,7 +17,7 @@ const Header = () => {
               navigate("/");
             }}
           >
-            <img src="public\logo-mock.png" alt="logo" />
+            <img src="public/로고100x100.png" alt="logo" />
           </HeaderLogo>
         ) : (
           <HeaderLogo
@@ -25,7 +25,7 @@ const Header = () => {
               navigate("/schedule");
             }}
           >
-            <img src="public\logo-mock.png" alt="logo" />
+            <img src="public/로고100x100.png" alt="logo" />
           </HeaderLogo>
         )}
         {/* <BreadCrumb /> */}
@@ -33,12 +33,12 @@ const Header = () => {
           <HeaderButton onClick={() => navigate(`/project/create`)}>
             <BiAddToQueue style={{ fontSize: 30 }} />
           </HeaderButton>
-          <HeaderButton>
+          {/* <HeaderButton>
             <BiMessage style={{ fontSize: 30 }} />
           </HeaderButton>
           <HeaderButton>
             <BiBulb style={{ fontSize: 30 }} />
-          </HeaderButton>
+          </HeaderButton> */}
         </HeaderMenuWrap>
       </HeaderContainer>
     </>

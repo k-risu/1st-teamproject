@@ -23,12 +23,13 @@ const SideBar = () => {
 
   useEffect(() => {
     const getUserData = async () => {
-      const res = await axios.get(`api/user`, {
+      const res = await axios.get(`/api/user`, {
         params: {
           targetUserNo: cookies.signedUserNo,
           signedUserNo: cookies.signedUserNo,
         },
       });
+      console.log(res);
       setUserData({ ...res.data });
     };
     getUserData();
@@ -46,7 +47,7 @@ const SideBar = () => {
           <SideBarProfileImg
             src={
               userData.pic === null
-                ? "public/profile8.jpg"
+                ? "public/default_profile.jpg"
                 : `${import.meta.env.VITE_BASE_URL}/pic/user/${cookies.signedUserNo}/${userData.pic}`
             }
             alt="profileImage"

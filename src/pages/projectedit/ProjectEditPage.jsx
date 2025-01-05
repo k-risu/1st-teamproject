@@ -5,8 +5,8 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import AddModal from "./AddModal";
-import { DateModal } from "./DateModal";
+import EditMemberModal from "./EditMemberModal";
+import EditDateModal from "./EditDateModal";
 import {
   AddTeamMemberBt,
   CalendarWrap,
@@ -19,18 +19,34 @@ import {
   ProjectCreationWrap,
   ProjectInformation,
   StyledLuCircleUser,
-} from "./ProjectCreationPage.styles";
-import { useNavigate } from "react-router-dom";
+} from "../projectCreation/ProjectCreationPage.styles";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { isLogin } from "../../utils/isLogin";
 import Swal from "sweetalert2";
 
-function ProjectCreationPage() {
+const ProjectEditPage = () => {
+  const location = useLocation();
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // AddModal 상태
   const [isDateModalOpen, setIsDateModalOpen] = useState(false); // DateModal 상태
-  const [teamMembers, setTeamMembers] = useState([]); // 팀 구성원 상태
+  const [teamMembers, setTeamMembers] = useState([location.state?.memberList]); // 팀 구성원 상태
   const [eventData, setEventData] = useState({});
-  const [selectDate, setSelectDate] = useState([]);
+  const [selectDate, setSelectDate] = useState([
+    {
+      start: location.state?.startAt,
+      end: dayjs(location.state?.deadLine).add(1, "day").format("YYYY-MM-DD"),
+    },
+  ]);
+
+  const [clickProjectData, setclickProjectData] = useState({
+    projectNo: location.state?.projectNo,
+    title: location.state?.title,
+    description: location.state?.description,
+    startAt: location.state?.startAt,
+    deadLine: location.state?.deadLine,
+    memberList: location.state?.memberList,
+  });
 
   const openAddModal = () => setIsAddModalOpen(true); // AddModal 열기
   const closeAddModal = () => setIsAddModalOpen(false); // AddModal 닫기
@@ -59,28 +75,44 @@ function ProjectCreationPage() {
   });
 
   const addTeamMember = () => {
+    setTeamMembers(teamMembers);
     closeAddModal();
   };
 
   const handleSubmitForm = async (data) => {
+    console.log(data);
+    console.log(eventData);
+    console.log(clickProjectData.projectNo);
+    console.log(clickProjectData.memberList);
+    console.log(teamMembers[1]);
+
     try {
       const payload = {
         signedUserNo: cookies.signedUserNo,
+        projectNo: clickProjectData.projectNo,
         title: data.title,
         description: data.description,
         startAt: eventData.startAt,
         deadLine: eventData.deadLine,
-        memberNoList: teamMembers.map((item) => item),
+        // memberNoList: teamMembers[1].filter((item) => {
+        //   return item.userNo;
+        // }),
       };
-      const res = await axios.post(`/api/project`, payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const res = await axios.put(`/api/project`, payload);
+      const resMember = await axios.post(`/api/project/search-user`, {
+        signedUserNo: cookies.signedUserNo,
+        projectNo: clickProjectData.projectNo,
+        insertUserNoList: teamMembers[1].filter((item) => {
+          return item.userNo;
+        }),
+        deleteUserNoList: [],
       });
       console.log(res);
+      console.log(resMember);
+
       const Toast = Swal.mixin({
         toast: true,
-        position: "center",
+        position: "top",
         showConfirmButton: false,
         timer: 2000,
         timerProgressBar: true,
@@ -91,7 +123,7 @@ function ProjectCreationPage() {
       });
       Toast.fire({
         icon: "success",
-        title: "프로젝트가 생성되었습니다!",
+        title: "프로젝트가 수정되었습니다!",
       });
       setTimeout(() => {
         navigate(`/schedule`);
@@ -137,7 +169,7 @@ function ProjectCreationPage() {
 
   return (
     <ProjectCreationForm onSubmit={handleSubmit(handleSubmitForm)}>
-      <h1>새 프로젝트 시작하기</h1>
+      <h1>{clickProjectData.title} 수정하기</h1>
       <ProjectCreationWrap>
         <CalendarWrap>
           <label>프로젝트 기간</label>
@@ -162,7 +194,7 @@ function ProjectCreationPage() {
             events={selectDate}
           />
           {isDateModalOpen && (
-            <DateModal
+            <EditDateModal
               isOpen={isDateModalOpen}
               closeModal={closeDateModal}
               eventData={eventData}
@@ -175,13 +207,19 @@ function ProjectCreationPage() {
         <ProjectInformation>
           <InformationWrap>
             <label>프로젝트 이름</label>
-            <InformationInput {...register("title")} />
+            <InformationInput
+              {...register("title")}
+              defaultValue={clickProjectData.title}
+            />
             {/* 오류 메세지 */}
             <p style={{ color: "red" }}>{errors.title?.message}</p>
           </InformationWrap>
           <InformationWrap projectDetails={true}>
             <InformationLabel>프로젝트 내용</InformationLabel>
-            <InformationText {...register("description")} />
+            <InformationText
+              {...register("description")}
+              defaultValue={clickProjectData.description}
+            />
             {/* 오류 메세지 */}
             <p style={{ color: "red" }}>{errors.description?.message}</p>
           </InformationWrap>
@@ -194,17 +232,17 @@ function ProjectCreationPage() {
           </InformationWrap>
         </ProjectInformation>
       </ProjectCreationWrap>
-      <ProjectCreationFormBT type="submit">생성하기</ProjectCreationFormBT>
+      <ProjectCreationFormBT type="submit">수정하기</ProjectCreationFormBT>
       {/* AddModal을 위한 버튼 클릭 시 */}
-      <AddModal
+      <EditMemberModal
         isOpen={isAddModalOpen}
         closeModal={closeAddModal}
         addTeamMember={addTeamMember}
-        teamMembers={teamMembers}
+        teamMembers={clickProjectData.memberList}
         setTeamMembers={setTeamMembers}
       />
     </ProjectCreationForm>
   );
-}
+};
 
-export default ProjectCreationPage;
+export default ProjectEditPage;

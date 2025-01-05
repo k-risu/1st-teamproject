@@ -23,14 +23,16 @@ const information = `
 export const ProjectCreationForm = styled.form`
   ${alignment};
   flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #fbfbfb;
+
   h1 {
+    justify-content: flex-start;
     font-size: 19.8px; // Reduced by 10%
     margin-right: 49.5vw; // Reduced by 10%
     margin-bottom: 5.4vh; // Reduced by 10%
   }
-  width: 100%;
-  height: 100%;
-  background-color: #fbfbfb;
 `;
 
 export const ModalOverlay = styled.div`
@@ -107,7 +109,7 @@ export const ProjectCreationWrap = styled.div`
 export const CalendarWrap = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 400px;
   height: 600px;
   margin-right: 50px;
 

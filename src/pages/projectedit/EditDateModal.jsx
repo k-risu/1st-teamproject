@@ -4,10 +4,10 @@ import {
   ModalContent,
   ModalInput,
   ModalOverlay,
-} from "./DateModal.styles";
+} from "../projectCreation/DateModal.styles";
 import dayjs from "dayjs";
 
-export const DateModal = ({
+const EditDateModal = ({
   isOpen,
   closeModal,
   eventData,
@@ -51,7 +51,6 @@ export const DateModal = ({
       console.log("종료일을 선택해주세요");
     }
     console.log(selectDate);
-
   };
 
   return (
@@ -86,3 +85,4 @@ export const DateModal = ({
     </ModalOverlay>
   );
 };
+export default EditDateModal;

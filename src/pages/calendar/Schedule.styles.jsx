@@ -73,6 +73,7 @@ export const ProfileImage = styled.img`
   height: 50px;
   border-radius: 50px;
   margin-top: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 
   cursor: pointer;
 `;

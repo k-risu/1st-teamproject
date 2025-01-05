@@ -11,6 +11,8 @@ export const HeaderLogo = styled.div`
   display: flex;
   width: 100px;
   height: 100%;
+  padding: 10px;
+  margin-left: 10px;
   cursor: pointer;
 `;
 

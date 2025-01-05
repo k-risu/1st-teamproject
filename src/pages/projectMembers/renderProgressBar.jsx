@@ -68,7 +68,6 @@ const CustomBullet = ({ data }) => {
           );
         })}
       </svg>
-
       {tooltip.visible && (
         <div
           style={{
