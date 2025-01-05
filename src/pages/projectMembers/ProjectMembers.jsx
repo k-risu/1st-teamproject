@@ -1,9 +1,12 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import AddNewTaskModal from "./AddNewTask";
-import MoreOptionsModal from "./MoreOptionsModal";
+import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
+import { useLocation, useNavigate } from "react-router-dom";
+import { isLogin } from "../../utils/isLogin";
+import DeleteModal from "./Modal/DeleteModal";
+import MoreOptionsModal from "./Modal/MoreOptionsModal";
+import OpenTaskModal from "./Modal/OpenTaskModal";
 import {
   Card,
   CardImg,
@@ -15,19 +18,22 @@ import {
   MembersLayout,
   MembersLayoutTop,
   MembersSection,
-  MembersSectionBT,
   MoreOptionsIcon,
   ProjectTitle,
   Task,
   TaskList,
 } from "./ProjectMembers.styles";
-import UnassignedMsg from "./UnassignedMsg";
+import { chunkMembers, handleCheck } from "./projectMemberUtils";
+
+import React from "react";
+import UnassignedMsg from "./Modal/UnassignedMsg";
 import renderProgressBar from "./renderProgressBar";
-import TaskDetails from "./TaskDetails";
-import ChangeTaskUser from "./Modal/ChangeTaskUser";
-import DeleteModal from "./Modal/DeleteModal";
-import { useLocation, useNavigate } from "react-router-dom";
-import { isLogin } from "../../utils/isLogin";
+
+// Memoize the modals using React.memo
+const MoreOptionsModalMemo = React.memo(MoreOptionsModal);
+const DeleteModalMemo = React.memo(DeleteModal);
+const OpenTaskModalMemo = React.memo(OpenTaskModal);
+
 import ToggleButton from "../../components/ToggleButton";
 
 const ProjectMembers = () => {
@@ -36,33 +42,55 @@ const ProjectMembers = () => {
   const [clickProjectNo, setclickProjectNo] = useState(
     location.state?.projectNo,
   );
-
-  const [cookies] = useCookies(["signedUserNo"]); // 쿠키 가져오기
-  // const signedUserNo = 2;
-  const [projectTitle, setProjectTitle] = useState("");
-  const [members, setMembers] = useState([]);
-  const [leaderNo, setLeaderNo] = useState(null);
-  const [openModalId, setOpenModalId] = useState(null);
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-  const [msgModal, setMsgModal] = useState(false);
-  const [openTaskModalFor, setOpenTaskModalFor] = useState(null);
-  const [deleteModal, setDeleteModal] = useState(null);
-  const [deleteModalFor, setDeleteModalFor] = useState(null);
-
-  const [changeTaskUserModal, setChangeTaskUserModal] = useState(null);
-
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [selectedUserNo, setSelectedUserNo] = useState(null);
-  const [modalMode, setModalMode] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [selectNickname, setSelectNickname] = useState(null);
-
-  const [isTask, setIsTask] = useState(null);
-
   const [activeButton, setActiveButton] = useState("right");
 
-  const signedUserNo = cookies.signedUserNo; // 쿠키에서 signedUserNo 값 추출
+  const [loading, setLoading] = useState(true); // 페이지 로딩 안되었을 때
 
+  const [cookies] = useCookies(["signedUserNo"]); // 쿠키 가져오기
+
+  // 프로젝트 정보
+  const [projectTitle, setProjectTitle] = useState("");
+  const [leaderNo, setLeaderNo] = useState(null);
+  const [members, setMembers] = useState([]);
+
+  // MoreOptionsModal
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const [moreOptionsModalId, setMoreOptionsModalId] = useState("");
+
+  // MsgModal
+  const [msgModal, setMsgModal] = useState(false);
+
+  // DeleteModal
+  const [deleteModalFor, setDeleteModalFor] = useState(false); // 유저 제외하기
+  const [deleteModal, setDeleteModal] = useState(false); // 할일 삭제
+
+  // OpenTaskModal
+  const [modalMode, setModalMode] = useState("");
+  const [openTaskModalFor, setOpenTaskModalFor] = useState(false);
+
+  // 어떤 프로젝트인지 확인
+  // const projectNo = 45; // 프랍스로 받을 예정
+  const signedUserNo = cookies.signedUserNo; // 쿠키 데이터 받아오는거
+
+  // 선택한 할일 정보
+  const [selectedInfo, setSelectedInfo] = useState({
+    userNo: null,
+    nickname: "",
+    task: null,
+    modalMode: null,
+    isTask: null,
+  });
+
+  // DeleteModal 열기 함수
+  const openDeleteModal = useCallback((userNo) => {
+    setDeleteModalFor(userNo);
+    setDeleteModal(true);
+    setMoreOptionsModalId(null);
+  }, []);
+
+  const navigate = useNavigate();
+
+  // 프로젝트 데이터 가져오는 함수
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
@@ -72,11 +100,12 @@ const ProjectMembers = () => {
         if (response.status === 200) {
           const { title, memberList, leaderNo } = response.data.project;
           setProjectTitle(title);
-          setMembers(memberList);
           setLeaderNo(leaderNo);
+          setMembers(memberList);
         }
       } catch (error) {
         console.error("API 호출 오류:", error);
+        navigate("/schedule");
         setProjectTitle("");
         setLeaderNo("");
       } finally {
@@ -86,152 +115,73 @@ const ProjectMembers = () => {
     fetchProjectData();
   }, [clickProjectNo, signedUserNo]);
 
-  const navigate = useNavigate();
-
+  // 로그인 확인
   useEffect(() => {
     isLogin({ navigate, cookies });
   }, []);
 
-  const handleCheck = async (scheduleNo) => {
-    try {
-      const response = await axios.post(
-        `/api/project/schedule/${scheduleNo}`,
-        null,
-        {
-          params: {
-            signedUserNo,
-            scheduleNo,
-          },
-        },
-      );
-      if (response.status === 200) {
-        if (response.data.code === "NF") {
-          console.log("권한없음");
-        } else {
-          console.log("체크 업데이트 성공:", response.data);
-
-          const projectResponse = await axios.get(
-            `/api/project/${clickProjectNo}`,
-            {
-              params: { signedUserNo },
-            },
-          );
-
-          if (projectResponse.status === 200) {
-            const { memberList } = projectResponse.data.project;
-            setMembers(memberList);
-          }
-        }
-      }
-    } catch (error) {
-      console.error("API 호출 오류:", error);
-    }
-  };
-
-  const refreshData = async () => {
-    try {
-      const response = await axios.get(`/api/project/${clickProjectNo}`, {
-        params: { signedUserNo },
-      });
-      if (response.status === 200) {
-        const { memberList } = response.data.project;
-        setMembers(memberList || []);
-      }
-    } catch (error) {
-      console.error("데이터 갱신 오류:", error);
-    }
-  };
-  const checkUnassignedTasks = async () => {
-    try {
-      const response = await axios.get(`/api/project/${clickProjectNo}`, {
-        params: { signedUserNo },
-      });
-
-      console.log("API 응답 데이터:", response.data); // 구조 확인용
-
-      if (response.status === 200) {
-        const { memberList } = response.data.project; // project 내부의 memberList를 직접 가져옴
-        setMembers(memberList || []); // 멤버 리스트 상태 업데이트
-
-        // 'lock === 1'이고 할일이 남아 있는 팀원 확인
-        const unassignedMember = memberList.find(
-          (member) =>
-            member.lock === 1 &&
-            Array.isArray(member.scheduleList) &&
-            member.scheduleList.filter(
-              (item) => item !== null && item !== undefined,
-            ).length > 0, // 유효한 값만 확인
-        );
-
-        if (unassignedMember) {
-          setMsgModal(true); // UnassignedMsg 표시
-        }
-      }
-    } catch (error) {
-      console.error("Unassigned 상태 확인 오류:", error);
-    }
-  };
-
-  const openModal = (id, event) => {
+  /**
+   * MoreOptionsModal의 좌표값을 계산하여 모달을 열기 위한 함수
+   * @param {number|string} id - 열고자 하는 모달의 고유 ID
+   * @param {Object} event - 클릭 이벤트 객체
+   */
+  const moreOptionsOpenModal = useCallback((id, event) => {
     const { top, left, width } = event.target.getBoundingClientRect();
     setModalPosition({
       top: top + window.scrollY,
       left: left + width,
     });
-    setOpenModalId(id);
-  };
+    setSelectedInfo((prevState) => ({
+      ...prevState,
+      userNo: id, // 선택된 member의 userNo로 상태 업데이트
+      modalMode: "view", // 모달 모드를 설정
+    }));
+    setMoreOptionsModalId(id); // openModalId를 선택된 userNo로 설정
+  }, []);
 
-  const closeDeleteModal = () => {
-    setDeleteModal(null);
-    setSelectedTask(null);
-    setDeleteModalFor(null);
-  };
+  const memberChunks = chunkMembers(members, 4); // 멤버 리스트를 4명씩 나누기
 
-  const closeTaskModal = () => {
-    setOpenTaskModalFor(null);
-    setSelectedTask(null);
-    setModalMode(null);
-
-    if (changeTaskUserModal === false) refreshData();
-  };
-
-  const openTaskModal = (memberNo) => {
-    setOpenModalId(null);
-    setOpenTaskModalFor(memberNo);
-  };
-
-  const msgCloseModal = () => setMsgModal(false);
-
-  const chunkMembers = (members, chunkSize) => {
-    const result = [];
-    while (members.length % chunkSize !== 0) {
-      members.push(null);
+  // 카드 이미지 렌더링 함수
+  const renderCardImg = useCallback((userNo, pic, nickname) => {
+    if (pic !== null) {
+      return (
+        <CardImg
+          src={`${import.meta.env.VITE_BASE_URL}/pic/user/${userNo}/${pic}`}
+          alt={nickname}
+        />
+      );
+    } else {
+      return <CardImg noImage />;
     }
-    for (let i = 0; i < members.length; i += chunkSize) {
-      const chunk = members.slice(i, i + chunkSize);
-      result.push(chunk);
-    }
-    return result;
-  };
+  }, []);
 
-  const openTaskModalForEdit = (taskData) => {
-    setSelectedTask(taskData);
-    setModalMode("edit");
-  };
+  // 멤버 정보 렌더링 함수
+  const renderMemberInfoWrap = useCallback((member, leaderNo) => {
+    return (
+      <MemberInfoWrap>
+        <h2>{member.lock === 1 ? "없음" : member.nickname}</h2>
+        <span>{member.userNo === leaderNo ? "팀장" : "팀원"}</span>
+      </MemberInfoWrap>
+    );
+  }, []);
 
-  const memberChunks = chunkMembers(members, 4);
-
-  const openChangeTaskUserModal = (taskData) => {
-    setChangeTaskUserModal(taskData); // ChangeTaskUser 모달을 열기 위해 데이터 저장
-    // setSelectedTask(null); // TaskDetails 모달 닫기
-    setModalMode(null); // 다른 모달 닫기
-    setOpenModalId(null); // MoreOptionsModal 닫기
-  };
-  const openDeleteModal = (userNo) => {
-    setDeleteModalFor(userNo);
-    setDeleteModal(true);
-    // console.log(signedUserNo, leaderNo);
-  };
+  // MoreOptions 아이콘 렌더링 함수
+  const renderMoreOptionsIcon = useCallback(
+    (signedUserNo, member, leaderNo, moreOptionsOpenModal) => {
+      if (signedUserNo === member.userNo || signedUserNo === leaderNo) {
+        return (
+          <MoreOptionsIcon
+            onClick={(e) => {
+              console.log("클릭된 멤버의 e:", e); // 클릭된 멤버만 출력
+              moreOptionsOpenModal(member.userNo, e); // 클릭한 멤버의 ID만 넘겨줌
+            }}
+          />
+        );
+      }
+      return null;
+    },
+    [],
+  );
 
   if (loading) {
     return <div>데이터를 로딩 중입니다...</div>;
@@ -239,6 +189,7 @@ const ProjectMembers = () => {
 
   const goProjectDashBoard = (e) => {
     console.log(e);
+
     setActiveButton("left");
 
     navigate(`/project/dashboard`, {
@@ -260,9 +211,6 @@ const ProjectMembers = () => {
             onClick={() => navigate("/project")}
             type="button"
             sideProps={true}
-            // isOpenModal={openModalId}
-            // closeModal={() => setMsgModal(false)}
-            // onClick={() => setMsgModal(true)}
           >
             대시보드
           </MembersSectionBT>
@@ -290,35 +238,28 @@ const ProjectMembers = () => {
               <Card key={member.userNo || index}>
                 <CardTod />
                 <MemberInfo>
-                  {member.pic !== null ? (
-                    <CardImg
-                      src={`${import.meta.env.VITE_BASE_URL}/pic/user/${member.userNo}/${member.pic}`}
-                      alt={member.nickname}
-                    />
-                  ) : (
-                    <CardImg noImage />
+                  {renderCardImg(member.userNo, member.pic, member.nickname)}
+                  {renderMemberInfoWrap(member, leaderNo)}
+                  {renderMoreOptionsIcon(
+                    signedUserNo,
+                    member,
+                    leaderNo,
+                    moreOptionsOpenModal,
                   )}
-                  <MemberInfoWrap>
-                    <h2>{member.lock === 1 ? "없음" : member.nickname}</h2>
-                    {console.log(member.lock)}
-                    <span>{member.userNo === leaderNo ? "팀장" : "팀원"}</span>
-                  </MemberInfoWrap>
-                  {signedUserNo === member.userNo ||
-                  signedUserNo === leaderNo ? (
-                    <MoreOptionsIcon
-                      onClick={(e) => openModal(member.userNo, e)}
-                    />
-                  ) : null}
                 </MemberInfo>
                 <TaskList>
                   {member.scheduleList.map((schedule) => (
                     <ul key={schedule.scheduleNo}>
                       <li
                         onClick={() => {
-                          setSelectedUserNo(member.userNo);
-                          setSelectNickname(member.nickname);
-                          setSelectedTask(schedule);
-                          setModalMode("view");
+                          setSelectedInfo({
+                            userNo: member.userNo,
+                            nickname: member.nickname,
+                            task: schedule,
+                            modalMode: "view",
+                          });
+                          setModalMode(setSelectedInfo.modalMode);
+                          setOpenTaskModalFor(member.userNo); // 선택된 유저의 userNo를 설정하여 모달을 엽니다.
                         }}
                       >
                         <div>
@@ -330,7 +271,12 @@ const ProjectMembers = () => {
                           checked={schedule.checked}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleCheck(schedule.scheduleNo);
+                            handleCheck(
+                              schedule.scheduleNo,
+                              clickProjectNo,
+                              signedUserNo,
+                              setMembers,
+                            );
                           }}
                         />
                       </li>
@@ -338,39 +284,6 @@ const ProjectMembers = () => {
                   ))}
                 </TaskList>
                 {renderProgressBar(member.scheduleList)}
-                <MoreOptionsModal
-                  isOpenModal={openModalId === member.userNo}
-                  closeModal={() => setOpenModalId(null)}
-                  modalPosition={modalPosition}
-                  role={signedUserNo === leaderNo ? signedUserNo : false}
-                  signedUserNo={signedUserNo}
-                  memberRole={member.userNo}
-                  projectNo={clickProjectNo}
-                  onOpenDeleteModal={() => openDeleteModal(member.userNo)}
-                  onAddNewTask={() => openTaskModal(member.userNo)}
-                />
-                {deleteModalFor && deleteModalFor === member.userNo && (
-                  <DeleteModal
-                    projectNo={clickProjectNo}
-                    signedUserNo={signedUserNo}
-                    refreshData={refreshData}
-                    allCloseModal={closeDeleteModal}
-                    isLeader={signedUserNo === leaderNo}
-                    memberRole={member.userNo}
-                    checkUnassignedTasks={checkUnassignedTasks}
-                  />
-                )}
-                {openTaskModalFor === member.userNo && (
-                  <AddNewTaskModal
-                    isOpen={openTaskModalFor === member.userNo}
-                    closeModal={closeTaskModal}
-                    projectNo={clickProjectNo}
-                    signedUserNo={signedUserNo}
-                    memberRole={member.userNo}
-                    refreshData={refreshData}
-                    isLeader={signedUserNo === leaderNo}
-                  />
-                )}
               </Card>
             ) : (
               <Card key={index} dummy={true} />
@@ -378,53 +291,59 @@ const ProjectMembers = () => {
           )}
         </Members>
       ))}
-      {selectedTask && modalMode === "view" && (
-        <TaskDetails
-          scheduleNo={selectedTask.scheduleNo}
-          closeModal={closeTaskModal}
-          onEdit={openTaskModalForEdit}
+      <MoreOptionsModalMemo
+        isOpenModal={moreOptionsModalId === selectedInfo.userNo}
+        closeModal={() => setMoreOptionsModalId(null)}
+        modalPosition={modalPosition}
+        role={signedUserNo === leaderNo ? signedUserNo : false}
+        signedUserNo={signedUserNo}
+        memberRole={selectedInfo.userNo}
+        onOpenDeleteModal={() => openDeleteModal(selectedInfo.userNo)}
+        selectedInfo={selectedInfo}
+        openTaskModalFor={() => setOpenTaskModalFor(selectedInfo.userNo)}
+        setSelectedInfo={setSelectedInfo}
+      />
+
+      {deleteModalFor === selectedInfo.userNo && (
+        <DeleteModalMemo
+          projectNo={clickProjectNo}
           signedUserNo={signedUserNo}
-          nickname={selectNickname}
-          openChangeTaskUserModal={openChangeTaskUserModal}
-          openDeleteModal={openDeleteModal}
+          allCloseModal={() => {
+            setDeleteModalFor(null),
+              setSelectedInfo((prevState) => ({
+                ...prevState,
+                isTask: false,
+              }));
+          }}
           isLeader={signedUserNo === leaderNo}
-          setIsTask={setIsTask}
+          memberRole={selectedInfo.userNo}
+          scheduleNo={selectedInfo.task?.scheduleNo}
+          setMembers={setMembers}
+          setMsgModal={setMsgModal}
+          isTask={selectedInfo.isTask}
+          setIsTask={setSelectedInfo}
+          closeTaskModalFor={() => {
+            setOpenTaskModalFor(null),
+              setSelectedInfo((prevState) => ({
+                ...prevState,
+                isTask: false,
+              }));
+          }}
         />
       )}
 
-      {selectedTask && modalMode === "edit" && (
-        <AddNewTaskModal
-          isOpen={true}
-          closeModal={closeTaskModal}
-          initialData={selectedTask}
-          projectNo={clickProjectNo}
+      {openTaskModalFor === selectedInfo.userNo && (
+        <OpenTaskModalMemo
+          openTaskModalFor={openTaskModalFor === selectedInfo.userNo}
+          closeTaskModalFor={() => setOpenTaskModalFor(null)}
           signedUserNo={signedUserNo}
-          scheduleNo={selectedTask.scheduleNo}
-          refreshData={refreshData}
-          userNo={selectedUserNo}
-          mode="edit"
-        />
-      )}
-      {selectedTask && changeTaskUserModal && (
-        <ChangeTaskUser
-          selectedTask={selectedTask}
           projectNo={clickProjectNo}
-          signedUserNo={signedUserNo}
-          scheduleNo={selectedTask.scheduleNo}
+          selectedInfo={selectedInfo}
+          setSelectedInfo={setSelectedInfo}
+          isLeader={signedUserNo === leaderNo}
+          setMembers={setMembers}
           members={members}
-          refreshData={refreshData}
-          closeModal={() => setChangeTaskUserModal(null)} // 모달 닫기 핸들러
-        />
-      )}
-      {selectedTask && deleteModal && (
-        <DeleteModal
-          scheduleNo={selectedTask.scheduleNo}
-          signedUserNo={signedUserNo}
-          refreshData={refreshData}
-          allCloseModal={closeDeleteModal}
-          setisTask={setIsTask}
-          isTask={isTask}
-          closeModal={() => setDeleteModal(null)}
+          onOpenDeleteModal={() => openDeleteModal(selectedInfo.userNo)}
         />
       )}
     </MembersLayout>
