@@ -18,3 +18,5 @@ export default defineConfig({
     proxy: createProxy("http://112.222.157.156:5213/api/"), // 기본 URL 설정
   },
 });
+
+// VITE_BASE_URL=http://112.222.157.156:5213
