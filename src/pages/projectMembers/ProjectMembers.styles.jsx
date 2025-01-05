@@ -118,7 +118,7 @@ export const CardImg = styled.img`
     props.noImage ? "#c0c0c0" : "transparent"}; /* 이미지가 없으면 회색 배경 */
   background-image: ${(props) =>
     props.noImage
-      ? "public/default_profile.jpg"
+      ? "none"
       : `url(${props.src})`}; /* 이미지가 없으면 배경 이미지를 안 넣음 */
 `;
 

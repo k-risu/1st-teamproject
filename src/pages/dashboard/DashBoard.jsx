@@ -130,7 +130,6 @@ const DashBoard = () => {
       navigate(-1);
     }
   };
-
   const goProjectEdit = async (e) => {
     console.log(e);
 
@@ -157,7 +156,6 @@ const DashBoard = () => {
       },
     });
   };
-
   const goUserPage = (e) => {
     console.log(e);
 

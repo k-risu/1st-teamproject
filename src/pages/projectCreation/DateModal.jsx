@@ -51,6 +51,7 @@ export const DateModal = ({
       console.log("종료일을 선택해주세요");
     }
     console.log(selectDate);
+
   };
 
   return (

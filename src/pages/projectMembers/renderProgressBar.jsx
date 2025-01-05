@@ -8,13 +8,6 @@ import { useState } from "react";
  * @returns {JSX.Element} - SVG 막대를 포함한 진행 상태 표시 컴포넌트
  */
 const CustomBullet = ({ data }) => {
-  /**
-   * 상태 관리: 툴팁 표시 여부와 위치 및 텍스트
-   * @property {boolean} visible - 툴팁 표시 여부
-   * @property {number} x - 툴팁의 X 좌표
-   * @property {number} y - 툴팁의 Y 좌표
-   * @property {string} text - 툴팁에 표시할 텍스트
-   */
   const [tooltip, setTooltip] = useState({
     visible: false,
     x: 0,
@@ -22,28 +15,17 @@ const CustomBullet = ({ data }) => {
     text: "",
   });
 
-  /**
-   * 마우스를 막대 위에 올릴 때 호출되는 함수
-   * 툴팁 표시 및 위치를 업데이트합니다.
-   * @param {MouseEvent} e - 마우스 이벤트
-   * @param {number} completed - 완료된 작업 수
-   * @param {number} total - 전체 작업 수
-   */
   const handleMouseEnter = (e, completed, total) => {
-    const tooltipX = e.clientX; // 마우스 X 위치 (브라우저 기준)
-    const tooltipY = e.clientY; // 마우스 Y 위치 (브라우저 기준)
+    const tooltipX = e.clientX;
+    const tooltipY = e.clientY;
     setTooltip({
       visible: true,
       x: tooltipX,
       y: tooltipY,
-      text: `${completed} to ${total}`, // 툴팁 텍스트
+      text: `${completed} of ${total}`,
     });
   };
 
-  /**
-   * 마우스가 막대를 떠날 때 호출되는 함수
-   * 툴팁을 숨깁니다.
-   */
   const handleMouseLeave = () => {
     setTooltip({ visible: false, x: 0, y: 0, text: "" });
   };
@@ -52,15 +34,18 @@ const CustomBullet = ({ data }) => {
     <div style={{ position: "relative", display: "inline-block" }}>
       <svg width="250" height="30" style={{ margin: "0 auto" }}>
         {data.map((item, index) => {
-          const total = item.ranges[1]; // 전체 범위 (totalTasks)
-          const completed = item.measures[0]; // 완료된 범위 (completedTasks)
-
-          const totalWidth = 250; // 전체 막대의 너비
-          const completedWidth = (completed / total) * totalWidth; // 완료된 범위의 너비
+          const total = item.ranges[1];
+          const completed = item.measures[0];
+          const totalWidth = 250;
+          const completedWidth =
+            total > 0 ? (completed / total) * totalWidth : 0;
 
           return (
-            <g key={index}>
-              {/* 전체 범위 (회색 막대) */}
+            <g
+              key={index}
+              onMouseEnter={(e) => handleMouseEnter(e, completed, total)}
+              onMouseLeave={handleMouseLeave}
+            >
               <rect
                 x="0"
                 y="10"
@@ -69,10 +54,7 @@ const CustomBullet = ({ data }) => {
                 fill="#E8E8E8"
                 rx="10"
                 ry="10"
-                onMouseEnter={(e) => handleMouseEnter(e, completed, total)}
-                onMouseLeave={handleMouseLeave}
               />
-              {/* 완료된 범위 (녹색 막대) */}
               <rect
                 x="0"
                 y="10"
@@ -81,31 +63,27 @@ const CustomBullet = ({ data }) => {
                 fill="#67DA6F"
                 rx="10"
                 ry="10"
-                onMouseEnter={(e) => handleMouseEnter(e, completed, total)}
-                onMouseLeave={handleMouseLeave}
               />
             </g>
           );
         })}
       </svg>
-
-      {/* 툴팁 */}
       {tooltip.visible && (
         <div
           style={{
-            position: "fixed", // 브라우저 기준 위치
-            top: tooltip.y - 40, // 마우스 위에 툴팁 표시
-            left: Math.min(
-              tooltip.x - 20,
-              window.innerWidth - 120, // 툴팁이 화면을 벗어나지 않도록 조정
+            position: "fixed",
+            top: Math.max(0, tooltip.y - 40),
+            left: Math.max(
+              0,
+              Math.min(tooltip.x - 20, window.innerWidth - 120),
             ),
             backgroundColor: "#333",
             color: "#fff",
             padding: "5px 10px",
             borderRadius: "5px",
             fontSize: "12px",
-            whiteSpace: "nowrap", // 줄바꿈 방지
-            pointerEvents: "none", // 툴팁 클릭 방지
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
             zIndex: 10,
           }}
         >

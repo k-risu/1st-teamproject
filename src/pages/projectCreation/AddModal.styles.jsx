@@ -141,7 +141,6 @@ export const FindUserData = styled.div`
     background-color: #c0c0c0;
     border: 1px solid rgba(0, 0, 0, 0.1);
   }
-
   span {
     padding: 10px;
   }

@@ -30,7 +30,6 @@ const SideBar = () => {
         },
       });
       console.log(res);
-
       setUserData({ ...res.data });
     };
     getUserData();
