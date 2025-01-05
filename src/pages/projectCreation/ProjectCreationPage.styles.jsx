@@ -30,7 +30,7 @@ export const ProjectCreationForm = styled.form`
   h1 {
     justify-content: flex-start;
     font-size: 19.8px; // Reduced by 10%
-    margin-right: 49.5vw; // Reduced by 10%
+    margin-right: 40.5vw; // Reduced by 10%
     margin-bottom: 5.4vh; // Reduced by 10%
   }
 `;

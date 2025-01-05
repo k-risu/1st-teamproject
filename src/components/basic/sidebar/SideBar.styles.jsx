@@ -39,6 +39,7 @@ export const SideBarProfileImg = styled.img`
   border-radius: 50px;
   margin-top: 100px;
   border: 1px solid rgba(0, 0, 0, 0.2);
+  object-fit: cover;
 `;
 
 export const SideBarMenuWrap = styled.ul`

@@ -42,6 +42,10 @@ export const ContainerTitle = styled.p`
   margin-bottom: 20px;
 `;
 
+export const DescriptionSection = styled.div`
+  padding: 20px;
+`;
+
 export const CompletionContainer = styled.div`
   width: 50%;
   height: 50%;
@@ -133,4 +137,5 @@ export const SlideImage = styled.img`
   display: flex;
   width: 50px;
   height: 50px;
+  object-fit: cover;
 `;

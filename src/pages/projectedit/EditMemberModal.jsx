@@ -12,6 +12,7 @@ import {
 } from "../projectCreation/AddModal.styles";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { FiDelete } from "react-icons/fi";
 
 const EditMemberModal = ({
   isOpen,
@@ -23,6 +24,7 @@ const EditMemberModal = ({
   const [memberList, setMemberList] = useState([
     teamMembers.map((item) => item.nickname),
   ]);
+  const [membersData, setMembersData] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
@@ -52,7 +54,8 @@ const EditMemberModal = ({
       icon: "success",
       title: `${userNickname}님을 추가했어요`,
     });
-    setTeamMembers((prev) => [...prev, userInfo]);
+    setTeamMembers(userInfo);
+    setMembersData((teamMembers) => [...teamMembers, clickUserData]);
     setMemberList((prev) => [...prev, userNickname]);
     setSearchInput("");
     setUserInfo([]);
@@ -87,6 +90,30 @@ const EditMemberModal = ({
     } catch (error) {
       console.error("오류 발생:", error);
       alert("해당 사용자를 찾을 수 없습니다");
+    }
+  };
+
+  const handleDelete = (e) => {
+    const deleteMember = memberList.flat().filter((item) => item !== e);
+
+    if (teamMembers[0].nickname === deleteMember[0]) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "error",
+        title: "해당 사용자는 삭제할 수 없습니다",
+      });
+    } else {
+      setMemberList(deleteMember);
     }
   };
 
@@ -139,10 +166,17 @@ const EditMemberModal = ({
           </FindDiv>
         )}
         <div>
-          <ModalText readOnly value={memberList} />
+          <ModalText>
+            {memberList.map((item, index) => (
+              <div key={index}>
+                <span>{item}</span>
+                <FiDelete onClick={() => handleDelete(item)} />
+              </div>
+            ))}
+          </ModalText>
         </div>
         <ButtonWrapper>
-          <button type="button" onClick={() => addTeamMember(userInfo)}>
+          <button type="button" onClick={() => addTeamMember(membersData)}>
             추가
           </button>
           <button type="button" onClick={closeModal}>

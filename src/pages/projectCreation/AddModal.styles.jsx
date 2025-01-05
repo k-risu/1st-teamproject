@@ -65,26 +65,30 @@ export const ButtonWrapper = styled.div`
   /* justify-content: space-between; */
   width: 100%;
 `;
-export const ModalText = styled.textarea`
-  padding: 4.5px;
+export const ModalText = styled.div`
+  padding: 10px 30px;
   font-size: 18px;
   width: 400px;
   border-radius: 5px;
   border: 2px solid #7a7a7a;
   background-color: #f4f4f4;
   height: 250px;
-  resize: none;
   font-family: "GmarketSansMedium";
 
-  display: block;
-  margin: auto; /* 추가: 텍스트 영역을 부모 내에서 자동으로 중앙 정렬 */
-  &:focus {
-    outline: none;
-    border: 2px solid #7a7a7a;
+  div {
+    display: flex;
+    width: 300px;
+    height: 40px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
   }
-  ${(props) => props.readOnly}
-  cursor: default;
+
+  span {
+    text-wrap: nowrap;
+  }
 `;
+
 export const ModalInput = styled.input`
   width: 400px;
   border-radius: ${(props) => (props.userInfo ? "5px 5px 0px 0px" : "5px")};

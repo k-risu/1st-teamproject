@@ -55,6 +55,7 @@ export const ProfileWrapper = styled.div`
 
 // 프로필 이미지 스타일
 export const UserImage = styled.img`
+  display: flex;
   width: 150px; /* 이미지 너비 */
   height: 150px; /* 이미지 높이 */
   border-radius: 50%; /* 둥근 모서리로 설정 */

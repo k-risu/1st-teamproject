@@ -18,6 +18,7 @@ import {
   ProjectData,
   ProjectInfo,
   SlideImage,
+  DescriptionSection,
 } from "./DashBoard.styles";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -29,6 +30,7 @@ import {
   MembersSectionBT,
 } from "../projectMembers/ProjectMembers.styles";
 import ToggleButton from "../../components/ToggleButton";
+import ProjectProgress from "./ProjectProgress";
 
 const DashBoard = () => {
   const location = useLocation();
@@ -166,6 +168,17 @@ const DashBoard = () => {
     });
   };
 
+  const [teamProgress, setTeamProgress] = useState(60);
+  const [personalProgress, setPersonalProgress] = useState(40);
+
+  const increaseTeamProgress = () => {
+    setTeamProgress((prev) => Math.min(prev + 5, 100));
+  };
+
+  const increasePersonalProgress = () => {
+    setPersonalProgress((prev) => Math.min(prev + 10, 100));
+  };
+
   return (
     <DashBoardContainer>
       <DashBoardTitleWrap>
@@ -182,34 +195,10 @@ const DashBoard = () => {
           <ContainerTitle>
             달성률 (D-<span style={{ color: "red" }}>{d_Day}</span>)
           </ContainerTitle>
-          <div>
-            <div>
-              <p>{data[0].title}</p>
-              <ResponsiveBullet
-                data={[data[0]]}
-                margin={{ top: 50, right: 90, bottom: 50, left: 90 }}
-                spacing={30}
-                titleAlign="start"
-                titleOffsetX={-70}
-                measureSize={1}
-                markerSize={0}
-                motionConfig="slow"
-              ></ResponsiveBullet>
-            </div>
-            <div>
-              <p>{data[1].title}</p>
-              <ResponsiveBullet
-                data={[data[1]]}
-                margin={{ top: 50, right: 90, bottom: 50, left: 90 }}
-                spacing={30}
-                titleAlign="start"
-                titleOffsetX={-70}
-                measureSize={1}
-                markerSize={0}
-                motionConfig="slow"
-              />
-            </div>
-          </div>
+          <ProjectProgress
+            teamProgress={teamProgress}
+            personalProgress={personalProgress}
+          />
         </CompletionContainer>
         <MemberContainer>
           <ContainerTitle>프로젝트 구성원</ContainerTitle>
@@ -221,15 +210,19 @@ const DashBoard = () => {
             >
               {memberList.map((item) => (
                 <SwiperSlide key={item.userNo}>
-                  <SlideImage
-                    src={
-                      item.pic === null
-                        ? "public/default_profile.jpg"
-                        : `${import.meta.env.VITE_BASE_URL}/pic/user/${item.userNo}/${item.pic}`
-                    }
-                    alt="유저 프로필"
-                    onClick={() => goUserPage(item.userNo)}
-                  />
+                  {item.pic === null ? (
+                    <SlideImage
+                      src="/default_profile.jpg"
+                      alt="유저 프로필"
+                      onClick={() => goUserPage(item.userNo)}
+                    />
+                  ) : (
+                    <SlideImage
+                      src={`${import.meta.env.VITE_BASE_URL}/pic/user/${item.userNo}/${item.pic}`}
+                      alt="유저 프로필"
+                      onClick={() => goUserPage(item.userNo)}
+                    />
+                  )}
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -239,7 +232,7 @@ const DashBoard = () => {
       <ContainerWrap>
         <ProjectInfo>
           <ContainerTitle>프로젝트 세부내용</ContainerTitle>
-          <div>{projectData.description}</div>
+          <DescriptionSection>{projectData.description}</DescriptionSection>
         </ProjectInfo>
         <ProjectData>
           <ButtonSection>

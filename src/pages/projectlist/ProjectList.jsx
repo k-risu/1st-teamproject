@@ -66,7 +66,7 @@ const ProjectList = () => {
             </div>
             <div>
               <FaRegUser style={{ color: "darkgray", marginRight: 3 }} />
-              <div>7명</div>
+              {/* <div>7명</div> */}
             </div>
           </Projects>
           <Projects>

@@ -239,7 +239,7 @@ const Schedule = () => {
                 <ProfileImage
                   src={
                     item.pic === null
-                      ? "public/profile8.jpg"
+                      ? "public/default_profile.jpg"
                       : `${import.meta.env.VITE_BASE_URL}/pic/user/${item.userNo}/${item.pic}`
                   }
                   alt="구성원 프로필 이미지"

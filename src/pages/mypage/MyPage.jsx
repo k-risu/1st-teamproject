@@ -85,11 +85,11 @@ function MyPage() {
   const userEditClick = (e) => {
     console.log(e);
 
-    // navigate(`/mypage`, {
-    //   state: {
-    //     targetUserNo: e,
-    //   },
-    // });
+    navigate(`/mypage/edit`, {
+      state: {
+        targetUserId: e.userId,
+      },
+    });
   };
 
   return (

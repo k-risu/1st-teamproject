@@ -32,6 +32,7 @@ const ProjectEditPage = () => {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false); // DateModal 상태
   const [teamMembers, setTeamMembers] = useState([location.state?.memberList]); // 팀 구성원 상태
   const [eventData, setEventData] = useState({});
+  const [changeDate, setChangeDate] = useState([]);
   const [selectDate, setSelectDate] = useState([
     {
       start: location.state?.startAt,
@@ -74,66 +75,134 @@ const ProjectEditPage = () => {
     mode: "onSubmit",
   });
 
-  const addTeamMember = () => {
+  const addTeamMember = (data) => {
+    const userList = [...clickProjectData.memberList, data.flat()].flat();
+    const userNoList = userList.map((item) => {
+      return item.userNo;
+    });
+    console.log(userList);
+
+    console.log(userNoList);
+
+    const payload = {
+      signedUserNo: cookies.signedUserNo,
+      projectNo: clickProjectData.projectNo,
+      insertUserNoList: userNoList,
+      deleteUserNoList: [],
+    };
+
+    const res = axios.post(`/api/project/search-user`, payload);
+
     setTeamMembers(teamMembers);
     closeAddModal();
   };
 
   const handleSubmitForm = async (data) => {
     console.log(data);
-    console.log(eventData);
-    console.log(clickProjectData.projectNo);
-    console.log(clickProjectData.memberList);
-    console.log(teamMembers[1]);
+
+    let payload = {
+      signedUserNo: cookies.signedUserNo,
+      projectNo: clickProjectData.projectNo,
+      title: data.title,
+      description: data.description,
+      startAt: eventData.startAt.replace(/-/g, ""),
+      deadLine: eventData.deadLine.replace(/-/g, ""),
+    };
 
     try {
-      const payload = {
-        signedUserNo: cookies.signedUserNo,
-        projectNo: clickProjectData.projectNo,
-        title: data.title,
-        description: data.description,
-        startAt: eventData.startAt,
-        deadLine: eventData.deadLine,
-        // memberNoList: teamMembers[1].filter((item) => {
-        //   return item.userNo;
-        // }),
-      };
-      const res = await axios.put(`/api/project`, payload);
-      const resMember = await axios.post(`/api/project/search-user`, {
-        signedUserNo: cookies.signedUserNo,
-        projectNo: clickProjectData.projectNo,
-        insertUserNoList: teamMembers[1].filter((item) => {
-          return item.userNo;
-        }),
-        deleteUserNoList: [],
-      });
-      console.log(res);
-      console.log(resMember);
+      if (payload.title === "") {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "프로젝트 이름을 입력해주세요.",
+        });
+      }
+      if (payload.description === "") {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "프로젝트 내용을 입력해주세요.",
+        });
+      }
+      if (payload.startAt === undefined && payload.deadLine === undefined) {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "프로젝트 기간을 설정해주세요.",
+        });
+      }
 
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top",
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "success",
-        title: "프로젝트가 수정되었습니다!",
-      });
-      setTimeout(() => {
-        navigate(`/schedule`);
-      }, 2000);
+      const res = await axios.put(`/api/project`, payload);
+      console.log(res);
+
+      if (res.data.code === "OK") {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "success",
+          title: "프로젝트가 수정되었습니다!",
+        });
+        setTimeout(() => {
+          navigate(`/schedule`);
+        }, 2000);
+      } else {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "프로젝트가 수정에 실패했습니다. 다시 시도해주세요.",
+        });
+      }
     } catch (error) {
       console.error(error);
-      alert("프로젝트 생성 중 오류가 발생했습니다.");
-      return;
-    } finally {
-      reset();
     }
   };
 
@@ -141,24 +210,49 @@ const ProjectEditPage = () => {
     console.log(data);
 
     const userSelectedDate = {
-      startAt: data.startStr,
-      deadLine: dayjs(data.endStr).subtract(1, "day").format("YYYY-MM-DD"),
+      startAt: data?.startStr,
+      deadLine: dayjs(data?.endStr).subtract(1, "day").format("YYYY-MM-DD"),
     };
+
     await setEventData(userSelectedDate);
     await openDateModal(userSelectedDate);
-    await setSelectDate((prev = []) => {
+    await setSelectDate(([]) => {
       return [
-        ...prev,
         {
-          title: "선택한 기간",
+          title: "",
           start: data.startStr,
           end: data.endStr,
-          backgroundColor: "lightblue",
-          borderColor: "blue",
+          backgroundColor: "#58ACFA",
+          borderColor: "#58ACFA",
         },
       ];
     });
     console.log(selectDate);
+  };
+
+  const eventChangeHandler = async (data) => {
+    console.log(data.event.startStr);
+    console.log(data.event.endStr);
+
+    const userChangeDate = {
+      startAt: data.event.startStr,
+      deadLine: dayjs(data.event.endStr)
+        .subtract(1, "day")
+        .format("YYYY-MM-DD"),
+    };
+
+    await setEventData(userChangeDate);
+    await setChangeDate(([]) => {
+      return [
+        {
+          title: "",
+          start: data.event.startStr,
+          end: data.event.endStr,
+          backgroundColor: "#58ACFA",
+          borderColor: "#58ACFA",
+        },
+      ];
+    });
   };
 
   // 쿠키의 signedUserNo에 값이 없으면 로그인 하라는 알림창과 함께 이전 페이지로 이동
@@ -191,6 +285,7 @@ const ProjectEditPage = () => {
               today: "오늘",
             }}
             select={eventSelectHandler}
+            eventChange={eventChangeHandler}
             events={selectDate}
           />
           {isDateModalOpen && (

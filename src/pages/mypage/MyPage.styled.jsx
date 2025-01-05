@@ -24,7 +24,10 @@ export const Userinfo = styled.div`
   display: flex;
   flex-direction: column; /* 수직 정렬 */
   align-items: start; /* 중앙 정렬 */
+  padding-top: 20px;
+  padding-left: 30px;
   padding-right: 250px;
+  padding-bottom: 20px;
   gap: 20px; /* 프로필과 정보 간 간격 */
   max-width: 700px; /* 전체 영역의 너비 */
   background-color: white;
@@ -36,6 +39,10 @@ export const UserProfile = styled.div`
   display: flex;
   align-items: center; /* 중앙 정렬 */
   gap: 10px;
+
+  img {
+    object-fit: cover;
+  }
 `;
 
 // 닉네임 및 이메일 섹션
@@ -75,16 +82,16 @@ export const Footer = styled.div`
   display: flex;
   justify-content: center; /* 중앙 정렬 */
   max-width: 700px; /* 전체 영역의 너비 */
-  background-color: white;
+  /* background-color: white; */
   margin: 0 auto;
   margin-top: 50px;
 
   button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #f4f4f4; /* 버튼 기본 색상 */
+    background-color: #f4f4f4; 버튼 기본 색상
     color: black;
-    border: none;
+    border: 1px solid rgba(0,0,0,0.3);
     border-radius: 8px; /* 둥근 모서리 */
     cursor: pointer;
 

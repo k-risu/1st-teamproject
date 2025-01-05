@@ -31,6 +31,7 @@ function ProjectCreationPage() {
   const [teamMembers, setTeamMembers] = useState([]); // 팀 구성원 상태
   const [eventData, setEventData] = useState({});
   const [selectDate, setSelectDate] = useState([]);
+  const [changeDate, setChangeDate] = useState([]);
 
   const openAddModal = () => setIsAddModalOpen(true); // AddModal 열기
   const closeAddModal = () => setIsAddModalOpen(false); // AddModal 닫기
@@ -61,7 +62,7 @@ function ProjectCreationPage() {
   const addTeamMember = () => {
     closeAddModal();
   };
-
+  console.log(eventData);
   const handleSubmitForm = async (data) => {
     try {
       const payload = {
@@ -72,11 +73,61 @@ function ProjectCreationPage() {
         deadLine: eventData.deadLine,
         memberNoList: teamMembers.map((item) => item),
       };
-      const res = await axios.post(`/api/project`, payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      console.log(payload);
+
+      if (payload.title === "") {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "프로젝트 이름을 입력해주세요.",
+        });
+      }
+      if (payload.description === "") {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "프로젝트 내용을 입력해주세요.",
+        });
+      }
+      if (payload.startAt === undefined && payload.deadLine === undefined) {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "프로젝트 기간을 설정해주세요.",
+        });
+      }
+
+      const res = await axios.post(`/api/project`, payload);
       console.log(res);
       const Toast = Swal.mixin({
         toast: true,
@@ -98,10 +149,6 @@ function ProjectCreationPage() {
       }, 2000);
     } catch (error) {
       console.error(error);
-      alert("프로젝트 생성 중 오류가 발생했습니다.");
-      return;
-    } finally {
-      reset();
     }
   };
 
@@ -109,27 +156,50 @@ function ProjectCreationPage() {
     console.log(data);
 
     const userSelectedDate = {
-      startAt: data.startStr,
-      deadLine: dayjs(data.endStr).subtract(1, "day").format("YYYY-MM-DD"),
+      startAt: data?.startStr,
+      deadLine: dayjs(data?.endStr).subtract(1, "day").format("YYYY-MM-DD"),
     };
+    console.log(userSelectedDate);
+
     await setEventData(userSelectedDate);
     await openDateModal(userSelectedDate);
-    await setSelectDate((prev = []) => {
+    await setSelectDate(([]) => {
       return [
-        ...prev,
         {
-          title: "선택한 기간",
+          title: "",
           start: data.startStr,
           end: data.endStr,
-          backgroundColor: "lightblue",
-          borderColor: "blue",
+          backgroundColor: "#58ACFA",
+          borderColor: "#58ACFA",
         },
       ];
     });
-    console.log(selectDate);
   };
 
-  // 쿠키의 signedUserNo에 값이 없으면 로그인 하라는 알림창과 함께 이전 페이지로 이동
+  const eventChangeHandler = async (data) => {
+    console.log(data.event.startStr);
+    console.log(data.event.endStr);
+
+    const userChangeDate = {
+      startAt: data.event.startStr,
+      deadLine: dayjs(data.event.endStr)
+        .subtract(1, "day")
+        .format("YYYY-MM-DD"),
+    };
+
+    await setEventData(userChangeDate);
+    await setChangeDate(([]) => {
+      return [
+        {
+          title: "",
+          start: data.event.startStr,
+          end: data.event.endStr,
+          backgroundColor: "#58ACFA",
+          borderColor: "#58ACFA",
+        },
+      ];
+    });
+  };
 
   useEffect(() => {
     isLogin({ navigate, cookies });
@@ -159,6 +229,7 @@ function ProjectCreationPage() {
               today: "오늘",
             }}
             select={eventSelectHandler}
+            eventChange={eventChangeHandler}
             events={selectDate}
           />
           {isDateModalOpen && (

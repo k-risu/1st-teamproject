@@ -12,6 +12,7 @@ import {
 } from "./AddModal.styles";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { FiDelete } from "react-icons/fi";
 
 const AddModal = ({
   isOpen,
@@ -104,11 +105,29 @@ const AddModal = ({
     }
   };
 
-  // const handleKeyPress = async (e) => {
-  //   if (e.key === "Enter") {
-  //     await handleSearch();
-  //   }
-  // };
+  const handleDelete = (e) => {
+    const deleteMember = memberList.flat().filter((item) => item !== e);
+
+    if (teamMembers[0].nickname === deleteMember[0]) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "error",
+        title: "해당 사용자는 삭제할 수 없습니다",
+      });
+    } else {
+      setMemberList(deleteMember);
+    }
+  };
 
   return (
     <ModalOverlay onClick={closeModal}>
@@ -117,7 +136,6 @@ const AddModal = ({
           placeholder="닉네임을 검색해보세요"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          // onKeyDown={() => handleKeyPress()}
         />
         <SearchMember
           onClick={() => {
@@ -160,7 +178,14 @@ const AddModal = ({
           </FindDiv>
         )}
         <div>
-          <ModalText readOnly value={memberList} />
+          <ModalText>
+            {memberList.map((item, index) => (
+              <div key={index}>
+                <span>{item}</span>
+                <FiDelete onClick={() => handleDelete(item)} />
+              </div>
+            ))}
+          </ModalText>
         </div>
         <ButtonWrapper>
           <button type="button" onClick={() => addTeamMember(userInfo)}>

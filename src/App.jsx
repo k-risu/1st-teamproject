@@ -26,8 +26,10 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             {/* 새로운 비밀번호 재설정 페이지 */}
             <Route path="/signin/repw" element={<SigninRepw />} />
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/mypage/myedit" element={<MyPageEdit />} />
+            <Route path="/mypage">
+              <Route index element={<MyPage />} />
+              <Route path="edit" element={<MyPageEdit />} />
+            </Route>
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/project">
               <Route index element={<ProjectList />} />

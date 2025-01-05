@@ -32,18 +32,18 @@ const EditDateModal = ({
       closeModal();
       return (
         await setEventData({
-          ...data,
           startAt: data.startAt,
           deadLine: data.deadLine,
         }),
-        await setSelectDate({
-          ...data,
-          title: "선택한 기간",
-          start: data.startAt,
-          end: dayjs(data.deadLine).subtract(1, "day").format("YYYY-MM-DD"),
-          backgroundColor: "lightblue",
-          borderColor: "blue",
-        })
+        await setSelectDate([
+          {
+            title: "",
+            start: data.startAt,
+            end: dayjs(data.deadLine).add(1, "day").format("YYYY-MM-DD"),
+            backgroundColor: "#58ACFA",
+            borderColor: "#58ACFA",
+          },
+        ])
       );
     } else if (data.startAt === "") {
       console.log("시작일을 선택해주세요");

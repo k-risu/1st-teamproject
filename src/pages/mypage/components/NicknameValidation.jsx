@@ -26,7 +26,7 @@ function NicknameValidation({
         disabled={!isEditable}
         placeholder="닉네임을 입력하세요 (특수문자 # 사용 불가)"
       />
-      {isEditable && (
+      {/* {isEditable && (
         <CheckButton
           type="button"
           onClick={handleCheckNickname}
@@ -34,7 +34,7 @@ function NicknameValidation({
         >
           {isNicknameChecked ? "사용 가능" : "중복 확인"}
         </CheckButton>
-      )}
+      )} */}
     </NicknameContainer>
   );
 }
