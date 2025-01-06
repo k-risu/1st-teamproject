@@ -174,7 +174,7 @@ const EditMemberModal = ({
             {teamMembers.map((item) => (
               <div key={item.userNo}>
                 <ModalUser>
-                  <span>{item.nickname}</span>
+                  <span>{item?.nickname}</span>
                   <FiDelete
                     aria-label={`Delete ${item.nickname}`}
                     onClick={() => handleDelete(item.nickname)}

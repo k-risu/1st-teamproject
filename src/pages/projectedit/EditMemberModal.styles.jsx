@@ -73,6 +73,7 @@ export const ModalText = styled.div`
   border: 2px solid #7a7a7a;
   background-color: #f4f4f4;
   height: 250px;
+  overflow-y: scroll;
   font-family: "GmarketSansMedium";
 
   div {

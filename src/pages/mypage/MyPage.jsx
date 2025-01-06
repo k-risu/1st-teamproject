@@ -27,7 +27,7 @@ function MyPage() {
   const [userData, setUserData] = useState({
     nickname: "로그인 전 테스트 유저", // 임의 닉네임
     email: "testuser@example.com", // 임의 이메일
-    pic: location.state?.updatedPic || "public/default_profile.jpg", // 🔥 최신 pic 적용
+    pic: location.state?.updatedPic || "/default_profile.jpg", // 🔥 최신 pic 적용
     userId: "로그인 전 testID123", // 임의 유저 ID
     userStatusMessage: "상태 메시지 테스트", // 임의 상태 메시지
     myInfo: true, // 정보 변경 버튼이 표시되도록 설정
@@ -59,7 +59,6 @@ function MyPage() {
 
       if (response.data.code === "OK") {
         console.log("업데이트할 프로필 이미지:", response.data.pic);
-
         setUserData((prevData) => ({
           ...prevData,
           nickname: response.data.nickname
@@ -74,7 +73,7 @@ function MyPage() {
           userId: response.data.userId || "",
           userStatusMessage: response.data.statusMessage || "",
           myInfo: response.data.targetUserNo,
-        });
+        }));
       } else {
         console.error("유저 정보를 가져오는 중 오류 발생:", response.data);
       }
