@@ -13,6 +13,7 @@ export const Header = styled.div`
   padding: 20px;
   font-size: 15px;
   font-weight: bold;
+  width: 100%;
   max-width: 700px;
   background-color: white;
   margin: 0 auto;

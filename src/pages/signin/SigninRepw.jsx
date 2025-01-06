@@ -11,6 +11,7 @@ import {
   SigninRepwContainer,
 } from "./SignInRepw.styled";
 import { useNavigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function SigninRepw() {
   const navigate = useNavigate();
@@ -62,21 +63,91 @@ function SigninRepw() {
         const result = await response.json();
 
         if (response.ok && result.code === "OK") {
-          alert(
-            "비밀번호가 성공적으로 재설정되었습니다. 로그인 페이지로 이동합니다.",
-          );
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "center",
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title:
+              "비밀번호가 성공적으로 재설정되었습니다. 로그인 페이지로 이동합니다.",
+          });
+
           navigate("/signin");
         } else if (result.code === "PFE") {
-          alert("비밀번호 형식 오류. 다시 시도해주세요.");
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "center",
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "warning",
+            title: "비밀번호 형식 오류. 다시 시도해주세요.",
+          });
         } else if (result.code === "PCE") {
-          alert("비밀번호 확인 오류. 다시 시도해주세요.");
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "center",
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "warning",
+            title: "비밀번호 확인 오류. 다시 시도해주세요.",
+          });
         } else {
           console.error("알 수 없는 오류 발생:", result);
-          alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "center",
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "question",
+            title: "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.",
+          });
         }
       } catch (error) {
         console.error("API 요청 중 오류 발생:", error);
-        alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        });
       }
     },
   });
