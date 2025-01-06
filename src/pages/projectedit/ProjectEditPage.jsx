@@ -83,10 +83,11 @@ const ProjectEditPage = () => {
 
     console.log(userList);
     console.log(userNoList);
+    console.log(clickProjectData);
 
     const payload = {
-      signedUserNo: cookies.signedUserNo,
-      projectNo: clickProjectData.projectNo,
+      signedUserNo: parseInt(cookies.signedUserNo),
+      projectNo: parseInt(clickProjectData.projectNo),
       insertUserNoList: userNoList,
       deleteUserNoList: [],
     };
@@ -101,7 +102,7 @@ const ProjectEditPage = () => {
   const handleSubmitForm = async (data) => {
     console.log(data);
 
-    let payload = {
+    const payload = {
       signedUserNo: cookies.signedUserNo,
       projectNo: clickProjectData.projectNo,
       title: data.title,
