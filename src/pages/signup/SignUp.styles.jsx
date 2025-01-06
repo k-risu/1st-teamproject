@@ -186,7 +186,11 @@ export const MgsWrap = styled.div`
   position: absolute;
 `;
 export const ErrorsMsg = styled.p`
-  color: red;
+  /* nicknameCheckMessage */
+  color: ${(props) =>
+    props.nicknameCheckMessage === "사용 가능한 아이디입니다."
+      ? "green"
+      : "red"};
 
   margin-left: 0;
 
