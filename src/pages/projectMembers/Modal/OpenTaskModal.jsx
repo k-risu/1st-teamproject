@@ -272,7 +272,7 @@ const OpenTaskModal = ({
           <h2>{getModalTitle()}</h2>
           {selectedInfo.modalMode === "change" ? (
             ""
-          ) : (
+          ) : selectedInfo.modalMode === "view" ? (
             <IconWrap>
               {/* 리더일 때 무조건 EditIcon, ChangeIcon, DeleteIcon이 나옴 */}
               {isLeader && (
@@ -328,6 +328,8 @@ const OpenTaskModal = ({
                 </>
               )}
             </IconWrap>
+          ) : (
+            ""
           )}
         </ModalHeader>
         {selectedInfo.modalMode === "change" ? (

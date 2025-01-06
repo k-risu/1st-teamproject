@@ -32,7 +32,12 @@ import {
 
 // 유효성 검사 스키마 (로그인 및 회원가입 폼에서 사용하는 모든 입력값에 대한 유효성 검사 규칙)
 const loginSchema = yup.object({
-  nickname: yup.string().required("아이디는 필수 입니다."),
+  nickname: yup
+    .string()
+    .required("아이디는 필수 입니다.")
+    .test("is-valid-id", "아이디 형식이 올바르지 않습니다.", (value) =>
+      /^[a-zA-Z0-9_-]+$/.test(value),
+    ), // userId 검증 추가,
   email: yup
     .string()
     .email("유효한 이메일을 입력하세요.")

@@ -13,6 +13,7 @@ import {
   Userpage,
   UserProfile,
   UserId,
+  Layout,
 } from "./MyPage.styled";
 
 function MyPage() {
@@ -128,9 +129,10 @@ function MyPage() {
   );
 
   return (
-    <div>
+    <Layout>
       <Header>
-        <h2>마이 페이지</h2>
+        {userData.myInfo === true ? <h2>마이 페이지</h2> : userData.nickname}
+        {console.log("여기:", userData)}
       </Header>
       <Userinfo>
         <UserProfile>
@@ -149,24 +151,24 @@ function MyPage() {
           ) : (
             <img src="/default_profile.jpg" alt="" />
           )}
-          <p>{userData.userStatusMessage || "statusMessage 영역"}</p>
+          {/* <p>{userData.userStatusMessage || "statusMessage 영역"}</p> */}
+          <Userpage>
+            <UserDetail>
+              <Label>아이디</Label>
+              <UserId>{userData.userId || "아이디 정보 없음"}</UserId>
+            </UserDetail>
+            <UserDetail>
+              <Label>이메일</Label>
+              <Useremail>{userData.email || "이메일 정보 없음"}</Useremail>
+            </UserDetail>
+            <UserDetail>
+              <Label>닉네임</Label>
+              <Usernickname>
+                {userData.nickname || "닉네임 정보 없음"}
+              </Usernickname>
+            </UserDetail>
+          </Userpage>
         </UserProfile>
-        <Userpage>
-          <UserDetail>
-            <Label>아이디</Label>
-            <UserId>{userData.userId || "아이디 정보 없음"}</UserId>
-          </UserDetail>
-          <UserDetail>
-            <Label>이메일</Label>
-            <Useremail>{userData.email || "이메일 정보 없음"}</Useremail>
-          </UserDetail>
-          <UserDetail>
-            <Label>닉네임</Label>
-            <Usernickname>
-              {userData.nickname || "닉네임 정보 없음"}
-            </Usernickname>
-          </UserDetail>
-        </Userpage>
       </Userinfo>
       {/* ✅ 프로필 이미지 확대 팝업 */}
       {isPopupOpen && (
@@ -230,7 +232,7 @@ function MyPage() {
           </button>
         </Footer>
       )}
-    </div>
+    </Layout>
   );
 }
 

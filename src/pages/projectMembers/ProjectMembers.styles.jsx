@@ -219,6 +219,8 @@ export const Task = styled.span`
   user-select: none;
   width: 195px;
   ${(props) => (props.memberLock === 1 ? "color:#808080" : "")}
+  font-weight: 500;
+  margin: 3px;
 `;
 export const CheckedIcon = styled(FaCheck)`
   min-width: 20px;

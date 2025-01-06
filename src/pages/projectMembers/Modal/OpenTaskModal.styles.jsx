@@ -114,14 +114,28 @@ export const BtWrap = styled.div`
   margin-bottom: 15px;
 
   button {
-    background-color: #dfdfdf;
-    color: #000;
-    padding: 5px 15px;
-    border: none;
-    border-radius: 5px;
+    /* background-color: #dfdfdf; */
+    /* color: #000; */
+    /* padding: 5px 15px; */
+    /* border: none; */
+    /* border-radius: 5px; */
     cursor: pointer;
     margin-top: 15px;
     font-size: 15px;
+
+    border-radius: 5px;
+    color: rgba(0, 0, 0, 1) !important;
+    background-color: rgba(255, 255, 255, 1);
+    font-weight: 600;
+    padding: 5px 15px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.8) !important;
+      color: rgba(255, 255, 255, 1) !important;
+    }
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.16),
+      0 1px 3px rgba(0, 0, 0, 0.23);
   }
 `;
 
@@ -155,6 +169,13 @@ export const MembersWrap = styled.div`
   padding: 10px;
   border-radius: 5px;
   background-color: #f4f4f4;
+
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    background-color: #c0c0c0;
+  }
 
   cursor: pointer;
   &:hover {

@@ -142,7 +142,7 @@ const DashBoard = () => {
     });
   };
   const goUserPage = (e) => {
-    console.log(e);
+    console.log("여기111", e);
 
     navigate(`/mypage`, {
       state: {
