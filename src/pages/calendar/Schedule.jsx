@@ -37,8 +37,10 @@ const Schedule = () => {
     height: 120px;
     background-color: whitesmoke;
     position: fixed;
-    border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 3px;
+    box-shadow:
+      0 10px 5px rgba(0, 0, 0, 0.1),
+      0 6px 6px rgba(0, 0, 0, 0.2);
 
     left: ${(props) => `${props.modalXY.x}px`};
     top: ${(props) => `${props.modalXY.y}px`};

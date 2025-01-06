@@ -11,9 +11,8 @@ export const SideBarContainer = styled.div`
   border-right: 1px solid rgba(0, 0, 0, 0.2);
   gap: 30px;
   box-shadow:
-    0 10px 20px rgba(0, 0, 0, 0.19),
-    0 6px 6px rgba(0, 0, 0, 0.23);
-
+    0 10px 5px rgba(0, 0, 0, 0.1),
+    0 6px 6px rgba(0, 0, 0, 0.2);
   background-color: white;
 `;
 

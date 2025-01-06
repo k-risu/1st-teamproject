@@ -4,7 +4,11 @@ export const DashBoardContainer = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 1400px;
-  width: 1250px;
+  width: 100%;
+  height: 100%;
+  padding: 50px 60px;
+  padding-bottom: 100px;
+  background-color: rgba(255, 255, 255, 0.5);
 `;
 
 export const DashBoardTitleWrap = styled.div`
@@ -105,27 +109,36 @@ export const ButtonDescription = styled.div`
 
 export const ButtonTitle = styled.div`
   display: flex;
-  padding: 5px 10px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-  background-color: white;
-  font-weight: 700;
   cursor: pointer;
+  padding: 8px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 1);
+  background-color: rgba(255, 255, 255, 1);
 
+  box-shadow:
+    0 3px 5px rgba(0, 0, 0, 0.16),
+    0 3px 5px rgba(0, 0, 0, 0.23);
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 1);
   }
 `;
 
 export const ButtonTitleDanger = styled.div`
   display: flex;
-  padding: 5px 10px;
+  padding: 8px 15px;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 1);
   color: #ff3c3c;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
+
+  box-shadow:
+    0 3px 5px rgba(0, 0, 0, 0.16),
+    0 3px 5px rgba(0, 0, 0, 0.23);
 
   &:hover {
     background-color: #ff3c3c;

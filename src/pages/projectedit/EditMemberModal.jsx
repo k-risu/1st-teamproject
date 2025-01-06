@@ -54,7 +54,11 @@ const EditMemberModal = ({
       icon: "success",
       title: `${userNickname}님을 추가했어요`,
     });
-    setTeamMembers(userInfo);
+    console.log(teamMembers);
+    console.log(userNickname);
+    console.log(clickUserData);
+
+    setTeamMembers((teamMembers) => [...teamMembers, clickUserData]);
     setMembersData((teamMembers) => [...teamMembers, clickUserData]);
     setMemberList((prev) => [...prev, userNickname]);
     setSearchInput("");

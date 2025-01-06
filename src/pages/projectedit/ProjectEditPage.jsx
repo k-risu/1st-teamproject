@@ -80,8 +80,8 @@ const ProjectEditPage = () => {
     const userNoList = userList.map((item) => {
       return item.userNo;
     });
-    console.log(userList);
 
+    console.log(userList);
     console.log(userNoList);
 
     const payload = {
@@ -93,7 +93,7 @@ const ProjectEditPage = () => {
 
     const res = axios.post(`/api/project/search-user`, payload);
 
-    setTeamMembers(teamMembers);
+    setTeamMembers([...teamMembers, userList]);
     closeAddModal();
   };
 
