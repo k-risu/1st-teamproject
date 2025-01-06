@@ -18,6 +18,19 @@ import {
   UserWrap,
 } from "./OpenTaskModal.styles";
 
+/**
+ * OpenTaskModal 컴포넌트
+ * @param {boolean} openTaskModalFor - 모달이 열려있는지 여부
+ * @param {function} closeTaskModalFor - 모달을 닫는 함수
+ * @param {function} onOpenDeleteModal - 삭제 모달을 여는 함수
+ * @param {number} signedUserNo - 로그인한 사용자의 번호
+ * @param {number} projectNo - 프로젝트 번호
+ * @param {object} selectedInfo - 선택된 정보 (할 일 관련)
+ * @param {function} setSelectedInfo - 선택된 정보 상태 변경 함수
+ * @param {boolean} isLeader - 사용자가 팀 리더인지 여부
+ * @param {function} setMembers - 팀 멤버 상태 변경 함수
+ * @param {Array} members - 팀 멤버 목록
+ */
 const OpenTaskModal = ({
   openTaskModalFor,
   closeTaskModalFor,
@@ -35,11 +48,22 @@ const OpenTaskModal = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 상태 변경 함수
+  /**
+   * 할 일 내용 상태 변경 함수
+   * @param {object} e - 이벤트 객체
+   */
   const handleChangeContent = (e) => setTaskContent(e.target.value);
+
+  /**
+   * 할 일 상세 내용 상태 변경 함수
+   * @param {object} e - 이벤트 객체
+   */
   const handleChangeDetail = (e) => setTaskDetail(e.target.value);
 
-  // 유저 선택
+  /**
+   * 팀원 선택 상태 변경 함수
+   * @param {number} userNo - 선택된 팀원의 번호
+   */
   const [selectedUser, setSelectedUser] = useState(null); // 선택된 팀원
 
   useEffect(() => {
@@ -54,7 +78,9 @@ const OpenTaskModal = ({
       return;
     }
 
-    // 기존 데이터를 수정하는 모드일 때 데이터를 가져오는 코드
+    /**
+     * 할 일 상세 정보를 가져오는 함수
+     */
     const fetchTaskDetails = async () => {
       try {
         const response = await axios.get(`/api/project/schedule`, {
@@ -79,6 +105,10 @@ const OpenTaskModal = ({
     }
   }, []); // openTaskModalFor, selectedInfo에 따라 리렌더링
 
+  /**
+   * 폼 제출 처리 함수
+   * @param {object} taskData - 할 일 데이터를 포함한 객체
+   */
   const handleSubmit = async () => {
     if (!taskContent.trim()) return;
 
@@ -122,7 +152,6 @@ const OpenTaskModal = ({
 
           if (response.status === 200) {
             console.log(response);
-
             console.log(taskData);
             refreshData(projectNo, signedUserNo, setMembers);
           }
@@ -143,6 +172,10 @@ const OpenTaskModal = ({
     }
   };
 
+  /**
+   * 모달의 제목을 결정하는 함수
+   * @returns {string} 모달의 제목
+   */
   const getModalTitle = () => {
     switch (selectedInfo.modalMode) {
       case "add":
@@ -156,6 +189,10 @@ const OpenTaskModal = ({
     }
   };
 
+  /**
+   * 모달에 표시할 버튼을 렌더링하는 함수
+   * @returns {JSX.Element} 버튼 UI
+   */
   const renderButtons = () => {
     if (selectedInfo.modalMode === "view") {
       return (
@@ -184,6 +221,11 @@ const OpenTaskModal = ({
       </BtWrap>
     );
   };
+
+  /**
+   * 팀원 변경 UI를 렌더링하는 함수
+   * @returns {JSX.Element} 팀원 변경 UI
+   */
   const renderChangeUserUI = () => {
     return (
       <>
@@ -230,7 +272,7 @@ const OpenTaskModal = ({
           <h2>{getModalTitle()}</h2>
           {selectedInfo.modalMode === "change" ? (
             ""
-          ) : (
+          ) : selectedInfo.modalMode === "view" ? (
             <IconWrap>
               {/* 리더일 때 무조건 EditIcon, ChangeIcon, DeleteIcon이 나옴 */}
               {isLeader && (
@@ -286,6 +328,8 @@ const OpenTaskModal = ({
                 </>
               )}
             </IconWrap>
+          ) : (
+            ""
           )}
         </ModalHeader>
         {selectedInfo.modalMode === "change" ? (

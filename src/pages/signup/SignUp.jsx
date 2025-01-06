@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -30,9 +30,14 @@ import {
   SignUpTop,
 } from "./SignUp.styles";
 
-// 유효성 검사 스키마
+// 유효성 검사 스키마 (로그인 및 회원가입 폼에서 사용하는 모든 입력값에 대한 유효성 검사 규칙)
 const loginSchema = yup.object({
-  nickname: yup.string().required("아이디은 필수 입니다."),
+  nickname: yup
+    .string()
+    .required("아이디는 필수 입니다.")
+    .test("is-valid-id", "아이디 형식이 올바르지 않습니다.", (value) =>
+      /^[a-zA-Z0-9_-]+$/.test(value),
+    ), // userId 검증 추가,
   email: yup
     .string()
     .email("유효한 이메일을 입력하세요.")
@@ -63,7 +68,8 @@ function SignUp() {
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 여부
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기/닫기 상태
   const [over14, setOver14] = useState(false); // Over14 상태를 직접 관리
-  // const [isEmail, setIsEmail] = useState(false);
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false); // 아이디 중복 확인 여부
+  const [nicknameCheckMessage, setNicknameCheckMessage] = useState(""); // 중복 확인 메시지 상태
   const navigate = useNavigate();
 
   const {
@@ -79,59 +85,69 @@ function SignUp() {
     mode: "onSubmit",
   });
 
-  // 회원가입 폼 제출 처리 함수
-  const handleSubmitForm = async (data) => {
-    const isValid = await trigger(); // trigger()로 모든 필드 검사
+  /**
+   * 회원가입 폼 제출 처리 함수
+   * @param {object} data - 회원가입 폼에서 입력된 데이터
+   */
+  const handleSubmitForm = useCallback(
+    async (data) => {
+      const isValid = await trigger(); // trigger()로 모든 필드 검사
 
-    if (!isValid) {
-      // 유효성 검사 실패 시, 회원가입 처리를 하지 않음
-      return;
-    }
-    try {
-      const formData = new FormData();
-      formData.append(
-        "req",
-        JSON.stringify({
-          email: data.email,
-          userId: data.nickname,
-          password: data.password,
-          passwordConfirm: data.passwordConfirm,
-        }),
-      );
-
-      const response = await axios.post("/api/user/sign-up", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          accept: "*/*",
-        },
-      });
-
-      if (response.data.code === "DPE") {
-        console.error("회원가입 실패: 중복 이메일");
-
-        // 중복 이메일 오류를 email 필드에 설정
-        setError("email", {
-          type: "manual",
-          message: "이미 가입된 이메일입니다.",
-        });
+      if (!isValid || !isNicknameChecked) {
+        if (!isNicknameChecked) {
+          setError("nickname", {
+            type: "manual",
+            message: "아이디 중복 확인이 필요합니다.",
+          });
+        }
         return;
       }
-      console.log("회원가입 성공:", response.data);
+      try {
+        const formData = new FormData();
+        formData.append(
+          "req",
+          JSON.stringify({
+            email: data.email,
+            userId: data.nickname,
+            password: data.password,
+            passwordConfirm: data.passwordConfirm,
+          }),
+        );
 
-      if (response.data.code === "OK") {
-        navigate("/signin");
+        const response = await axios.post("/api/user/sign-up", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            accept: "*/*",
+          },
+        });
+
+        if (response.data.code === "DPE") {
+          console.error("회원가입 실패: 중복 이메일");
+
+          // 중복 이메일 오류를 email 필드에 설정
+          setError("email", {
+            type: "manual",
+            message: "이미 가입된 이메일입니다.",
+          });
+          return;
+        }
+        console.log("회원가입 성공:", response.data);
+
+        if (response.data.code === "OK") {
+          navigate("/signin");
+        }
+      } catch (error) {
+        console.error("회원가입 실패:", error);
       }
-      // 회원가입 후 처리 (로그인 페이지로 이동 등)
-    } catch (error) {
-      console.error("회원가입 실패:", error);
-    }
-  };
+    },
+    [isNicknameChecked, navigate, setError, trigger], // 의존성 배열에 필요한 값들 추가
+  );
 
-  // 이메일 인증 버튼 클릭 시
+  /**
+   * 이메일 인증 버튼 클릭 시 인증을 요청하고 모달을 열기 위한 함수
+   */
   const handleEmailVerification = async () => {
     const isEmailValid = await trigger("email");
-    // setIsEmail(isEmailValid);
-    // console.log(isEmailValid);
 
     if (isEmailValid) {
       setIsModalOpen(true); // 모달 먼저 열기
@@ -155,19 +171,28 @@ function SignUp() {
     }
   };
 
-  // 인증 성공 시 이메일 인증 완료 상태로 변경
+  /**
+   * 인증 성공 시 이메일 인증 완료 상태로 변경
+   */
   const handleVerificationSuccess = () => {
     setValue("emailVerified", true); // react-hook-form에 상태 전달
     setIsModalOpen(false); // 모달 닫기
   };
 
-  // Over14 체크박스를 클릭하면 오류 메시지가 사라짐
+  /**
+   * Over14 체크박스를 클릭하면 오류 메시지가 사라짐
+   * @param {Event} e - 체크박스 이벤트
+   */
   const handleOver14Change = (e) => {
     const isChecked = e.target.checked;
     setOver14(isChecked); // Over14 상태 변경
     setValue("Over14", isChecked); // react-hook-form에 값 설정
     trigger("Over14"); // validation을 다시 실행하여 오류 메시지 업데이트
   };
+
+  /**
+   * 아이디 중복 체크를 위한 함수
+   */
   const handleIdCheck = async () => {
     const nickname = getValues("nickname");
 
@@ -192,8 +217,11 @@ function SignUp() {
           type: "manual",
           message: "중복된 아이디입니다.",
         });
+        setNicknameCheckMessage("");
+        setIsNicknameChecked(false);
       } else if (response.data.code === "OK") {
-        alert("사용 가능한 아이디입니다.");
+        setNicknameCheckMessage("사용 가능한 아이디입니다.");
+        setIsNicknameChecked(true);
       }
     } catch (error) {
       console.error("중복 확인 요청 중 오류 발생:", error);
@@ -204,9 +232,21 @@ function SignUp() {
     }
   };
 
+  /**
+   * 아이디 입력 시 중복 확인 메시지를 초기화
+   * @param {Event} e - 아이디 입력 이벤트
+   */
+  const handleNicknameChange = (e) => {
+    setIsNicknameChecked(false);
+    setValue("nickname", e.target.value);
+    setNicknameCheckMessage("");
+    trigger("nickname"); // 유효성 검사 강제 실행
+  };
+
   return (
     <SignUpLayout>
       <SignUpForm onSubmit={handleSubmit(handleSubmitForm)}>
+        {/* 회원가입 폼 레이아웃 및 UI */}
         <SignUpTop>
           <BackBt>
             <ArrowLeft onClick={() => navigate(-1)} />
@@ -214,6 +254,7 @@ function SignUp() {
           <SignUpText>회원가입</SignUpText>
         </SignUpTop>
 
+        {/* 이메일 입력 및 인증 */}
         <SignUpFieldWrap>
           <SignUpFieldDCBT>
             <SignUpField CheckBt={true}>
@@ -241,15 +282,22 @@ function SignUp() {
             </EmailErrorsMsg>
           </SignUpFieldDCBT>
 
+          {/* 아이디 입력 및 중복 확인 */}
           <SignUpFieldDCBT>
             <SignUpField CheckBt={true}>
               <SignUpTextFieldName>&nbsp;아이디</SignUpTextFieldName>
               <SignUpTextField
                 {...register("nickname")}
+                onChange={handleNicknameChange}
                 placeholder="사용하실 아이디를 입력해주세요"
               />
               <MgsWrap>
                 <ErrorsMsg>{errors.nickname?.message}</ErrorsMsg>
+                {nicknameCheckMessage && (
+                  <ErrorsMsg nicknameCheckMessage={nicknameCheckMessage}>
+                    {nicknameCheckMessage}
+                  </ErrorsMsg>
+                )}
               </MgsWrap>
             </SignUpField>
             <DuplicateCheckBt type="button" onClick={handleIdCheck}>
@@ -257,11 +305,12 @@ function SignUp() {
             </DuplicateCheckBt>
           </SignUpFieldDCBT>
 
+          {/* 비밀번호 입력 및 확인 */}
           <SignUpField>
             <SignUpTextFieldName>비밀번호</SignUpTextFieldName>
             <SignUpTextField
-              type="password" // 비밀번호 숨기기
-              {...register("password")} // password 등록
+              type="password"
+              {...register("password")}
               placeholder="사용 하실 비밀번호를 입력해주세요"
             />
             <MgsWrap>
@@ -272,8 +321,8 @@ function SignUp() {
           <SignUpField>
             <SignUpTextFieldName>비밀번호 확인</SignUpTextFieldName>
             <SignUpTextField
-              type="password" // 비밀번호 확인 숨기기
-              {...register("passwordConfirm")} // passwordConfirm 등록
+              type="password"
+              {...register("passwordConfirm")}
               placeholder="비밀번호를 다시 입력해주세요"
             />
             <MgsWrap>
@@ -282,7 +331,7 @@ function SignUp() {
           </SignUpField>
         </SignUpFieldWrap>
 
-        {/* 처음부터 표시되는 '14세 이상' 오류 메시지 */}
+        {/* 14세 이상 체크박스 */}
         <Over14Label>
           <Over14CheckBox
             type="checkbox"
@@ -293,13 +342,13 @@ function SignUp() {
           &nbsp;필수
           <div>&nbsp;&nbsp;14세 이상입니다.</div>
         </Over14Label>
-        {/* 오류 메시지는 Over14 체크박스가 체크되지 않았을 때만 표시 */}
         <MgsOver14Wrap>
           {errors.Over14 && (
             <ErrorsMsg over14={true}>{errors.Over14?.message}</ErrorsMsg>
           )}
         </MgsOver14Wrap>
 
+        {/* 회원가입 버튼 */}
         <SignUpBtWrap>
           <Link to="/signin">
             <AlreadyMemberBt>이미 회원이세요?</AlreadyMemberBt>

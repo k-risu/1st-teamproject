@@ -92,6 +92,7 @@ function MyPageEdit() {
       const formData = new FormData();
 
       // ✅ JSON 데이터를 Blob으로 변환하여 `req` 키에 추가
+
       formData.append(
         "req",
         new Blob([JSON.stringify(params)], { type: "application/json" }),
@@ -114,7 +115,9 @@ function MyPageEdit() {
 
       if (response.data.code === "OK") {
         alert("정보 변경이 완료되었습니다.");
-        navigate("/mypage");
+        navigate("/mypage", {
+          state: { updatedPic: pic }, // 🔥 변경된 pic 정보를 넘김
+        });
       } else if (response.data.code === "DN") {
         alert("닉네임이 중복되었습니다.");
         setIsNicknameChecked(false);
