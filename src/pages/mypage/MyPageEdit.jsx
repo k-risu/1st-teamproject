@@ -110,7 +110,9 @@ function MyPageEdit() {
 
       if (response.data.code === "OK") {
         alert("정보 변경이 완료되었습니다.");
-        navigate("/mypage");
+        navigate("/mypage", {
+          state: { updatedPic: pic }, // 🔥 변경된 pic 정보를 넘김
+        });
       } else if (response.data.code === "DN") {
         alert("닉네임이 중복되었습니다.");
         setIsNicknameChecked(false);
