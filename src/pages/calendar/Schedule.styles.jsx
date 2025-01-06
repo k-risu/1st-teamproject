@@ -7,8 +7,6 @@ export const CalendarLayout = styled.section`
   background-color: white;
   padding: 30px;
 
-  /* pointer-events: none; */
-
   .fc .fc-toolbar-title {
     font-weight: normal;
   }
@@ -51,6 +49,11 @@ export const CalendarLayout = styled.section`
     justify-content: center;
     align-items: center;
     text-align: center;
+  }
+
+  .fc-direction-ltr .fc-daygrid-event.fc-event-start,
+  .fc-direction-rtl .fc-daygrid-event.fc-event-end {
+    margin-left: 50px !important;
   }
 `;
 

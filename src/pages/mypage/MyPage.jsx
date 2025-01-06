@@ -112,7 +112,7 @@ function MyPage() {
               onClick={handleImageClick}
             />
           ) : (
-            <p>유저 사진이 없습니다.</p>
+            <img src="/default_profile.jpg" alt="" />
           )}
           <p>{userData.userStatusMessage || "statusMessage 영역"}</p>
         </UserProfile>

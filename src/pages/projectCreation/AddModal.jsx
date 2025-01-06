@@ -42,15 +42,6 @@ const AddModal = ({
     // console.log(checkNickname);
     console.log(memberList);
 
-    // if (
-    //   memberList.filter((item) => {
-    //     console.log(item);
-
-    //     return item === userNickname;
-    //   })
-    // ) {
-    //   alert("이미 존재하는 사용자입니다");
-    // } else {
     const Toast = Swal.mixin({
       toast: true,
       position: "center",
@@ -70,7 +61,6 @@ const AddModal = ({
     setMemberList((prev) => [...prev, userNickname]);
     setSearchInput("");
     setUserInfo([]);
-    // }
   };
 
   const handleSearch = async () => {
