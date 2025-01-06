@@ -1,3 +1,4 @@
+import { useMemo, useCallback } from "react";
 import { checkUnassignedTasks, refreshData } from "../projectMemberUtils";
 import { AlertIcon, ModalContent, ModalOverlay } from "./DeleteModal.styles";
 import axios from "axios";
@@ -15,7 +16,25 @@ const DeleteModal = ({
   setMsgModal,
   closeTaskModalFor,
 }) => {
-  const handleDeleteTask = async () => {
+  /**
+   * 조건부 메시지를 useMemo로 메모이제이션
+   */
+  const modalMessage = useMemo(() => {
+    if (isTask === true) {
+      return "이 할일을 삭제하시겠습니까?";
+    } else if (isLeader) {
+      return "프로젝트에서 제외하시겠습니까?";
+    } else {
+      return "프로젝트를 나가시겠습니까?";
+    }
+  }, [isTask, isLeader]);
+
+  /**
+   * 할 일을 삭제하는 함수.
+   * API 요청을 통해 해당 할 일을 삭제하고, 삭제 성공 시 상태를 업데이트하고 데이터를 새로 고칩니다.
+   * @returns {Promise<void>}
+   */
+  const handleDeleteTask = useCallback(async () => {
     try {
       const response = await axios.delete(`/api/project/schedule`, {
         data: { scheduleNo, signedUserNo },
@@ -36,9 +55,22 @@ const DeleteModal = ({
       console.log("API 호출 중 오류가 발생했습니다.");
       console.log(err);
     }
-  };
+  }, [
+    scheduleNo,
+    signedUserNo,
+    setIsTask,
+    allCloseModal,
+    closeTaskModalFor,
+    projectNo,
+    setMembers,
+  ]);
 
-  const handleLeaveProject = async () => {
+  /**
+   * 프로젝트에서 나가거나 제외하는 함수.
+   * API 요청을 통해 프로젝트에서 나가거나 특정 멤버를 제외하고, 이후 할 일에 대한 처리와 데이터를 새로 고칩니다.
+   * @returns {Promise<void>}
+   */
+  const handleLeaveProject = useCallback(async () => {
     try {
       const response = await axios.patch(`/api/project`, {
         signedUserNo,
@@ -63,26 +95,27 @@ const DeleteModal = ({
     } catch (err) {
       console.log("API 호출 중 오류가 발생했습니다.", err);
     }
-  };
+  }, [
+    signedUserNo,
+    memberRole,
+    projectNo,
+    setMembers,
+    setMsgModal,
+    allCloseModal,
+  ]);
 
   return (
     <ModalOverlay
       onClick={() => {
-        allCloseModal,
-          setIsTask((prevState) => ({
-            ...prevState,
-            isTask: false,
-          }));
+        allCloseModal();
+        setIsTask((prevState) => ({
+          ...prevState,
+          isTask: false,
+        }));
       }}
     >
       <ModalContent onClick={(e) => e.stopPropagation()}>
-        {isTask === true ? (
-          <h2>이 할일을 삭제하시겠습니까?</h2>
-        ) : isLeader ? (
-          <h2>프로젝트에서 제외하시겠습니까?</h2>
-        ) : (
-          <h2>프로젝트를 나가시겠습니까?</h2>
-        )}
+        <h2>{modalMessage}</h2>
         <AlertIcon />
         <div>
           {isTask === true ? (
@@ -98,4 +131,5 @@ const DeleteModal = ({
     </ModalOverlay>
   );
 };
+
 export default DeleteModal;

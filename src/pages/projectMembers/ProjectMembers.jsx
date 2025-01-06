@@ -37,6 +37,10 @@ const OpenTaskModalMemo = React.memo(OpenTaskModal);
 
 import ToggleButton from "../../components/ToggleButton";
 
+/**
+ * ProjectMembers 컴포넌트는 프로젝트 구성원들의 정보를 보여주고,
+ * 구성원과 관련된 작업을 관리하는 기능을 담당합니다.
+ */
 const ProjectMembers = () => {
   const location = useLocation();
 
@@ -82,7 +86,10 @@ const ProjectMembers = () => {
     isTask: null,
   });
 
-  // DeleteModal 열기 함수
+  /**
+   * 삭제 모달을 열기 위한 함수입니다.
+   * @param {number} userNo - 삭제할 사용자 번호
+   */
   const openDeleteModal = useCallback((userNo) => {
     setDeleteModalFor(userNo);
     setDeleteModal(true);
@@ -91,7 +98,10 @@ const ProjectMembers = () => {
 
   const navigate = useNavigate();
 
-  // 프로젝트 데이터 가져오는 함수
+  /**
+   * 프로젝트 데이터를 API를 통해 가져오는 함수입니다.
+   * @async
+   */
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
@@ -103,6 +113,7 @@ const ProjectMembers = () => {
           setProjectTitle(title);
           setLeaderNo(leaderNo);
           setMembers(memberList);
+          console.log("데이터 목록:", response.data.project);
         }
       } catch (error) {
         console.error("API 호출 오류:", error);
@@ -116,14 +127,17 @@ const ProjectMembers = () => {
     fetchProjectData();
   }, [clickProjectNo, signedUserNo]);
 
-  // 로그인 확인
+  /**
+   * 로그인 상태를 확인하는 함수입니다.
+   * @useEffect
+   */
   useEffect(() => {
     isLogin({ navigate, cookies });
   }, []);
 
   /**
-   * MoreOptionsModal의 좌표값을 계산하여 모달을 열기 위한 함수
-   * @param {number|string} id - 열고자 하는 모달의 고유 ID
+   * MoreOptionsModal을 열기 위한 좌표를 계산하고, 모달을 엽니다.
+   * @param {number|string} id - 모달을 열고자 하는 구성원의 ID
    * @param {Object} event - 클릭 이벤트 객체
    */
   const moreOptionsOpenModal = useCallback((id, event) => {
@@ -140,9 +154,21 @@ const ProjectMembers = () => {
     setMoreOptionsModalId(id); // openModalId를 선택된 userNo로 설정
   }, []);
 
+  /**
+   * 멤버들을 4명씩 나누는 함수입니다.
+   * @param {Array} members - 프로젝트 멤버 리스트
+   * @param {number} size - 몇 명씩 나눌 것인지 설정
+   * @returns {Array} - 분할된 멤버 리스트
+   */
   const memberChunks = chunkMembers(members, 4); // 멤버 리스트를 4명씩 나누기
 
-  // 카드 이미지 렌더링 함수
+  /**
+   * 구성원의 이미지 카드를 렌더링하는 함수입니다.
+   * @param {number} userNo - 사용자 번호
+   * @param {string|null} pic - 사용자 프로필 이미지
+   * @param {string} nickname - 사용자의 닉네임
+   * @returns {JSX.Element} - 사용자 이미지
+   */
   const renderCardImg = useCallback((userNo, pic, nickname) => {
     if (pic !== null) {
       return (
@@ -156,7 +182,12 @@ const ProjectMembers = () => {
     }
   }, []);
 
-  // 멤버 정보 렌더링 함수
+  /**
+   * 멤버 정보와 역할을 보여주는 컴포넌트입니다.
+   * @param {Object} member - 멤버 객체
+   * @param {number} leaderNo - 팀장 번호
+   * @returns {JSX.Element} - 멤버 정보
+   */
   const renderMemberInfoWrap = useCallback((member, leaderNo) => {
     return (
       <MemberInfoWrap>
@@ -237,7 +268,7 @@ const ProjectMembers = () => {
         <Members key={chunkIndex}>
           {chunk.map((member, index) =>
             member ? (
-              <Card key={member.userNo || index}>
+              <Card key={member.index || index}>
                 <CardTod />
                 <MemberInfo>
                   {leaderNo === member.userNo ? <CrownIcon /> : ""}
@@ -286,6 +317,7 @@ const ProjectMembers = () => {
                     </ul>
                   ))}
                 </TaskList>
+
                 {renderProgressBar(member.scheduleList)}
               </Card>
             ) : (

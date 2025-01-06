@@ -116,6 +116,7 @@ export const checkUnassignedTasks = async (
 
 /**
  * 멤버 리스트를 주어진 크기로 나누고, lock이 1인 멤버는 scheduleList가 있을 때만 표시합니다.
+ * lock이 1이고 scheduleList가 없는 멤버는 null로 처리합니다.
  * @param {Array} members - 나눌 멤버 배열
  * @param {number} chunkSize - 각 조각의 크기
  * @returns {Array} - 나눠진 멤버 배열 조각들의 배열
@@ -130,28 +131,34 @@ export const chunkMembers = (members, chunkSize) => {
   const result = [];
 
   // lock이 1이고 scheduleList가 존재하는 멤버만 표시
-  const processedMembers = members.map((member) => {
-    // lock이 1이고 scheduleList가 존재하면 표시, 그렇지 않으면 null
-    if (
-      member.lock === 1 &&
-      member.scheduleList &&
-      member.scheduleList.length > 0
-    ) {
-      return member; // scheduleList가 존재하는 경우 표시
-    } else if (member.lock === 1) {
-      return null; // lock이 1인데 scheduleList가 없으면 null
+  const processedMembers = members.filter((member) => {
+    // lock이 1이고 scheduleList가 존재하는 경우에만 표시
+    if (member.lock === 1) {
+      return member.scheduleList && member.scheduleList.length > 0;
     }
-    return member; // lock이 0인 멤버는 그대로 유지
+    return true; // lock이 0인 멤버는 그대로 유지
   });
 
+  // lock이 1이고 scheduleList가 없는 멤버들 처리 (null로 처리)
+  const lockOneWithoutSchedule = members
+    .filter(
+      (member) =>
+        member.lock === 1 &&
+        (!member.scheduleList || member.scheduleList.length === 0),
+    )
+    .map(() => null); // 이 부분에서 null을 반환하도록 처리
+
+  // lock이 1인 멤버들을 앞에 배치하고 lock이 0인 멤버들을 뒤에 배치
+  const finalMembers = [...processedMembers, ...lockOneWithoutSchedule];
+
   // 배열 크기가 chunkSize의 배수가 되도록 null 추가
-  while (processedMembers.length % chunkSize !== 0) {
-    processedMembers.push(null);
+  while (finalMembers.length % chunkSize !== 0) {
+    finalMembers.push(null);
   }
 
   // 배열을 chunkSize 크기로 나누기
-  for (let i = 0; i < processedMembers.length; i += chunkSize) {
-    const chunk = processedMembers.slice(i, i + chunkSize);
+  for (let i = 0; i < finalMembers.length; i += chunkSize) {
+    const chunk = finalMembers.slice(i, i + chunkSize);
     result.push(chunk);
   }
 
