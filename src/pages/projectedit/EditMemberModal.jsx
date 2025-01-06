@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ButtonWrapper,
   ModalContent,
@@ -7,12 +7,13 @@ import {
   ModalText,
   FindDiv,
   SearchMember,
-  SearchProfile,
   FindUserData,
-} from "../projectCreation/AddModal.styles";
+  ModalUser,
+} from "./EditMemberModal.styles";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FiDelete } from "react-icons/fi";
+import { useCookies } from "react-cookie";
 
 const EditMemberModal = ({
   isOpen,
@@ -21,87 +22,84 @@ const EditMemberModal = ({
   teamMembers,
   setTeamMembers,
 }) => {
-  const [memberList, setMemberList] = useState([
-    teamMembers.map((item) => item.nickname),
-  ]);
   const [membersData, setMembersData] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [cookies] = useCookies("signedUserNo");
+
+  useEffect(() => {
+    console.log("Updated teamMembers:", teamMembers);
+  }, [teamMembers]);
 
   if (!isOpen) return null;
 
-  const handleAddMemberButton = (e) => {
-    const clickUserData = userInfo.filter((item) => {
-      return item.userNo === e;
-    });
-    const userNickname = clickUserData[0].nickname.substring(
-      0,
-      clickUserData[0].nickname?.indexOf("#"),
-    );
+  const handleAddMemberButton = async (userNo) => {
+    if (teamMembers.some((member) => member.userNo === userNo)) {
+      Swal.fire({
+        icon: "warning",
+        title: "이미 추가된 사용자입니다.",
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+      });
+      return;
+    }
 
-    const Toast = Swal.mixin({
+    const clickUserData = userInfo.find((item) => item.userNo === userNo);
+    const userNickname = clickUserData.nickname.split("#")[0];
+
+    Swal.fire({
+      icon: "success",
+      title: `${userNickname}님을 추가했어요.`,
       toast: true,
       position: "center",
       showConfirmButton: false,
-      timer: 2000,
+      timer: 1500,
       timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      },
     });
-    Toast.fire({
-      icon: "success",
-      title: `${userNickname}님을 추가했어요`,
-    });
-    setTeamMembers(userInfo);
-    setMembersData((teamMembers) => [...teamMembers, clickUserData]);
-    setMemberList((prev) => [...prev, userNickname]);
+    setTeamMembers((prev) => [...prev, clickUserData]);
     setSearchInput("");
     setUserInfo([]);
   };
 
   const handleSearch = async () => {
+    if (!searchInput.trim()) {
+      Swal.fire("검색어를 입력해주세요.", "", "warning");
+      return;
+    }
+
     try {
       const seacrchNickname = encodeURIComponent(searchInput.trim());
-
       const res = await axios.get(
-        `/api/project/search-user/${seacrchNickname}`,
+        `/api/project/search-user/${seacrchNickname}`
       );
       if (res.data.code === "OK") {
         setUserInfo(res.data.userList);
       } else {
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "center",
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
-        Toast.fire({
-          icon: "error",
-          title: "해당 사용자를 찾을 수 없습니다",
-        });
+        Swal.fire("사용자를 찾을 수 없습니다.", "", "error");
       }
     } catch (error) {
-      console.error("오류 발생:", error);
-      alert("해당 사용자를 찾을 수 없습니다");
+      console.error("사용자 검색 중 오류 발생:", error);
+      Swal.fire("검색 실패", "다시 시도해주세요.", "error");
     }
   };
 
   const handleDelete = (e) => {
-    const deleteMember = memberList.flat().filter((item) => item !== e);
+    const deleteMember = teamMembers.filter((item) => item.userNo !== e);
+    console.log(deleteMember);
 
-    if (teamMembers[0].nickname === deleteMember[0]) {
+    if (
+      deleteMember.map((item) => {
+        return item.scheduleList.length;
+      }) >= 1
+    ) {
       const Toast = Swal.mixin({
         toast: true,
         position: "center",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 1500,
         timerProgressBar: true,
         didOpen: (toast) => {
           toast.onmouseenter = Swal.stopTimer;
@@ -113,7 +111,7 @@ const EditMemberModal = ({
         title: "해당 사용자는 삭제할 수 없습니다",
       });
     } else {
-      setMemberList(deleteMember);
+      setTeamMembers(deleteMember);
     }
   };
 
@@ -167,16 +165,16 @@ const EditMemberModal = ({
         )}
         <div>
           <ModalText>
-            {memberList.map((item, index) => (
-              <div key={index}>
-                <span>{item}</span>
-                <FiDelete onClick={() => handleDelete(item)} />
-              </div>
+            {teamMembers.map((item) => (
+              <ModalUser key={item.userNo}>
+                <span>{item.nickname}</span>
+                <FiDelete onClick={() => handleDelete(item.userNo)} />
+              </ModalUser>
             ))}
           </ModalText>
         </div>
         <ButtonWrapper>
-          <button type="button" onClick={() => addTeamMember(membersData)}>
+          <button type="button" onClick={() => addTeamMember(teamMembers)}>
             추가
           </button>
           <button type="button" onClick={closeModal}>

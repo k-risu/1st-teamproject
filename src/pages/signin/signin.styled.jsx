@@ -13,7 +13,8 @@ export const SigninContainer = styled.div`
   justify-content: center; /* 세로 중앙 정렬 */
   align-items: center; /* 가로 중앙 정렬 */
   height: 100vh; /* 화면 전체 높이 */
-  background-color: #f9f9f9; /* 배경색 추가 */
+  width: 100%;
+  background-color: white; /* 배경색 추가 */
 `;
 
 export const SigninBox = styled.div`
@@ -86,19 +87,20 @@ export const SigninBoxInputBox = styled.input`
 export const SigninBoxSigninbt = styled.button`
   max-width: 150px;
   width: 50%; /* 버튼이 너무 작지 않도록 너비 조정 */
-  padding: 7px 0px; /* 버튼 내부 여백 */
-  background-color: #f3f3f3; /* 메인 버튼 배경색 */
-  color: black; /* 버튼 텍스트 색상 */
-  border: 1px solid #f6f6f6; /* 테두리에 색상 추가 */
-  border-radius: 8px; /* 버튼 모서리를 둥글게 */
   font-size: 16px; /* 텍스트 크기 */
-  font-weight: bold; /* 텍스트 강조 */
   margin-top: 20px; /* 버튼과 상단 요소 간 간격 */
   cursor: pointer; /* 포인터 커서 표시 */
   transition: background-color 0.3s ease; /* 호버 시 부드러운 색상 전환 효과 */
 
+  padding: 8px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 1);
+  background-color: rgba(255, 255, 255, 1);
   &:hover {
-    background-color: #0056b3; /* 호버 효과로 더 어두운 색상 */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 1);
   }
 
   &:active {
@@ -107,8 +109,6 @@ export const SigninBoxSigninbt = styled.button`
 `;
 
 export const ButtonGroup = styled.div`
-  border: 1px solid #f6f6f6; /* 테두리에 색상 추가 */
-
   display: flex;
   justify-content: center; /* 모든 버튼을 가운데 정렬 */
   gap: 15px; /* 버튼 간 간격 */
@@ -117,19 +117,19 @@ export const ButtonGroup = styled.div`
 `;
 
 export const SigninBoxGroupbt = styled.button`
-  padding: 10px 20px; /* 버튼 내부 여백 */
-  border: 1px solid #f6f6f6; /* 테두리에 색상 추가 */
-  border-radius: 8px; /* 버튼 모서리를 둥글게 */
-  background-color: transparent; /* 버튼 배경 투명 */
-  color: "black"; /* 버튼 텍스트 색상 */
   font-size: 14px; /* 텍스트 크기 */
-  font-weight: bold; /* 텍스트 강조 */
   cursor: pointer; /* 포인터 커서 표시 */
   transition: all 0.3s ease; /* 호버 효과 부드럽게 */
 
+  padding: 8px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 1);
+  background-color: rgba(255, 255, 255, 1);
   &:hover {
-    background-color: #007bff; /* 배경색 변경 */
-    color: white; /* 텍스트 색상 변경 */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 1);
   }
 
   &:active {

@@ -39,6 +39,25 @@ export const ModalContent = styled.div`
     display: flex;
     gap: 30px;
     & > button {
+      /* background-color: #dfdfdf !important; */
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 30px;
+      border-radius: 5px;
+      color: rgba(0, 0, 0, 1) !important;
+      background-color: rgba(255, 255, 255, 1);
+      font-weight: 600;
+      padding: 5px 15px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.8) !important;
+        color: rgba(255, 255, 255, 1) !important;
+      }
+      box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.16),
+        0 1px 3px rgba(0, 0, 0, 0.23);
+    }
+    /* & > button {
       background-color: #dfdfdf !important;
       color: #000 !important;
       padding: 5px 15px;
@@ -47,7 +66,7 @@ export const ModalContent = styled.div`
       cursor: pointer;
       font-size: 15px;
       margin-top: 30px;
-    }
+    } */
   }
 `;
 export const AlertIcon = styled(GoAlert)`

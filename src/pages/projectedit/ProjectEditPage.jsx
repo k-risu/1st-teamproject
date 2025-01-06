@@ -30,7 +30,9 @@ const ProjectEditPage = () => {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // AddModal 상태
   const [isDateModalOpen, setIsDateModalOpen] = useState(false); // DateModal 상태
-  const [teamMembers, setTeamMembers] = useState([location.state?.memberList]); // 팀 구성원 상태
+  const [teamMembers, setTeamMembers] = useState(
+    location.state?.memberList || []
+  );
   const [eventData, setEventData] = useState({});
   const [changeDate, setChangeDate] = useState([]);
   const [selectDate, setSelectDate] = useState([
@@ -75,38 +77,90 @@ const ProjectEditPage = () => {
     mode: "onSubmit",
   });
 
-  const addTeamMember = (data) => {
-    const userList = [...clickProjectData.memberList, data.flat()].flat();
-    const userNoList = userList.map((item) => {
-      return item.userNo;
-    });
-    console.log(userList);
+  // const addTeamMember = async (data) => {
+  //   const userList = [...clickProjectData.memberList, data.flat()].flat();
+  //   const userNoList = userList.map((item) => {
+  //     return item.userNo;
+  //   });
+  //   console.log(userList);
 
-    console.log(userNoList);
+  //   const isMemberNo = teamMembers.map((item) => {
+  //     return item.userNo;
+  //   });
+
+  //   // const addMemberNo = [
+  //   //   ...userNoList.filter((item) => !isMemberNo.includes(item)),
+  //   //   ...isMemberNo.filter((item) => !userNoList.includes(item)),
+  //   // ];
+  //   const addMemberNo = userNoList.filter(
+  //     (userNo) => !isMemberNo.includes(userNo)
+  //   );
+
+  //   const payload = {
+  //     signedUserNo: parseInt(cookies.signedUserNo),
+  //     projectNo: parseInt(clickProjectData.projectNo),
+  //     insertUserNoList: addMemberNo,
+  //     deleteUserNoList: [],
+  //   };
+
+  //   const res = await axios.post(`/api/project/search-user`, payload);
+  //   console.log(res);
+
+  //   setTeamMembers((prev) => [...prev, ...userList]);
+  //   closeAddModal();
+  // };
+  const addTeamMember = async (data) => {
+    const userList = [...clickProjectData.memberList, ...data.flat()];
+    const userNoList = userList.map((item) => item.userNo);
+
+    const isMemberNo = teamMembers.map((item) => item.userNo);
+    const addMemberNo = userNoList.filter(
+      (userNo) => !isMemberNo.includes(userNo)
+    );
 
     const payload = {
-      signedUserNo: cookies.signedUserNo,
-      projectNo: clickProjectData.projectNo,
-      insertUserNoList: userNoList,
+      signedUserNo: parseInt(cookies.signedUserNo),
+      projectNo: parseInt(clickProjectData.projectNo),
+      insertUserNoList: addMemberNo,
       deleteUserNoList: [],
     };
 
-    const res = axios.post(`/api/project/search-user`, payload);
+    try {
+      const res = await axios.post(`/api/project/search-user`, payload);
+      console.log(res);
 
-    setTeamMembers(teamMembers);
-    closeAddModal();
+      if (res.data.code === "OK") {
+        const newMembers = data
+          .flat()
+          .filter((member) => addMemberNo.includes(member.userNo));
+        setTeamMembers((prev) => [...prev, ...newMembers]);
+        closeAddModal();
+      } else {
+        console.error("Failed to add members:", res.data.message);
+      }
+    } catch (error) {
+      console.error("Error adding members:", error);
+    }
   };
 
   const handleSubmitForm = async (data) => {
     console.log(data);
+    console.log(eventData.length);
+    console.log(clickProjectData);
 
-    let payload = {
+    const payload = {
       signedUserNo: cookies.signedUserNo,
       projectNo: clickProjectData.projectNo,
       title: data.title,
       description: data.description,
-      startAt: eventData.startAt.replace(/-/g, ""),
-      deadLine: eventData.deadLine.replace(/-/g, ""),
+      startAt:
+        eventData.length === undefined
+          ? clickProjectData.startAt.replace(/-/g, "")
+          : eventData.startAt.replace(/-/g, ""),
+      deadLine:
+        eventData.length === undefined
+          ? clickProjectData.deadLine.replace(/-/g, "")
+          : eventData.deadLine.replace(/-/g, ""),
     };
 
     try {

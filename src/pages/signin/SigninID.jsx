@@ -9,6 +9,7 @@ import {
   ResetButton,
   SigninBoxInputBox,
 } from "./SignIn.styled";
+import Swal from "sweetalert2";
 
 function SigninID({
   emailFormik,
@@ -79,7 +80,21 @@ function SigninID({
           if (result.code === "OK") {
             setUserId(result.userId); // userId 상태 저장
           } else {
-            alert("유저 ID를 가져오는 데 실패했습니다.");
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "center",
+              showConfirmButton: false,
+              timer: 1000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "warning",
+              title: "유저 ID를 가져오는 데 실패했습니다.",
+            });
           }
         } catch (error) {
           console.error("유저 ID 가져오기 오류:", error);
@@ -92,7 +107,21 @@ function SigninID({
 
   const handleSendVerification = () => {
     if (!emailFormik.values.email) {
-      alert("이메일을 입력해주세요.");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "이메일을 입력해주세요.",
+      });
       return;
     }
     setIsVerifying(true);
@@ -107,7 +136,21 @@ function SigninID({
     console.log("현재 인증번호:", verificationCode);
 
     if (!verificationCode) {
-      alert("인증번호를 입력해주세요.");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "인증번호를 입력해주세요.",
+      });
       return;
     }
 
@@ -199,12 +242,40 @@ function SigninID({
                         onClick={() => {
                           try {
                             navigator.clipboard.writeText(userId); // userId 복사
-                            alert("ID가 복사되었습니다.");
+                            const Toast = Swal.mixin({
+                              toast: true,
+                              position: "center",
+                              showConfirmButton: false,
+                              timer: 1000,
+                              timerProgressBar: true,
+                              didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                              },
+                            });
+                            Toast.fire({
+                              icon: "success",
+                              title: "ID가 복사되었습니다.",
+                            });
                             closePopup(); // 상태 초기화 및 팝업 닫기
                             navigate("/signin"); // "/signin" 페이지로 이동
                           } catch (error) {
                             console.error("ID 복사 오류:", error);
-                            alert("ID 복사 중 오류가 발생했습니다.");
+                            const Toast = Swal.mixin({
+                              toast: true,
+                              position: "center",
+                              showConfirmButton: false,
+                              timer: 1000,
+                              timerProgressBar: true,
+                              didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                              },
+                            });
+                            Toast.fire({
+                              icon: "warning",
+                              title: "ID 복사 중 오류가 발생했습니다.",
+                            });
                           }
                         }}
                         style={{

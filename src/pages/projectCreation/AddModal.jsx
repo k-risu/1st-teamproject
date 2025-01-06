@@ -7,7 +7,6 @@ import {
   ModalText,
   FindDiv,
   SearchMember,
-  SearchProfile,
   FindUserData,
 } from "./AddModal.styles";
 import axios from "axios";
@@ -27,50 +26,36 @@ const AddModal = ({
 
   if (!isOpen) return null;
 
-  const handleAddMemberButton = (e) => {
-    const clickUserData = userInfo.filter((item) => {
-      return item.userNo === e;
-    });
-    const userNickname = clickUserData[0].nickname.substring(
-      0,
-      clickUserData[0].nickname?.indexOf("#"),
-    );
-    // const checkNickname = memberList.filter((item) => {
-    //   return item === userNickname;
-    // });
-    console.log(userNickname);
-    // console.log(checkNickname);
-    console.log(memberList);
+  const handleAddMemberButton = (userNo) => {
+    if (teamMembers.some((member) => member === userNo)) {
+      Swal.fire({
+        icon: "warning",
+        title: "이미 추가된 사용자입니다.",
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+      });
+      return;
+    }
 
-    // if (
-    //   memberList.filter((item) => {
-    //     console.log(item);
+    const clickUserData = userInfo.find((item) => item.userNo === userNo);
+    const userNickname = clickUserData.nickname.split("#")[0];
 
-    //     return item === userNickname;
-    //   })
-    // ) {
-    //   alert("이미 존재하는 사용자입니다");
-    // } else {
-    const Toast = Swal.mixin({
+    Swal.fire({
+      icon: "success",
+      title: `${userNickname}님을 추가했어요.`,
       toast: true,
       position: "center",
       showConfirmButton: false,
-      timer: 2000,
+      timer: 1500,
       timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      },
     });
-    Toast.fire({
-      icon: "success",
-      title: `${userNickname}님을 추가했어요`,
-    });
-    setTeamMembers((prev) => [...prev, clickUserData[0].userNo]);
+    setTeamMembers((prev) => [...prev, userNo]);
     setMemberList((prev) => [...prev, userNickname]);
     setSearchInput("");
     setUserInfo([]);
-    // }
   };
 
   const handleSearch = async () => {
@@ -78,7 +63,7 @@ const AddModal = ({
       const seacrchNickname = encodeURIComponent(searchInput.trim());
 
       const res = await axios.get(
-        `/api/project/search-user/${seacrchNickname}`,
+        `/api/project/search-user/${seacrchNickname}`
       );
       if (res.data.code === "OK") {
         setUserInfo(res.data.userList);
@@ -87,7 +72,7 @@ const AddModal = ({
           toast: true,
           position: "center",
           showConfirmButton: false,
-          timer: 2000,
+          timer: 1500,
           timerProgressBar: true,
           didOpen: (toast) => {
             toast.onmouseenter = Swal.stopTimer;
@@ -100,8 +85,7 @@ const AddModal = ({
         });
       }
     } catch (error) {
-      console.error("오류 발생:", error);
-      alert("해당 사용자를 찾을 수 없습니다");
+      console.log(error);
     }
   };
 

@@ -2,12 +2,11 @@ import styled from "@emotion/styled";
 
 export const CalendarLayout = styled.section`
   max-width: 1440px;
-  width: 1200px;
-  height: 750px;
-  background-color: white;
-  padding: 30px;
 
-  /* pointer-events: none; */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 50px 60px;
 
   .fc .fc-toolbar-title {
     font-weight: normal;
@@ -51,6 +50,11 @@ export const CalendarLayout = styled.section`
     justify-content: center;
     align-items: center;
     text-align: center;
+  }
+
+  .fc-direction-ltr .fc-daygrid-event.fc-event-start,
+  .fc-direction-rtl .fc-daygrid-event.fc-event-end {
+    margin-left: 50px !important;
   }
 `;
 

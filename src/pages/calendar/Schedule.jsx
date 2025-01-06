@@ -13,14 +13,17 @@ import { useCookies } from "react-cookie";
 import { isLogin } from "../../utils/isLogin";
 
 const Schedule = () => {
-  const [currentEvents, setCurrentEvents] = useState([]);
+  const [currentEvents, setCurrentEvents] = useState([
+    {
+      backgroundColor: "#58ACFA",
+      borderColor: "#58ACFA",
+    },
+  ]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalXY, setModalXY] = useState({ x: -1000, y: -1000 });
   const [imageUrls, setImageUrls] = useState([]);
   const [clickEventData, setClickEventData] = useState([]);
   const [clickProjectNo, setClickProjectNo] = useState(0);
-
-  const [isMouseOver, setIsMouseOver] = useState(false);
 
   const [cookies] = useCookies(["signedUserNo"]);
   const navigate = useNavigate();
@@ -34,8 +37,10 @@ const Schedule = () => {
     height: 120px;
     background-color: whitesmoke;
     position: fixed;
-    border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 3px;
+    box-shadow:
+      0 10px 5px rgba(0, 0, 0, 0.1),
+      0 6px 6px rgba(0, 0, 0, 0.2);
 
     left: ${(props) => `${props.modalXY.x}px`};
     top: ${(props) => `${props.modalXY.y}px`};
@@ -126,7 +131,7 @@ const Schedule = () => {
 
     setClickProjectNo(clickProjectData[0].projectNo);
 
-    if (imageUrls.length === 0 && e.event) {
+    if (e.event) {
       getMemberPics(clickProjectNo);
       setImageUrls([]);
     } else {
@@ -154,46 +159,8 @@ const Schedule = () => {
     });
   };
 
-  // const mouseOverHandler = async (e) => {
-  //   const classList = [...e.nativeEvent.target.classList];
-
-  //   const clickModalHandler = (e) => {
-  //     if (imageUrls.length === 0 && e.event) {
-  //       getMemberPics();
-  //       setImageUrls([]);
-  //     } else {
-  //       return;
-  //     }
-  //   };
-
-  //   setIsMouseOver(true);
-  //   if (isMouseOver === false) return;
-
-  //   if (
-  //     classList.filter(
-  //       (item) => item === "fc-event-title" || item === "fc-h-event",
-  //     ).length !== 0
-  //   ) {
-  //     setModalXY({
-  //       x: e.clientX,
-  //       y: e.clientY,
-  //     });
-  //     setIsOpenModal(true);
-  //     await clickModalHandler(e);
-  //     console.log("마우스오버");
-  //   }
-
-  //   setTimeout(() => {
-  //     setIsMouseOver(false);
-  //   }, 1000);
-  // };
-
   return (
-    <CalendarLayout
-      onClick={(e) => eventClickHandler(e)}
-      // onMouseOver={(e) => mouseOverHandler(e)}
-      // onMouseOut={() => setIsOpenModal(false)}
-    >
+    <CalendarLayout onClick={(e) => eventClickHandler(e)}>
       <FullCalendar
         height={700}
         plugins={[dayGridPlugin, interactionPlugin]}
@@ -239,7 +206,7 @@ const Schedule = () => {
                 <ProfileImage
                   src={
                     item.pic === null
-                      ? "public/default_profile.jpg"
+                      ? "/default_profile.jpg"
                       : `${import.meta.env.VITE_BASE_URL}/pic/user/${item.userNo}/${item.pic}`
                   }
                   alt="구성원 프로필 이미지"

@@ -13,46 +13,64 @@ import {
   Userpage,
   UserProfile,
   UserId,
+  Layout,
 } from "./MyPage.styled";
 
 function MyPage() {
   const location = useLocation();
-  const [clickUserNo, setClickUserNo] = useState(location.state?.targetUserNo);
-  const [cookies] = useCookies(["signedUserNo"]); // 쿠키에서 signedUserNo 가져오기
-  const { targetUserNo } = useParams(); // URL에서 targetUserNo 가져오기
-  const [userData, setUserData] = useState({
-    nickname: "로그인 전 테스트 유저", // 임의 닉네임
-    email: "testuser@example.com", // 임의 이메일
-    pic: "public/default_profile.jpg", // 기본 프로필 이미지 URL
-    userId: "로그인 전 testID123", // 임의 유저 ID
-    userStatusMessage: "상태 메시지 테스트", // 임의 상태 메시지
-    myInfo: true, // 정보 변경 버튼이 표시되도록 설정
-  });
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const navigate = useNavigate();
+  const [cookies] = useCookies(["signedUserNo"]);
+  const { targetUserNo } = useParams();
+  const [isUser, setIsUser] = useState(null);
 
+  const [clickUserNo, setClickUserNo] = useState(() => {
+    // location.state가 null이면 signedUserNo를 기본값으로 사용
+    if (
+      location.state?.targetUserNo === cookies.signedUserNo ||
+      targetUserNo === cookies.signedUserNo
+    ) {
+      setIsUser(true); // targetUserNo와 signedUserNo가 동일하면 true
+    } else {
+      setIsUser(false); // 아니면 false
+    }
+    return location.state?.targetUserNo || targetUserNo || cookies.signedUserNo;
+  });
+
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState({
+    nickname: "",
+    email: "",
+    pic: location.state?.updatedPic || "",
+    userId: "",
+    userStatusMessage: "",
+    myInfo: null,
+  });
+  const [imageSrc, setImageSrc] = useState("");
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const signedUserNo = cookies.signedUserNo;
 
-  // fetchUserData 함수 선언 (useCallback으로 변경)
   const fetchUserData = useCallback(async () => {
     const endpoint = "/api/user";
 
     if (!signedUserNo) {
-      console.error("필수 값(signedUserNo)이 누락되었습니다.");
+      console.error("signedUserNo is missing");
       return;
     }
+
+    // 로그 추가: fetchUserData 호출 전 상태 확인
+    console.log("fetchUserData 호출 - clickUserNo:", clickUserNo);
+    console.log("fetchUserData 호출 - signedUserNo:", signedUserNo);
 
     try {
       const response = await axios.get(endpoint, {
         params: {
-          targetUserNo: clickUserNo ? clickUserNo : signedUserNo,
+          targetUserNo: clickUserNo || signedUserNo,
           signedUserNo: signedUserNo,
         },
       });
-      console.log(response);
+
+      console.log("API response:", response.data);
 
       if (response.data.code === "OK") {
-        console.log(response.data);
         setUserData({
           nickname: response.data.nickname
             ? response.data.nickname
@@ -60,48 +78,53 @@ function MyPage() {
                 .split("#")
                 .slice(0, 2)
                 .join("#")
-            : "", // `#0000` 제거 후 저장
+            : "",
           email: response.data.email || "",
-          pic: response.data.pic || "public/default_profile.jpg",
+          pic: response.data.pic || "/default_profile.jpg",
           userId: response.data.userId || "",
           userStatusMessage: response.data.statusMessage || "",
-          myInfo: response.data.targetUserNo === response.data.signedUserNo,
+          myInfo: response.data.targetUserNo,
         });
       } else {
-        console.error("유저 정보를 가져오는 중 오류 발생:", response.data);
+        console.error("Failed to fetch user data:", response.data);
       }
     } catch (error) {
-      console.error("API 호출 에러:", error);
+      console.error("Error during API call:", error);
     }
-  }, [targetUserNo, signedUserNo]);
+  }, [clickUserNo, signedUserNo]);
 
   useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
+    if (location.state || clickUserNo) {
+      fetchUserData();
+    }
+  }, [fetchUserData, location.state, clickUserNo]); // 의존성에 clickUserNo 추가
+
+  useEffect(() => {
+    console.log("userData.pic 변경 감지:", userData.pic);
+    if (userData.pic) {
+      const newImageSrc = `${import.meta.env.VITE_BASE_URL}/pic/user/${targetUserNo || signedUserNo}/${userData.pic}`;
+      setImageSrc(newImageSrc);
+    }
+  }, [userData.pic, targetUserNo, signedUserNo]);
 
   const handleImageClick = () => setIsPopupOpen(true);
   const handleClosePopup = () => setIsPopupOpen(false);
 
   const userEditClick = (e) => {
-    console.log(e);
-
     navigate(`/mypage/edit`, {
-      state: {
-        targetUserId: e.userId,
-      },
+      state: { targetUserId: e.userId },
     });
   };
-
   return (
-    <div>
+    <Layout>
       <Header>
-        <h2>마이 페이지</h2>
+        <h2>{userData.nickname} 의 페이지</h2>
       </Header>
       <Userinfo>
         <UserProfile>
           {userData.pic ? (
             <img
-              src={`${import.meta.env.VITE_BASE_URL}/pic/user/${targetUserNo || signedUserNo}/${userData.pic}`}
+              src={imageSrc || "/default_profile.jpg"}
               alt="프로필"
               style={{
                 borderRadius: "50px",
@@ -112,26 +135,25 @@ function MyPage() {
               onClick={handleImageClick}
             />
           ) : (
-            <p>유저 사진이 없습니다.</p>
+            <img src="/default_profile.jpg" alt="" />
           )}
-          <p>{userData.userStatusMessage || "statusMessage 영역"}</p>
+          <Userpage>
+            <UserDetail>
+              <Label>아이디</Label>
+              <UserId>{userData.userId || "아이디 정보 없음"}</UserId>
+            </UserDetail>
+            <UserDetail>
+              <Label>이메일</Label>
+              <Useremail>{userData.email || "이메일 정보 없음"}</Useremail>
+            </UserDetail>
+            <UserDetail>
+              <Label>닉네임</Label>
+              <Usernickname>
+                {userData.nickname || "닉네임 정보 없음"}
+              </Usernickname>
+            </UserDetail>
+          </Userpage>
         </UserProfile>
-        <Userpage>
-          <UserDetail>
-            <Label>아이디</Label>
-            <UserId>{userData.userId || "아이디 정보 없음"}</UserId>
-          </UserDetail>
-          <UserDetail>
-            <Label>이메일</Label>
-            <Useremail>{userData.email || "이메일 정보 없음"}</Useremail>
-          </UserDetail>
-          <UserDetail>
-            <Label>닉네임</Label>
-            <Usernickname>
-              {userData.nickname || "닉네임 정보 없음"}
-            </Usernickname>
-          </UserDetail>
-        </Userpage>
       </Userinfo>
       {isPopupOpen && (
         <div
@@ -159,7 +181,7 @@ function MyPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={userData.pic}
+              src={imageSrc || "/default_profile.jpg"}
               alt="유저 프로필 확대"
               style={{ width: "300px", height: "300px", borderRadius: "50%" }}
             />
@@ -180,19 +202,12 @@ function MyPage() {
           </div>
         </div>
       )}
-      {userData.myInfo && (
+      {setIsUser && (
         <Footer>
-          <button
-            // onClick={() => {
-            //   window.location.href = `/mypage/myedit?targetUserNo=${signedUserNo}`;
-            // }}
-            onClick={() => userEditClick(userData)}
-          >
-            정보 변경하기
-          </button>
+          <button onClick={() => userEditClick(userData)}>정보 변경하기</button>
         </Footer>
       )}
-    </div>
+    </Layout>
   );
 }
 

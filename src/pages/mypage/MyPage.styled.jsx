@@ -13,9 +13,11 @@ export const Header = styled.div`
   padding: 20px;
   font-size: 15px;
   font-weight: bold;
+  width: 100%;
   max-width: 700px;
   background-color: white;
   margin: 0 auto;
+  margin-top: 150px; /* 명시적으로 추가 */
   margin-bottom: 100px;
 `;
 
@@ -41,12 +43,15 @@ export const UserProfile = styled.div`
   gap: 10px;
 
   img {
+    display: flex;
     object-fit: cover;
+    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 `;
 
 // 닉네임 및 이메일 섹션
 export const Userpage = styled.div`
+  margin-left: 30px;
   display: flex;
   flex-direction: column; /* 수직 정렬 */
   gap: 15px; /* 항목 간 간격 */
@@ -87,16 +92,27 @@ export const Footer = styled.div`
   margin-top: 50px;
 
   button {
-    padding: 10px 20px;
     font-size: 16px;
-    background-color: #f4f4f4; 버튼 기본 색상
-    color: black;
-    border: 1px solid rgba(0,0,0,0.3);
-    border-radius: 8px; /* 둥근 모서리 */
     cursor: pointer;
-
+    padding: 8px 15px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 1);
+    background-color: rgba(255, 255, 255, 1);
     &:hover {
-      background-color: #0056b3; /* 호버 시 색상 변경 */
+      background-color: rgba(0, 0, 0, 0.8);
+      color: rgba(255, 255, 255, 1);
     }
   }
+`;
+export const Layout = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  /* margin: auto; */
+  /* align-items: center; */
+  /* justify-content: center; */
 `;

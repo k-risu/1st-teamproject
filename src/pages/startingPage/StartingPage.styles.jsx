@@ -9,9 +9,9 @@ const buttonStyle = `
   border-radius: 14px; 
   font-size: 25px; 
   font-weight: 600;
-  color: #ffffff;
+  color: black;
   border-radius: 14px;
-  background-color: #000000;
+  background-color: white;
   cursor: pointer;
 `;
 
@@ -49,15 +49,29 @@ export const LogoImg = styled.div`
 
 export const SignUpBt = styled.button`
   ${buttonStyle};
-  height: 54px;
+  padding-top: 12px;
+  padding-bottom: 8px;
+  /* height: 54px; */
   width: 162px;
   margin-bottom: 29px;
+
+  &:hover {
+    background-color: black;
+    color: white;
+  }
 `;
 
 export const LoginBt = styled.button`
   ${buttonStyle};
-  height: 54px;
+  /* height: 54px; */
+  padding-top: 12px;
+  padding-bottom: 8px;
   width: 133px;
+
+  &:hover {
+    background-color: black;
+    color: white;
+  }
 `;
 
 export const Auth = styled.form`
@@ -67,4 +81,8 @@ export const Auth = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  div {
+    margin-top: 100px;
+  }
 `;

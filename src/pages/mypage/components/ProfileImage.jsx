@@ -7,7 +7,7 @@ function ProfileImage({ pic, targetUserNo, handleImageChange }) {
   const inputId = `profile-upload-${uniqueId}`;
 
   // const DEFAULT_PROFILE_IMAGE = "https://via.placeholder.com/150";
-  const DEFAULT_PROFILE_IMAGE = "public/default_profile.jpg";
+  const DEFAULT_PROFILE_IMAGE = "/default_profile.jpg";
 
   const profileImageSrc = useMemo(() => {
     if (pic instanceof File) return URL.createObjectURL(pic);

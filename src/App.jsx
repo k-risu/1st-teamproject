@@ -38,7 +38,6 @@ function App() {
               <Route path="create" element={<ProjectCreationPage />} />
               <Route path="edit" element={<ProjectEditPage />} />
             </Route>
-
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
