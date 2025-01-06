@@ -43,7 +43,7 @@ const EditMemberModal = ({
       toast: true,
       position: "center",
       showConfirmButton: false,
-      timer: 2000,
+      timer: 1500,
       timerProgressBar: true,
       didOpen: (toast) => {
         toast.onmouseenter = Swal.stopTimer;
@@ -79,7 +79,7 @@ const EditMemberModal = ({
           toast: true,
           position: "center",
           showConfirmButton: false,
-          timer: 2000,
+          timer: 1500,
           timerProgressBar: true,
           didOpen: (toast) => {
             toast.onmouseenter = Swal.stopTimer;
@@ -105,7 +105,7 @@ const EditMemberModal = ({
         toast: true,
         position: "center",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 1500,
         timerProgressBar: true,
         didOpen: (toast) => {
           toast.onmouseenter = Swal.stopTimer;
@@ -171,13 +171,13 @@ const EditMemberModal = ({
         )}
         <div>
           <ModalText>
-            {teamMembers.map((item) => (
-              <div key={item.userNo}>
+            {memberList.map((item, index) => (
+              <div key={index}>
                 <ModalUser>
-                  <span>{item?.nickname}</span>
+                  <span>{item}</span>
                   <FiDelete
-                    aria-label={`Delete ${item.nickname}`}
-                    onClick={() => handleDelete(item.nickname)}
+                    aria-label={`Delete ${item}`}
+                    onClick={() => handleDelete(item)}
                   />
                 </ModalUser>
               </div>

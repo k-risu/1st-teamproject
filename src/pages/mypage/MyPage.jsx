@@ -80,7 +80,7 @@ function MyPage() {
                 .join("#")
             : "",
           email: response.data.email || "",
-          pic: response.data.pic || "public/default_profile.jpg",
+          pic: response.data.pic || "/default_profile.jpg",
           userId: response.data.userId || "",
           userStatusMessage: response.data.statusMessage || "",
           myInfo: response.data.targetUserNo,
