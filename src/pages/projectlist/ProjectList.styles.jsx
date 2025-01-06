@@ -18,14 +18,26 @@ export const ContainerTitle = styled.p`
   margin-bottom: 50px;
   justify-content: flex-start;
 `;
+export const ContainerWrap = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 두 개씩 가로 배치 */
+  align-items: center;
+  justify-content: center;
+  gap: 20px; /* 항목 간 간격 */
+  width: 100%;
+`;
 
 export const ProjectListWrap = styled.ul`
   display: flex;
   margin-bottom: 20px;
   width: 400px;
+  flex-direction: column; /* 내부 내용을 수직으로 정렬 */
+  justify-content: center; /* 내부 수직 중앙 정렬 */
+  align-items: center; /* 내부 가로 중앙 정렬 */
 `;
 
 export const ProjectDataWrap = styled.div`
+  margin-left: 200px;
   text-wrap: nowrap;
   background-color: white;
   border: 1px solid black;
@@ -37,7 +49,7 @@ export const ProjectDataWrap = styled.div`
 
 export const Projects = styled.li`
   display: flex;
-  width: 300px;
+  width: 450px;
   max-height: 500px;
   padding: 10px 0px;
   justify-content: space-between;

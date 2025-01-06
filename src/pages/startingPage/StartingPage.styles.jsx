@@ -49,7 +49,9 @@ export const LogoImg = styled.div`
 
 export const SignUpBt = styled.button`
   ${buttonStyle};
-  height: 54px;
+  padding-top: 12px;
+  padding-bottom: 8px;
+  /* height: 54px; */
   width: 162px;
   margin-bottom: 29px;
 
@@ -61,7 +63,9 @@ export const SignUpBt = styled.button`
 
 export const LoginBt = styled.button`
   ${buttonStyle};
-  height: 54px;
+  /* height: 54px; */
+  padding-top: 12px;
+  padding-bottom: 8px;
   width: 133px;
 
   &:hover {
