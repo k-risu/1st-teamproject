@@ -19,21 +19,26 @@ import {
 const SideBar = () => {
   const [userData, setUserData] = useState({});
   const [cookies, removeCookie] = useCookies("signedUserNo");
+  const [userProfile, setUserProfile] = useState(cookies.userProfile);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getUserData = async () => {
-      const res = await axios.get(`/api/user`, {
-        params: {
-          targetUserNo: cookies.signedUserNo,
-          signedUserNo: cookies.signedUserNo,
-        },
-      });
-      console.log(res);
-      setUserData({ ...res.data });
+      try {
+        const res = await axios.get(`/api/user`, {
+          params: {
+            targetUserNo: cookies.signedUserNo,
+            signedUserNo: cookies.signedUserNo,
+          },
+        });
+        setUserData({ ...res.data });
+        setUserProfile(userData.pic);
+      } catch (error) {
+        console.error(error);
+      }
     };
     getUserData();
-  }, []);
+  }, [userProfile]);
 
   const removeCookieHandler = () => {
     removeCookie("signedUserNo");
