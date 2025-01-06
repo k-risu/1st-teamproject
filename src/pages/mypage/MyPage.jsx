@@ -66,7 +66,7 @@ function MyPage() {
           pic: response.data.pic || "public/default_profile.jpg",
           userId: response.data.userId || "",
           userStatusMessage: response.data.statusMessage || "",
-          myInfo: response.data.targetUserNo === response.data.signedUserNo,
+          myInfo: response.data.targetUserNo,
         });
       } else {
         console.error("유저 정보를 가져오는 중 오류 발생:", response.data);
@@ -96,7 +96,7 @@ function MyPage() {
   return (
     <Layout>
       <Header>
-        {userData.myInfo === true ? <h2>마이 페이지</h2> : userData.nickname}
+        <h2>{userData.nickname} 의 페이지</h2>
         {console.log("여기:", userData)}
       </Header>
       <Userinfo>
