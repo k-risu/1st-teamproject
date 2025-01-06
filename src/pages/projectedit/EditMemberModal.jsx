@@ -7,9 +7,9 @@ import {
   ModalText,
   FindDiv,
   SearchMember,
-  SearchProfile,
   FindUserData,
-} from "../projectCreation/AddModal.styles";
+  ModalUser,
+} from "./EditMemberModal.styles";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FiDelete } from "react-icons/fi";
@@ -22,7 +22,7 @@ const EditMemberModal = ({
   setTeamMembers,
 }) => {
   const [memberList, setMemberList] = useState([
-    teamMembers.map((item) => item.nickname),
+    teamMembers.map((item) => [...item.nickname]),
   ]);
   const [membersData, setMembersData] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
@@ -54,7 +54,11 @@ const EditMemberModal = ({
       icon: "success",
       title: `${userNickname}님을 추가했어요`,
     });
-    setTeamMembers(userInfo);
+    console.log(teamMembers);
+    console.log(userNickname);
+    console.log(clickUserData);
+
+    setTeamMembers((teamMembers) => [...teamMembers, clickUserData]);
     setMembersData((teamMembers) => [...teamMembers, clickUserData]);
     setMemberList((prev) => [...prev, userNickname]);
     setSearchInput("");
@@ -167,10 +171,15 @@ const EditMemberModal = ({
         )}
         <div>
           <ModalText>
-            {memberList.map((item, index) => (
-              <div key={index}>
-                <span>{item}</span>
-                <FiDelete onClick={() => handleDelete(item)} />
+            {teamMembers.map((item) => (
+              <div key={item.userNo}>
+                <ModalUser>
+                  <span>{item.nickname}</span>
+                  <FiDelete
+                    aria-label={`Delete ${item.nickname}`}
+                    onClick={() => handleDelete(item.nickname)}
+                  />
+                </ModalUser>
               </div>
             ))}
           </ModalText>

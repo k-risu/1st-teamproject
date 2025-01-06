@@ -178,7 +178,7 @@ const ProjectMembers = () => {
         />
       );
     } else {
-      return <CardImg src="../../../public/default_profile.png" noImage />;
+      return <CardImg src="/default_profile.png" noImage />;
     }
   }, []);
 

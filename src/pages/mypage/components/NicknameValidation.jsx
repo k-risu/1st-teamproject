@@ -1,8 +1,4 @@
-import {
-  NicknameInput,
-  CheckButton,
-  NicknameContainer,
-} from "../MyPageEdit.styled";
+import { NicknameContainer, NicknameInput } from "../MyPageEdit.styled";
 
 function NicknameValidation({
   nickname,

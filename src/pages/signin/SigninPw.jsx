@@ -9,6 +9,7 @@ import {
   ResetButton,
   SigninBoxInputBox,
 } from "./SignIn.styled";
+import Swal from "sweetalert2";
 
 function SigninPw({
   setShowPwPopup,
@@ -63,7 +64,21 @@ function SigninPw({
     console.log("인증번호 확인 버튼 클릭됨");
 
     if (!verificationCode) {
-      alert("인증번호를 입력해주세요.");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "인증번호를 입력해주세요.",
+      });
       return;
     }
     console.log("인증번호 유효성 통과, POST 요청 진행");
@@ -81,7 +96,21 @@ function SigninPw({
       const result = await response.json();
 
       if (result.code === "OK") {
-        alert("인증 성공!");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "success",
+          title: "인증 성공!",
+        });
         navigate("/signin/repw", {
           state: { email: emailFormik.values.email }, // 이메일 전달
         });
@@ -90,7 +119,21 @@ function SigninPw({
       }
     } catch (error) {
       console.error("인증 확인 오류:", error);
-      alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+      });
     } finally {
       setIsVerifying(false); // 인증 완료 후 상태 복구
     }

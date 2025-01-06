@@ -37,8 +37,10 @@ const Schedule = () => {
     height: 120px;
     background-color: whitesmoke;
     position: fixed;
-    border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 3px;
+    box-shadow:
+      0 10px 5px rgba(0, 0, 0, 0.1),
+      0 6px 6px rgba(0, 0, 0, 0.2);
 
     left: ${(props) => `${props.modalXY.x}px`};
     top: ${(props) => `${props.modalXY.y}px`};
@@ -204,7 +206,7 @@ const Schedule = () => {
                 <ProfileImage
                   src={
                     item.pic === null
-                      ? "public/default_profile.jpg"
+                      ? "/default_profile.jpg"
                       : `${import.meta.env.VITE_BASE_URL}/pic/user/${item.userNo}/${item.pic}`
                   }
                   alt="구성원 프로필 이미지"

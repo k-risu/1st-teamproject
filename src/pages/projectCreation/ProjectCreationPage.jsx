@@ -163,7 +163,7 @@ function ProjectCreationPage() {
 
     await setEventData(userSelectedDate);
     await openDateModal(userSelectedDate);
-    await setSelectDate(([]) => {
+    await setSelectDate(() => {
       return [
         {
           title: "",
@@ -188,7 +188,7 @@ function ProjectCreationPage() {
     };
 
     await setEventData(userChangeDate);
-    await setChangeDate(([]) => {
+    await setChangeDate(() => {
       return [
         {
           title: "",

@@ -73,23 +73,6 @@ const DashBoard = () => {
   const d_Day = endDate.diff(today, "day");
   console.log(d_Day);
 
-  const data = [
-    {
-      id: 1,
-      title: "전체 달성률",
-      ranges: [10, 40, 53, 0, 100],
-      measures: [84],
-      markers: [74],
-    },
-    {
-      id: 2,
-      title: "개인 달성률",
-      ranges: [14, 19, 31, 25, 34, 42, 0, 80],
-      measures: [28],
-      markers: [74],
-    },
-  ];
-
   const projectCompleteHandler = async () => {
     try {
       const res = await axios.post(
@@ -168,17 +151,6 @@ const DashBoard = () => {
     });
   };
 
-  const [teamProgress, setTeamProgress] = useState(60);
-  const [personalProgress, setPersonalProgress] = useState(40);
-
-  const increaseTeamProgress = () => {
-    setTeamProgress((prev) => Math.min(prev + 5, 100));
-  };
-
-  const increasePersonalProgress = () => {
-    setPersonalProgress((prev) => Math.min(prev + 10, 100));
-  };
-
   return (
     <DashBoardContainer>
       <DashBoardTitleWrap>
@@ -196,8 +168,8 @@ const DashBoard = () => {
             달성률 (D-<span style={{ color: "red" }}>{d_Day}</span>)
           </ContainerTitle>
           <ProjectProgress
-            teamProgress={teamProgress}
-            personalProgress={personalProgress}
+            teamProgress={projectData.projectCompletePercent}
+            personalProgress={projectData.userCompletePercent}
           />
         </CompletionContainer>
         <MemberContainer>

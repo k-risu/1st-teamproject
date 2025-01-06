@@ -8,7 +8,7 @@ function StartingPage() {
     <>
       <Auth>
         <LogoImg>
-          <img src="public/로고400x400.png" />
+          <img src="/logo400x400.png" />
         </LogoImg>
         <Link to={`/signup`}>
           <SignUpBt>회원가입</SignUpBt>
@@ -16,6 +16,7 @@ function StartingPage() {
         <Link to={`/signin`}>
           <LoginBt>로그인</LoginBt>
         </Link>
+        <div>© 2025 Teamate. All rights reserved.</div>
       </Auth>
     </>
   );
