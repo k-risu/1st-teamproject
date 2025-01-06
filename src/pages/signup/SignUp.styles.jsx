@@ -22,8 +22,8 @@ export const SignUpLayout = styled.div`
   margin: 0 auto;
 
   background-color: #fff;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 `;
 
 export const SignUpForm = styled.form`
@@ -42,8 +42,8 @@ export const SignUpTop = styled.div`
   position: relative;
   ${alignment}
 
-  margin-top: 85px;
-  margin-bottom: 100px;
+  /* margin-top: 30px; */
+  margin-bottom: 70px;
 `;
 
 export const SignUpText = styled.h1`
@@ -109,12 +109,23 @@ export const DuplicateCheckBt = styled.button`
   /* right: -100px; */
   /* bottom: 20px; */
   margin-left: 10px;
-  padding: 9px 15px;
-  background-color: #b4b4b4;
-  border-radius: 8px;
-  border: 1px solid #b4b4b4;
+  /* padding: 9px 15px; */
+  /* background-color: #b4b4b4; */
+  /* border-radius: 8px; */
+  /* border: 1px solid #b4b4b4; */
 
   width: 120px;
+
+  padding: 8px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 1);
+  background-color: rgba(255, 255, 255, 1);
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 1);
+  }
 
   cursor: pointer;
 `;
@@ -169,15 +180,26 @@ export const AlreadyMemberBt = styled.button`
 `;
 export const SignUpBt = styled.button`
   font-size: 25px;
-  background-color: #f3f3f3;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 28px;
+  /* background-color: #f3f3f3; */
+  /* border: none; */
+  /* border-radius: 8px; */
+  /* padding: 12px 28px; */
+
+  padding: 8px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 1);
+  background-color: rgba(255, 255, 255, 1);
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 1);
+  }
   cursor: pointer;
 `;
 export const SignUpBtWrap = styled.div`
   ${alignment}
-  margin-top:125px;
+  margin-top:85px;
   gap: 50px;
 `;
 export const MgsWrap = styled.div`
