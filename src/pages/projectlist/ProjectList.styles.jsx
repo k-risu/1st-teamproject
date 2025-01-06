@@ -53,3 +53,15 @@ export const ProjectDataSubtitle = styled.p`
   font-size: 14px;
   font-weight: 500;
 `;
+
+export const Duration = styled.p`
+  margin-left: 10px;
+`;
+
+export const Subtitle = styled.p`
+  margin-left: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-all;
+`;

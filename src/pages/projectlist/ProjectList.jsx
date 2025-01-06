@@ -2,10 +2,12 @@ import axios from "axios";
 import {
   Container,
   ContainerTitle,
+  Duration,
   ProjectDataSubtitle,
   ProjectDataWrap,
   ProjectListWrap,
   Projects,
+  Subtitle,
 } from "./ProjectList.styles";
 import { FaCircle, FaRegUser } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -66,19 +68,19 @@ const ProjectList = () => {
                 <p>{item.title}</p>
               </div>
               <div>
-                <FaRegUser style={{ color: "darkgray", marginRight: 3 }} />
+                {/* <FaRegUser style={{ color: "darkgray", marginRight: 3 }} /> */}
                 {/* <div>7명</div> */}
               </div>
             </Projects>
             <Projects>
               <ProjectDataSubtitle>프로젝트 기간</ProjectDataSubtitle>
-              <div>
+              <Duration>
                 {item.startAt} ~ {item.deadline}
-              </div>
+              </Duration>
             </Projects>
             <Projects>
               <ProjectDataSubtitle>프로젝트 내용</ProjectDataSubtitle>
-              <div>{item.description}</div>
+              <Subtitle>{item.description}</Subtitle>
             </Projects>
           </ProjectDataWrap>
         </ProjectListWrap>

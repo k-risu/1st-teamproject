@@ -84,7 +84,7 @@ function MyPage() {
           userId: response.data.userId || "",
           userStatusMessage: response.data.statusMessage || "",
           myInfo: response.data.targetUserNo,
-        });
+        }));
       } else {
         console.error("Failed to fetch user data:", response.data);
       }

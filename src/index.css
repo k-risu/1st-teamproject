@@ -9,7 +9,7 @@
 }
 @font-face {
   font-family: "GmarketSansMedium";
-  src: url("public/GmarketSansMedium.woff");
+  src: url("/GmarketSansMedium.woff");
 }
 * {
   margin: 0;

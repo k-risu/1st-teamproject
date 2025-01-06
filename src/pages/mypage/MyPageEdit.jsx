@@ -143,7 +143,7 @@ function MyPageEdit() {
         : userInfo.nickname;
 
       const params = {
-        targetUserNo: String(targetUserNo),
+        targetUserNo: parseInt(targetUserNo),
         nickname: cleanNickname || "", // `#0000` 제거 후 BE로 전송
         statusMessage: userInfo.statusMessage || "", // 상태 메시지 값이 없으면 빈 문자열 전달
       };
@@ -152,15 +152,13 @@ function MyPageEdit() {
 
       // ✅ JSON 데이터를 Blob으로 변환하여 `req` 키에 추가
 
-      formData.append(
-        "req",
-        new Blob([JSON.stringify(params)], { type: "application/json" }),
-      );
+      formData.append("req", new Blob([JSON.stringify(params)]));
 
       // #@Start ✅ 새로운 파일이 있을 경우에만 `pic` 추가 (기존 이미지는 BE에서 유지)
-      if (pic instanceof File) {
-        formData.append("pic", pic); // ✅ 새로운 이미지 추가
-      }
+      // if (pic instanceof File) {
+      formData.append("pic", pic); // ✅ 새로운 이미지 추가
+      // formData.append("pic", new Blob([JSON.stringify(pic)])); // ✅ 새로운 이미지 추가
+      // }
 
       console.log("📌 최종 전송 데이터:", [...formData.entries()]); // 데이터 확인 로그
 

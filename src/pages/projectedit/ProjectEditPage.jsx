@@ -75,7 +75,7 @@ const ProjectEditPage = () => {
     mode: "onSubmit",
   });
 
-  const addTeamMember = (data) => {
+  const addTeamMember = async (data) => {
     const userList = [...clickProjectData.memberList, data.flat()].flat();
     const userNoList = userList.map((item) => {
       return item.userNo;
@@ -91,7 +91,8 @@ const ProjectEditPage = () => {
       deleteUserNoList: [],
     };
 
-    const res = axios.post(`/api/project/search-user`, payload);
+    const res = await axios.post(`/api/project/search-user`, payload);
+    console.log(res);
 
     setTeamMembers([...teamMembers, userList]);
     closeAddModal();
