@@ -6,6 +6,7 @@ import ProfileImage from "./components/ProfileImage";
 import UserForm from "./components/UserForm";
 import useFetchUserInfo from "./hooks/useFetchUserInfo";
 import { Container, Header, ProfileWrapper } from "./MyPageEdit.styled";
+import Swal from "sweetalert2";
 
 function MyPageEdit() {
   const [pic, setPic] = useState(null);
@@ -52,7 +53,22 @@ function MyPageEdit() {
       : userInfo.nickname;
 
     if (!cleanNickname) {
-      alert("닉네임을 입력해주세요.");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "닉네임을 입력해주세요.",
+      });
+
       return;
     }
 
@@ -62,16 +78,59 @@ function MyPageEdit() {
       });
 
       if (response.data.code === "DN") {
-        alert("닉네임이 중복되었습니다.");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: "닉네임이 중복되었습니다.",
+        });
+
         setIsNicknameChecked(false);
       } else {
-        alert("닉네임이 사용 가능합니다.");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "success",
+          title: "닉네임이 사용 가능합니다.",
+        });
         setUserInfo({ ...userInfo, nickname: cleanNickname }); // `#` 이후 제거된 닉네임을 상태에 저장
         setIsNicknameChecked(true);
       }
     } catch (error) {
       console.error("닉네임 확인 오류:", error);
-      alert("서버 오류가 발생했습니다.");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "서버 오류가 발생했습니다.",
+      });
     }
   };
 
@@ -98,15 +157,22 @@ function MyPageEdit() {
         new Blob([JSON.stringify(params)], { type: "application/json" }),
       );
 
-      // ✅ 기존 `pic` 유지 (새로운 이미지가 없을 경우 기존 프로필 유지)
-      if (pic) {
-        formData.append("pic", pic);
-      } else if (userInfo.pic && typeof userInfo.pic === "string") {
-        // 기존 `pic`이 문자열 경로일 경우 유지
-        formData.append("pic", userInfo.pic); // 백엔드에서 기존 이미지 유지하는 키 필요
+      // #@Start ✅ 새로운 파일이 있을 경우에만 `pic` 추가 (기존 이미지는 BE에서 유지)
+      if (pic instanceof File) {
+        formData.append("pic", pic); // ✅ 새로운 이미지 추가
       }
 
       console.log("📌 최종 전송 데이터:", [...formData.entries()]); // 데이터 확인 로그
+
+      // // ✅ 기존 `pic` 유지 (새로운 이미지가 없을 경우 기존 프로필 유지)
+      // if (pic) {
+      //   formData.append("pic", pic);
+      // } else if (userInfo.pic && typeof userInfo.pic === "string") {
+      //   // 기존 `pic`이 문자열 경로일 경우 유지
+      //   formData.append("pic", userInfo.pic); // 백엔드에서 기존 이미지 유지하는 키 필요
+      // }
+
+      // @end ✅ 새로운 파일이 있을 경우에만 `pic` 추가 (기존 이미지는 BE에서 유지)
 
       // 🚨 Content-Type을 설정하지 않음 (자동 설정)
       const response = await axios.put("/api/user", formData, {
@@ -114,16 +180,60 @@ function MyPageEdit() {
       });
 
       if (response.data.code === "OK") {
-        alert("정보 변경이 완료되었습니다.");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "success",
+          title: "정보 변경이 완료되었습니다.",
+        });
+
         navigate("/mypage", {
           state: { updatedPic: pic }, // 🔥 변경된 pic 정보를 넘김
         });
       } else if (response.data.code === "DN") {
-        alert("닉네임이 중복되었습니다.");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: "닉네임이 중복되었습니다.",
+        });
+
         setIsNicknameChecked(false);
       } else {
         console.error("🚨 서버 응답 데이터:", response.data);
-        alert("정보 저장 중 오류가 발생했습니다.");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "정보 저장 중 오류가 발생했습니다.",
+        });
       }
     } catch (error) {
       console.error("🚨 정보 저장 오류:", error);
@@ -133,7 +243,21 @@ function MyPageEdit() {
           `서버 오류 발생: ${error.response.data.message || "알 수 없는 오류"}`,
         );
       } else {
-        alert("서버 오류가 발생했습니다.");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "서버 오류가 발생했습니다.",
+        });
       }
     }
   };
