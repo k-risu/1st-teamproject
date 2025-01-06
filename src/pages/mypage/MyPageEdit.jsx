@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProfileImage from "./components/ProfileImage";
@@ -17,7 +17,10 @@ function MyPageEdit() {
     statusMessage: "",
     pic: "",
   });
-  const [cookies] = useCookies(["signedUserNo"]);
+  const [cookies, setCookie] = useCookies(["signedUserNo"]);
+  const [userProfile, setUserProfile, removeUserProfile] = useCookies([
+    "userProfile",
+  ]);
   const navigate = useNavigate();
   const location = useLocation();
   const signedUserNo = cookies.signedUserNo;
@@ -39,7 +42,8 @@ function MyPageEdit() {
     if (file) {
       setPic(file);
     }
-    console.log(file);
+    removeUserProfile();
+    setUserProfile("userProfile", userInfo.pic);
   };
 
   const handleCheckNickname = async () => {

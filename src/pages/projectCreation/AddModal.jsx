@@ -7,7 +7,6 @@ import {
   ModalText,
   FindDiv,
   SearchMember,
-  SearchProfile,
   FindUserData,
 } from "./AddModal.styles";
 import axios from "axios";
