@@ -2,24 +2,29 @@ import styled from "@emotion/styled";
 
 // 부모 컨테이너 스타일
 export const Container = styled.div`
-  max-width: 700px;
-  width: 100%; /* 부모의 전체 너비를 차지 */
-  margin: 0 auto; /* 수평 가운데 정렬 */
-  padding: 20px; /* 내부 여백 */
-  background-color: #f9f9f9; /* 배경 색상 */
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 // 헤더 영역 (페이지 상단 제목 또는 설명 표시)
 export const Header = styled.div`
+  padding: 20px;
+  font-weight: bold;
+  background-color: white;
+
   display: flex;
   justify-content: center; /* 중앙 정렬 */
   align-items: center;
-  padding: 20px;
   font-size: 15px;
-  font-weight: bold;
   max-width: 700px; /* 부모 컨테이너 최대 너비 */
   width: 100%; /* 부모의 전체 너비를 차지 */
-  background-color: white;
   margin: 0 auto;
   margin-bottom: 50px; /* 하단 여백 */
 `;
@@ -33,11 +38,11 @@ export const EditForm = styled.form`
   max-width: 700px; /* 부모 컨테이너 최대 너비 */
   width: 100%; /* 부모의 전체 너비를 차지 */
 
-  background-color: white; /* 배경 색상 */
   margin: 0 auto; /* 수평 가운데 정렬 */
+
   padding: 20px; /* 내부 여백 */
   border-radius: 10px; /* 둥근 모서리 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  background-color: white; /* 배경 색상 */
 `;
 
 // 프로필 이미지 영역 (프로필 사진과 업로드 버튼 포함)
@@ -111,11 +116,13 @@ export const InputWrapper = styled.div`
 export const InputField = styled.input`
   max-width: 400px;
   flex: 1; /* 남은 공간을 모두 차지 */
-  padding: 10px; /* 내부 여백 */
-  border: 1px solid #ddd; /* 외곽선 색상 */
-  border-radius: 8px; /* 둥근 모서리 */
-  font-size: 14px; /* 글자 크기 */
   height: 40px; /* 버튼과 동일한 높이 설정 */
+  font-size: 14px; /* 글자 크기 */
+
+  padding: 8px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  font-weight: 600;
 
   &:focus {
     border-color: #007bff; /* 포커스 시 외곽선 색상 */
@@ -125,37 +132,39 @@ export const InputField = styled.input`
 
 /// 중복 확인 버튼 (닉네임 중복 여부를 확인하는 버튼)
 export const CheckButton = styled.button`
-  padding: 10px 15px; /* 버튼의 상하, 좌우 여백 */
+  padding: 8px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  font-weight: 600;
   height: 40px; /* 입력 필드와 동일한 높이 설정 */
-  background-color: ${({ isAvailable }) =>
-    isAvailable ? "skyblue" : "#f4f4f4"}; /* 사용 가능 여부에 따라 색상 변경 */
-  color: black;
-  border: none;
-  border-radius: 8px;
   font-size: 14px; /* 글자 크기 */
   white-space: nowrap; /* 글자 줄바꿈 방지 */
 
+  color: rgba(0, 0, 0, 1);
+  background-color: rgba(255, 255, 255, 1);
   &:hover {
-    background-color: ${({ isAvailable }) =>
-      isAvailable ? "#008000" : "#276fdb"}; /* 호버 시 색상 변경 */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 1);
   }
 `;
 
 // 정보 변경 버튼
 export const SubmitButton = styled.button`
-  padding: 3px 10px;
-  background-color: #f4f4f4;
-  color: black;
+  padding: 8px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  font-weight: 600;
   border: none;
-  border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0; /* 크기 유지 */
   margin: 0 auto;
 
+  color: rgba(0, 0, 0, 1);
+  background-color: rgba(255, 255, 255, 1);
   &:hover {
-    background-color: #1048c2;
-    color: white;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 1);
   }
 `;
