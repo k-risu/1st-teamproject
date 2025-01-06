@@ -11,18 +11,19 @@ const ToggleButton = ({
 }) => {
   const ToggleButton = styled.div`
     display: flex;
-    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     overflow: hidden;
     width: 200px; /* 원하는 버튼 그룹의 너비 */
+
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     .toggle-button {
       flex: 1;
-      padding: 10px 20px;
+      padding: 8px 15px;
       font-size: 14px;
-      color: #555;
-      background-color: #f9f9f9;
+      color: rgba(0, 0, 0, 1);
+      background-color: rgba(255, 255, 255, 1);
       border: none;
       outline: none;
       cursor: pointer;

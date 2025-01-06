@@ -62,7 +62,7 @@ function MyPage() {
                 .join("#")
             : "", // `#0000` 제거 후 저장
           email: response.data.email || "",
-          pic: response.data.pic || "public/default_profile.jpg",
+          pic: response.data.pic || "/default_profile.jpg",
           userId: response.data.userId || "",
           userStatusMessage: response.data.statusMessage || "",
           myInfo: response.data.targetUserNo === response.data.signedUserNo,
@@ -93,7 +93,7 @@ function MyPage() {
   };
 
   return (
-    <div>
+    <div style={{ backgroundColor: "white" }}>
       <Header>
         <h2>마이 페이지</h2>
       </Header>

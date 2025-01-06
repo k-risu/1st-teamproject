@@ -2,10 +2,11 @@ import styled from "@emotion/styled";
 
 export const CalendarLayout = styled.section`
   max-width: 1440px;
-  width: 1200px;
-  height: 750px;
-  background-color: white;
-  padding: 30px;
+
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 50px 60px;
 
   .fc .fc-toolbar-title {
     font-weight: normal;

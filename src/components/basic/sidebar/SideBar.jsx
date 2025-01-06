@@ -52,7 +52,7 @@ const SideBar = () => {
           <SideBarProfileImg
             src={
               userData.pic === null
-                ? "public/default_profile.jpg"
+                ? "/default_profile.jpg"
                 : `${import.meta.env.VITE_BASE_URL}/pic/user/${cookies.signedUserNo}/${userData.pic}`
             }
             alt="profileImage"
