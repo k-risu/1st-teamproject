@@ -100,9 +100,24 @@ const EditMemberModal = ({
     const isNotDeleteUser = membersData.filter(
       (item) => item.scheduleList.length !== 0,
     );
-    console.log(isNotDeleteUser);
 
-    if (isNotDeleteUser[0].userNo === e) {
+    if (e === parseInt(cookies.signedUserNo)) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "error",
+        title: "해당 사용자는 삭제할 수 없습니다",
+      });
+    } else if (isNotDeleteUser[0].userNo === e) {
       const Toast = Swal.mixin({
         toast: true,
         position: "center",
