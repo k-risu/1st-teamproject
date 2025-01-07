@@ -25,15 +25,11 @@
 
 ### 📂 **형상관리 도구**
 
-<div style="background-color: #fff;">
-<img src="./public/GitHub_Logo.png" alt="로고 이미지" style="width: 150px; height: auto; display: block;" />
-</div>
+<img src="./public/GitHub_Logo.jpg" alt="로고 이미지" style="width: 150px; height: auto; display: block;" />
 
 ### 💬 **BackEnd 협업 도구**
 
-<div style="background-color: #fff;">
-  <img src="./public/Slack-Logo.webp" alt="로고 이미지" style="width: 150px; height: auto; display: block;" />
-</div>
+<img src="./public/Slack-Logo.jpg" alt="로고 이미지" style="width: 150px; height: auto; display: block; backgr" />
 
 ---
 
