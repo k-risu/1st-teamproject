@@ -89,6 +89,7 @@
 
 ### git tree
 
+```
 📦src
 ┣ 📂components
 ┃ ┣ 📂basic
@@ -187,3 +188,4 @@
 ┣ 📜App.jsx
 ┣ 📜index.css
 ┗ 📜main.jsx
+```
