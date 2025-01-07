@@ -5,8 +5,8 @@ export const Container = styled.div`
   width: 100%;
   margin: 0 auto;
   padding: 20px;
-  background-color: white;
-  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.5);
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -17,7 +17,7 @@ export const Container = styled.div`
 export const Header = styled.div`
   padding: 20px;
   font-weight: bold;
-  background-color: white;
+  /* background-color: white; */
 
   display: flex;
   justify-content: center; /* 중앙 정렬 */
@@ -26,7 +26,7 @@ export const Header = styled.div`
   max-width: 700px; /* 부모 컨테이너 최대 너비 */
   width: 100%; /* 부모의 전체 너비를 차지 */
   margin: 0 auto;
-  margin-bottom: 50px; /* 하단 여백 */
+  margin-bottom: 30px; /* 하단 여백 */
 `;
 
 // 폼 영역 (정보 수정 입력 필드 및 버튼 그룹을 포함)
@@ -42,7 +42,7 @@ export const EditForm = styled.form`
 
   padding: 20px; /* 내부 여백 */
   border-radius: 10px; /* 둥근 모서리 */
-  background-color: white; /* 배경 색상 */
+  /* background-color: white; 배경 색상 */
 `;
 
 // 프로필 이미지 영역 (프로필 사진과 업로드 버튼 포함)
@@ -54,8 +54,8 @@ export const ProfileWrapper = styled.div`
   gap: 20px; /* 이미지와 버튼 간 간격 */
   max-width: 700px; /* 부모 컨테이너 최대 너비 */
   width: 100%; /* 부모의 전체 너비를 차지 */
-  background-color: white; /* 배경 색상 */
-  margin: 0 auto 50px; /* 수평 가운데 정렬, 하단 여백 */
+  /* background-color: white; 배경 색상 */
+  margin: 0 auto 30px; /* 수평 가운데 정렬, 하단 여백 */
 `;
 
 // 프로필 이미지 스타일
@@ -150,16 +150,17 @@ export const CheckButton = styled.button`
 
 // 정보 변경 버튼
 export const SubmitButton = styled.button`
+  display: flex;
   padding: 8px 15px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   font-weight: 600;
-  border: none;
   font-size: 16px;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0; /* 크기 유지 */
   margin: 0 auto;
+  margin-top: 20px;
 
   color: rgba(0, 0, 0, 1);
   background-color: rgba(255, 255, 255, 1);
