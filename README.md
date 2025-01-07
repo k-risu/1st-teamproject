@@ -86,3 +86,106 @@
 ### 최종 목표
 
 1차 Teamate 프로젝트는 팀원 간의 원활한 협업과 프로젝트 진행 상황을 효율적으로 관리할 수 있는 도구를 제공합니다. 향후 더 많은 기능과 디자인 개선을 통해 협업에 있어 중요한 역할을 할 수 있도록 발전할 것입니다.
+
+### git tree
+
+```
+📦src
+┣ 📂components
+┃ ┣ 📂basic
+┃ ┃ ┣ 📂header
+┃ ┃ ┃ ┣ 📜BreadCrumb.jsx
+┃ ┃ ┃ ┣ 📜Header.jsx
+┃ ┃ ┃ ┣ 📜Header.styles.jsx
+┃ ┃ ┃ ┣ 📜index.jsx
+┃ ┃ ┃ ┗ 📜index.styled.jsx
+┃ ┃ ┗ 📂sidebar
+┃ ┃ ┃ ┣ 📜SideBar.jsx
+┃ ┃ ┃ ┗ 📜SideBar.styles.jsx
+┃ ┣ 📂modal
+┃ ┃ ┣ 📜Modal.jsx
+┃ ┃ ┗ 📜Modal.styles.jsx
+┃ ┣ 📜Layout.jsx
+┃ ┣ 📜Layout.styles.jsx
+┃ ┗ 📜ToggleButton.jsx
+┣ 📂hooks
+┃ ┗ 📜useModal.jsx
+┣ 📂pages
+┃ ┣ 📂calendar
+┃ ┃ ┣ 📜Schedule.jsx
+┃ ┃ ┗ 📜Schedule.styles.jsx
+┃ ┣ 📂dashboard
+┃ ┃ ┣ 📜DashBoard.jsx
+┃ ┃ ┣ 📜DashBoard.styles.jsx
+┃ ┃ ┗ 📜ProjectProgress.jsx
+┃ ┣ 📂mypage
+┃ ┃ ┣ 📂components
+┃ ┃ ┃ ┣ 📜NicknameValidation.jsx
+┃ ┃ ┃ ┣ 📜ProfileImage.jsx
+┃ ┃ ┃ ┗ 📜UserForm.jsx
+┃ ┃ ┣ 📂hooks
+┃ ┃ ┃ ┗ 📜useFetchUserInfo.js
+┃ ┃ ┣ 📜MyPage.jsx
+┃ ┃ ┣ 📜MyPage.styled.jsx
+┃ ┃ ┣ 📜MyPageEdit.jsx
+┃ ┃ ┗ 📜MyPageEdit.styled.jsx
+┃ ┣ 📂projectCreation
+┃ ┃ ┣ 📜AddModal.jsx
+┃ ┃ ┣ 📜AddModal.styles.jsx
+┃ ┃ ┣ 📜DateModal.jsx
+┃ ┃ ┣ 📜DateModal.styles.jsx
+┃ ┃ ┣ 📜ProjectCreationPage.jsx
+┃ ┃ ┗ 📜ProjectCreationPage.styles.jsx
+┃ ┣ 📂projectedit
+┃ ┃ ┣ 📜EditDateModal.jsx
+┃ ┃ ┣ 📜EditMemberModal.jsx
+┃ ┃ ┣ 📜EditMemberModal.styles.jsx
+┃ ┃ ┗ 📜ProjectEditPage.jsx
+┃ ┣ 📂projectlist
+┃ ┃ ┣ 📜ProjectList.jsx
+┃ ┃ ┗ 📜ProjectList.styles.jsx
+┃ ┣ 📂projectMembers
+┃ ┃ ┣ 📂Modal
+┃ ┃ ┃ ┣ 📜DeleteModal.jsx
+┃ ┃ ┃ ┣ 📜DeleteModal.styles.jsx
+┃ ┃ ┃ ┣ 📜MoreOptionsModal.jsx
+┃ ┃ ┃ ┣ 📜MoreOptionsModal.styles.jsx
+┃ ┃ ┃ ┣ 📜OpenTaskModal.jsx
+┃ ┃ ┃ ┣ 📜OpenTaskModal.styles.jsx
+┃ ┃ ┃ ┣ 📜UnassignedMsg.jsx
+┃ ┃ ┃ ┗ 📜UnassignedMsg.styles.jsx
+┃ ┃ ┣ 📜ProjectMembers.jsx
+┃ ┃ ┣ 📜ProjectMembers.styles.jsx
+┃ ┃ ┣ 📜projectMemberUtils.js
+┃ ┃ ┗ 📜renderProgressBar.jsx
+┃ ┣ 📂signin
+┃ ┃ ┣ 📜SignIn.jsx
+┃ ┃ ┣ 📜signin.styled.jsx
+┃ ┃ ┣ 📜SigninForm.jsx
+┃ ┃ ┣ 📜SigninID.jsx
+┃ ┃ ┣ 📜SigninPw.jsx
+┃ ┃ ┣ 📜SigninRepw.jsx
+┃ ┃ ┗ 📜SignInRepw.styled.jsx
+┃ ┣ 📂signup
+┃ ┃ ┣ 📜MailModal.jsx
+┃ ┃ ┣ 📜MailModal.styles.jsx
+┃ ┃ ┣ 📜MailTimer.jsx
+┃ ┃ ┣ 📜SignUp.jsx
+┃ ┃ ┗ 📜SignUp.styles.jsx
+┃ ┣ 📂startingPage
+┃ ┃ ┣ 📜StartingPage.jsx
+┃ ┃ ┗ 📜StartingPage.styles.jsx
+┃ ┣ 📜NotFound.jsx
+┃ ┗ 📜NotFound.styles.jsx
+┣ 📂utils
+┃ ┣ 📜cookie.js
+┃ ┣ 📜font.css
+┃ ┣ 📜isLogin.jsx
+┃ ┣ 📜Portal.jsx
+┃ ┣ 📜RegExp.jsx
+┃ ┗ 📜schedule-utils.jsx
+┣ 📜App.css
+┣ 📜App.jsx
+┣ 📜index.css
+┗ 📜main.jsx
+```
