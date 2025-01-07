@@ -29,9 +29,9 @@ export const ProjectCreationForm = styled.form`
 
   h1 {
     justify-content: flex-start;
-    font-size: 19.8px; // Reduced by 10%
-    margin-right: 40.5vw; // Reduced by 10%
-    margin-bottom: 5.4vh; // Reduced by 10%
+    font-size: 19.8px;
+    margin-right: 50.5vw;
+    margin-bottom: 5.4vh;
   }
 `;
 
@@ -165,10 +165,14 @@ export const StyledLuCircleUser = styled(LuCircleUser)`
 `;
 
 export const ProjectCreationFormBT = styled.button`
-  margin-top: 25px;
-  ${alignment};
-  font-size: 18px; // Reduced by 10%
-  font-weight: 550;
-  border: none;
-  background-color: transparent;
+  padding: 8px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 1);
+  background-color: rgba(255, 255, 255, 1);
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 1);
+  }
 `;

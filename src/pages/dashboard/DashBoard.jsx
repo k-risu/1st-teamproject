@@ -1,7 +1,12 @@
-import { ResponsiveBullet } from "@nivo/bullet";
+import axios from "axios";
 import dayjs from "dayjs";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { useLocation, useNavigate } from "react-router-dom";
 import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import ToggleButton from "../../components/ToggleButton";
+import { isLogin } from "../../utils/isLogin";
 import {
   ButtonDescription,
   ButtonSection,
@@ -13,24 +18,14 @@ import {
   ContainerWrap,
   DashBoardContainer,
   DashBoardTitleWrap,
-  DashBoardToggleWrap,
+  DescriptionSection,
   MemberContainer,
   ProjectData,
   ProjectInfo,
   SlideImage,
-  DescriptionSection,
 } from "./DashBoard.styles";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import { isLogin } from "../../utils/isLogin";
-import {
-  MembersSection,
-  MembersSectionBT,
-} from "../projectMembers/ProjectMembers.styles";
-import ToggleButton from "../../components/ToggleButton";
 import ProjectProgress from "./ProjectProgress";
+import Swal from "sweetalert2";
 
 const DashBoard = () => {
   const location = useLocation();
@@ -75,18 +70,34 @@ const DashBoard = () => {
 
   const projectCompleteHandler = async () => {
     try {
-      const res = await axios.post(
-        `/api/project/${projectData.projectNo}`,
-        {},
-        {
-          params: {
-            signedUserNo: cookies.signedUserNo,
-          },
-        },
-      );
-      console.log(res);
-      alert(`${projectData.title}를 완료하셨습니다!`);
-      navigate(`/project`);
+      Swal.fire({
+        title: "프로젝트를 완료 하시겠습니까?",
+        text: "다시 되돌릴 수 없습니다. 신중하세요.",
+        icon: "question",
+
+        showCancelButton: true,
+        confirmButtonColor: "#3788d8;",
+        cancelButtonColor: "#ff3c3c;",
+        confirmButtonText: "완료",
+        cancelButtonText: "취소",
+
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const res = axios.post(
+            `/api/project/${projectData.projectNo}`,
+            {},
+            {
+              params: {
+                signedUserNo: cookies.signedUserNo,
+              },
+            },
+          );
+          Swal.fire("프로젝트가 완료되었습니다.", "수고하셨습니다");
+          navigate(`/project`);
+          console.log(res);
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -101,23 +112,38 @@ const DashBoard = () => {
     console.log(deleteData);
 
     try {
-      const res = await axios.delete(`/api/project`, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "*/*",
-        },
-        data: deleteData,
+      Swal.fire({
+        title: "프로젝트를 삭제 하시겠습니까?",
+        text: "다시 되돌릴 수 없습니다. 신중하세요.",
+        icon: "warning",
+
+        showCancelButton: true,
+        confirmButtonColor: "#3788d8;",
+        cancelButtonColor: "#ff3c3c;",
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const res = axios.delete(`/api/project`, {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "*/*",
+            },
+            data: deleteData,
+          });
+          Swal.fire("프로젝트가 삭제되었습니다.", "수고하셨습니다");
+          navigate(`/project`);
+          console.log(res);
+        }
       });
-      console.log(res);
     } catch (error) {
       console.log(error);
-    } finally {
-      navigate(-1);
     }
   };
   const goProjectEdit = async (e) => {
     console.log(e);
-
     console.log("프로젝트 정보를 수정합니다");
     navigate(`/project/edit`, {
       state: {

@@ -57,38 +57,71 @@ const ProjectList = () => {
     <Container>
       <ContainerTitle>내가 진행중인 프로젝트</ContainerTitle>
       <ContainerWrap>
-        {projectList.map((item) => (
-          <ProjectListWrap
-            key={item.projectNo}
-            onClick={() => goProjectNo(item.projectNo)}
-          >
-            <ProjectDataWrap>
-              <Projects>
-                <ProjectDataSubtitle>프로젝트명</ProjectDataSubtitle>
-                <div>
-                  <FaCircle
-                    style={{
-                      color: "yellowgreen",
-                      marginRight: 3,
-                      marginLeft: 130,
-                    }}
-                  />
-                  <p>{item.title}</p>
-                </div>
-              </Projects>
-              <Projects>
-                <ProjectDataSubtitle>프로젝트 기간</ProjectDataSubtitle>
-                <Duration>
-                  {item.startAt} ~ {item.deadline}
-                </Duration>
-              </Projects>
-              <Projects>
-                <ProjectDataSubtitle>프로젝트 내용</ProjectDataSubtitle>
-                <Subtitle>{item.description}</Subtitle>
-              </Projects>
-            </ProjectDataWrap>
-          </ProjectListWrap>
-        ))}
+        {projectList.map((item) =>
+          item.projectComplete ? (
+            <ProjectListWrap
+              key={item.projectNo}
+              onClick={() => goProjectNo(item.projectNo)}
+            >
+              <ProjectDataWrap style={{ backgroundColor: "rgba(0,0,0,0.2)" }}>
+                <Projects>
+                  <ProjectDataSubtitle>프로젝트명</ProjectDataSubtitle>
+                  <div>
+                    <FaCircle
+                      style={{
+                        color: "rgba(0,0,0,0.7)",
+                        marginRight: 3,
+                        marginLeft: 130,
+                      }}
+                    />
+                    <p>{item.title}</p>
+                  </div>
+                </Projects>
+                <Projects>
+                  <ProjectDataSubtitle>프로젝트 기간</ProjectDataSubtitle>
+                  <Duration>
+                    {item.startAt} ~ {item.deadline}
+                  </Duration>
+                </Projects>
+                <Projects>
+                  <ProjectDataSubtitle>프로젝트 내용</ProjectDataSubtitle>
+                  <Subtitle>{item.description}</Subtitle>
+                </Projects>
+              </ProjectDataWrap>
+            </ProjectListWrap>
+          ) : (
+            <ProjectListWrap
+              key={item.projectNo}
+              onClick={() => goProjectNo(item.projectNo)}
+            >
+              <ProjectDataWrap>
+                <Projects>
+                  <ProjectDataSubtitle>프로젝트명</ProjectDataSubtitle>
+                  <div>
+                    <FaCircle
+                      style={{
+                        color: "yellowgreen",
+                        marginRight: 3,
+                        marginLeft: 130,
+                      }}
+                    />
+                    <p>{item.title}</p>
+                  </div>
+                </Projects>
+                <Projects>
+                  <ProjectDataSubtitle>프로젝트 기간</ProjectDataSubtitle>
+                  <Duration>
+                    {item.startAt} ~ {item.deadline}
+                  </Duration>
+                </Projects>
+                <Projects>
+                  <ProjectDataSubtitle>프로젝트 내용</ProjectDataSubtitle>
+                  <Subtitle>{item.description}</Subtitle>
+                </Projects>
+              </ProjectDataWrap>
+            </ProjectListWrap>
+          ),
+        )}
       </ContainerWrap>
     </Container>
   );

@@ -56,7 +56,7 @@ export const SignUpBt = styled.button`
   margin-bottom: 29px;
 
   &:hover {
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.8);
     color: white;
   }
 `;
@@ -69,7 +69,7 @@ export const LoginBt = styled.button`
   width: 133px;
 
   &:hover {
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.8);
     color: white;
   }
 `;

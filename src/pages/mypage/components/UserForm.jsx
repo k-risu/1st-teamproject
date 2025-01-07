@@ -39,14 +39,14 @@ function UserForm({
           onNicknameChange={onNicknameChange}
         />
       </InputWrapper>
-      <InputWrapper>
+      {/* <InputWrapper>
         <Label>상태 메시지</Label>
         <InputField
           value={statusMessage}
           onChange={onStatusMessageChange}
           disabled={!isEditable}
         />
-      </InputWrapper>
+      </InputWrapper> */}
       {isEditable && (
         <SubmitButton
           type="submit"

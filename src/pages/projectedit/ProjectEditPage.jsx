@@ -30,11 +30,16 @@ const ProjectEditPage = () => {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // AddModal 상태
   const [isDateModalOpen, setIsDateModalOpen] = useState(false); // DateModal 상태
-  const [teamMembers, setTeamMembers] = useState(
-    location.state?.memberList || []
-  );
-  const [eventData, setEventData] = useState({});
   const [changeDate, setChangeDate] = useState([]);
+  const [teamMembers, setTeamMembers] = useState(
+    location.state?.memberList || [],
+  );
+  const [eventData, setEventData] = useState([
+    {
+      start: location.state?.startAt,
+      end: dayjs(location.state?.deadLine).add(1, "day").format("YYYY-MM-DD"),
+    },
+  ]);
   const [selectDate, setSelectDate] = useState([
     {
       start: location.state?.startAt,
@@ -77,53 +82,26 @@ const ProjectEditPage = () => {
     mode: "onSubmit",
   });
 
-  // const addTeamMember = async (data) => {
-  //   const userList = [...clickProjectData.memberList, data.flat()].flat();
-  //   const userNoList = userList.map((item) => {
-  //     return item.userNo;
-  //   });
-  //   console.log(userList);
-
-  //   const isMemberNo = teamMembers.map((item) => {
-  //     return item.userNo;
-  //   });
-
-  //   // const addMemberNo = [
-  //   //   ...userNoList.filter((item) => !isMemberNo.includes(item)),
-  //   //   ...isMemberNo.filter((item) => !userNoList.includes(item)),
-  //   // ];
-  //   const addMemberNo = userNoList.filter(
-  //     (userNo) => !isMemberNo.includes(userNo)
-  //   );
-
-  //   const payload = {
-  //     signedUserNo: parseInt(cookies.signedUserNo),
-  //     projectNo: parseInt(clickProjectData.projectNo),
-  //     insertUserNoList: addMemberNo,
-  //     deleteUserNoList: [],
-  //   };
-
-  //   const res = await axios.post(`/api/project/search-user`, payload);
-  //   console.log(res);
-
-  //   setTeamMembers((prev) => [...prev, ...userList]);
-  //   closeAddModal();
-  // };
   const addTeamMember = async (data) => {
-    const userList = [...clickProjectData.memberList, ...data.flat()];
+    const userList = [...data];
     const userNoList = userList.map((item) => item.userNo);
 
     const isMemberNo = teamMembers.map((item) => item.userNo);
-    const addMemberNo = userNoList.filter(
-      (userNo) => !isMemberNo.includes(userNo)
+    const addMemberNo = await isMemberNo.filter(
+      (userNo) => !userNoList.includes(userNo),
+    );
+    const deleteMemberNo = await userNoList.filter(
+      (userNo) => !isMemberNo.includes(userNo),
     );
 
     const payload = {
       signedUserNo: parseInt(cookies.signedUserNo),
       projectNo: parseInt(clickProjectData.projectNo),
       insertUserNoList: addMemberNo,
-      deleteUserNoList: [],
+      deleteUserNoList: deleteMemberNo,
     };
+
+    console.log(payload);
 
     try {
       const res = await axios.post(`/api/project/search-user`, payload);
@@ -144,9 +122,9 @@ const ProjectEditPage = () => {
   };
 
   const handleSubmitForm = async (data) => {
-    console.log(data);
     console.log(eventData.length);
     console.log(clickProjectData);
+    console.log(eventData);
 
     const payload = {
       signedUserNo: cookies.signedUserNo,
@@ -154,14 +132,15 @@ const ProjectEditPage = () => {
       title: data.title,
       description: data.description,
       startAt:
-        eventData.length === undefined
+        eventData.length === 1
           ? clickProjectData.startAt.replace(/-/g, "")
           : eventData.startAt.replace(/-/g, ""),
       deadLine:
-        eventData.length === undefined
+        eventData.length === 1
           ? clickProjectData.deadLine.replace(/-/g, "")
           : eventData.deadLine.replace(/-/g, ""),
     };
+    console.log(payload);
 
     try {
       if (payload.title === "") {
@@ -270,7 +249,7 @@ const ProjectEditPage = () => {
 
     await setEventData(userSelectedDate);
     await openDateModal(userSelectedDate);
-    await setSelectDate(([]) => {
+    await setSelectDate(() => {
       return [
         {
           title: "",
@@ -296,7 +275,7 @@ const ProjectEditPage = () => {
     };
 
     await setEventData(userChangeDate);
-    await setChangeDate(([]) => {
+    await setChangeDate(() => {
       return [
         {
           title: "",

@@ -22,14 +22,14 @@ const EditMemberModal = ({
   teamMembers,
   setTeamMembers,
 }) => {
-  const [membersData, setMembersData] = useState([]);
+  const [membersData, setMembersData] = useState(teamMembers);
   const [userInfo, setUserInfo] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [cookies] = useCookies("signedUserNo");
 
   useEffect(() => {
-    console.log("Updated teamMembers:", teamMembers);
-  }, [teamMembers]);
+    console.log("Updated teamMembers:", membersData);
+  }, [membersData]);
 
   if (!isOpen) return null;
 
@@ -50,6 +50,12 @@ const EditMemberModal = ({
     const clickUserData = userInfo.find((item) => item.userNo === userNo);
     const userNickname = clickUserData.nickname.split("#")[0];
 
+    const addUserForm = {
+      ...clickUserData,
+      scheduleList: [],
+    };
+    console.log(addUserForm);
+
     Swal.fire({
       icon: "success",
       title: `${userNickname}님을 추가했어요.`,
@@ -60,6 +66,7 @@ const EditMemberModal = ({
       timerProgressBar: true,
     });
     setTeamMembers((prev) => [...prev, clickUserData]);
+    setMembersData([...membersData, addUserForm]);
     setSearchInput("");
     setUserInfo([]);
   };
@@ -73,7 +80,7 @@ const EditMemberModal = ({
     try {
       const seacrchNickname = encodeURIComponent(searchInput.trim());
       const res = await axios.get(
-        `/api/project/search-user/${seacrchNickname}`
+        `/api/project/search-user/${seacrchNickname}`,
       );
       if (res.data.code === "OK") {
         setUserInfo(res.data.userList);
@@ -86,15 +93,16 @@ const EditMemberModal = ({
     }
   };
 
-  const handleDelete = (e) => {
-    const deleteMember = teamMembers.filter((item) => item.userNo !== e);
-    console.log(deleteMember);
+  const handleDelete = async (e) => {
+    console.log(e);
 
-    if (
-      deleteMember.map((item) => {
-        return item.scheduleList.length;
-      }) >= 1
-    ) {
+    const deleteMember = membersData.filter((item) => item.userNo !== e);
+    const isNotDeleteUser = membersData.filter(
+      (item) => item.scheduleList.length !== 0,
+    );
+    console.log(isNotDeleteUser);
+
+    if (isNotDeleteUser[0].userNo === e) {
       const Toast = Swal.mixin({
         toast: true,
         position: "center",
@@ -108,10 +116,11 @@ const EditMemberModal = ({
       });
       Toast.fire({
         icon: "error",
-        title: "해당 사용자는 삭제할 수 없습니다",
+        title: "해당 사용자는 일정이 남아있습니다.",
       });
     } else {
-      setTeamMembers(deleteMember);
+      await setMembersData(deleteMember);
+      await setTeamMembers(deleteMember);
     }
   };
 
@@ -165,7 +174,7 @@ const EditMemberModal = ({
         )}
         <div>
           <ModalText>
-            {teamMembers.map((item) => (
+            {membersData.map((item) => (
               <ModalUser key={item.userNo}>
                 <span>{item.nickname}</span>
                 <FiDelete onClick={() => handleDelete(item.userNo)} />

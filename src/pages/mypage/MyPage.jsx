@@ -20,89 +20,130 @@ function MyPage() {
   const location = useLocation();
   const [cookies] = useCookies(["signedUserNo"]);
   const { targetUserNo } = useParams();
-  const [isUser, setIsUser] = useState(null);
+  const [isUser, setIsUser] = useState(false);
 
   const [clickUserNo, setClickUserNo] = useState(() => {
-    // location.state가 null이면 signedUserNo를 기본값으로 사용
     if (
-      location.state?.targetUserNo === cookies.signedUserNo ||
-      targetUserNo === cookies.signedUserNo
+      parseInt(location.state?.targetUserNo) === parseInt(cookies.signedUserNo)
     ) {
       setIsUser(true); // targetUserNo와 signedUserNo가 동일하면 true
+      return location.state?.targetUserNo;
     } else {
       setIsUser(false); // 아니면 false
+      return cookies.signedUserNo;
     }
-    return location.state?.targetUserNo || targetUserNo || cookies.signedUserNo;
   });
 
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     nickname: "",
     email: "",
-    pic: location.state?.updatedPic || "",
+    pic: "",
     userId: "",
     userStatusMessage: "",
     myInfo: null,
   });
-  const [imageSrc, setImageSrc] = useState("");
+  const [imageSrc, setImageSrc] = useState("/default_profile.jpg");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const signedUserNo = cookies.signedUserNo;
+  const signedUserNo = parseInt(cookies.signedUserNo);
 
-  const fetchUserData = useCallback(async () => {
-    const endpoint = "/api/user";
+  // const fetchUserData = useCallback(async () => {
+  //   const endpoint = "/api/user";
 
-    if (!signedUserNo) {
-      console.error("signedUserNo is missing");
-      return;
-    }
+  //   if (!signedUserNo) {
+  //     console.error("signedUserNo is missing");
+  //     return;
+  //   }
 
-    // 로그 추가: fetchUserData 호출 전 상태 확인
-    console.log("fetchUserData 호출 - clickUserNo:", clickUserNo);
-    console.log("fetchUserData 호출 - signedUserNo:", signedUserNo);
+  //   // 로그 추가: fetchUserData 호출 전 상태 확인
+  //   console.log("fetchUserData 호출 - clickUserNo:", clickUserNo);
+  //   console.log("fetchUserData 호출 - signedUserNo:", signedUserNo);
 
-    try {
-      const response = await axios.get(endpoint, {
-        params: {
-          targetUserNo: clickUserNo || signedUserNo,
-          signedUserNo: signedUserNo,
-        },
-      });
+  //   try {
+  //     const response = await axios.get(endpoint, {
+  //       params: {
+  //         targetUserNo: location.state?.targetUserNo,
+  //         signedUserNo: signedUserNo,
+  //       },
+  //     });
+  //     console.log(response);
 
-      console.log("API response:", response.data);
+  //     console.log("API response:", response.data);
 
-      if (response.data.code === "OK") {
-        setUserData({
-          nickname: response.data.nickname
-            ? response.data.nickname
-                .replace(/#0000/g, "")
-                .split("#")
-                .slice(0, 2)
-                .join("#")
-            : "",
-          email: response.data.email || "",
-          pic: response.data.pic || "/default_profile.jpg",
-          userId: response.data.userId || "",
-          userStatusMessage: response.data.statusMessage || "",
-          myInfo: response.data.targetUserNo,
-        });
-      } else {
-        console.error("Failed to fetch user data:", response.data);
-      }
-    } catch (error) {
-      console.error("Error during API call:", error);
-    }
-  }, [clickUserNo, signedUserNo]);
+  //     if (response.data.code === "OK") {
+  //       setUserData({
+  //         nickname: response.data.nickname.replace(/#0000/g, "").split("#")[0],
+  //         email: response.data.email,
+  //         pic: response.data.pic,
+  //         // pic: response.data.pic || "default_profile.jpg",
+  //         userId: response.data.userId,
+  //         userStatusMessage: response.data.statusMessage || "",
+  //         myInfo: response.data.myInfo,
+  //       });
+  //     } else {
+  //       console.error("Failed to fetch user data:", response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during API call:", error);
+  //   }
+  // }, [clickUserNo, signedUserNo]);
+
+  // useEffect(() => {
+  //   if (location.state || clickUserNo) {
+  //     fetchUserData();
+  //   }
+  // }, [fetchUserData, location.state, clickUserNo]); // 의존성에 clickUserNo 추가
 
   useEffect(() => {
-    if (location.state || clickUserNo) {
-      fetchUserData();
-    }
-  }, [fetchUserData, location.state, clickUserNo]); // 의존성에 clickUserNo 추가
+    const fetchUserData = async () => {
+      const endpoint = "/api/user";
+
+      if (!signedUserNo) {
+        console.error("signedUserNo is missing");
+        return;
+      }
+
+      // 로그 추가: fetchUserData 호출 전 상태 확인
+      console.log("fetchUserData 호출 - clickUserNo:", clickUserNo);
+      console.log("fetchUserData 호출 - signedUserNo:", signedUserNo);
+
+      try {
+        const response = await axios.get(endpoint, {
+          params: {
+            targetUserNo: location.state?.targetUserNo,
+            signedUserNo: signedUserNo,
+          },
+        });
+        console.log(response);
+
+        console.log("API response:", response.data);
+
+        if (response.data.code === "OK") {
+          setUserData({
+            nickname: response.data.nickname
+              .replace(/#0000/g, "")
+              .split("#")[0],
+            email: response.data.email,
+            pic: response.data.pic,
+            // pic: response.data.pic || "default_profile.jpg",
+            userId: response.data.userId,
+            userStatusMessage: response.data.statusMessage || "",
+            myInfo: response.data.myInfo,
+          });
+        } else {
+          console.error("Failed to fetch user data:", response.data);
+        }
+      } catch (error) {
+        console.error("Error during API call:", error);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     console.log("userData.pic 변경 감지:", userData.pic);
     if (userData.pic) {
-      const newImageSrc = `${import.meta.env.VITE_BASE_URL}/pic/user/${targetUserNo || signedUserNo}/${userData.pic}`;
+      const newImageSrc = `${import.meta.env.VITE_BASE_URL}/pic/user/${clickUserNo}/${userData.pic}`;
       setImageSrc(newImageSrc);
     }
   }, [userData.pic, targetUserNo, signedUserNo]);
@@ -111,10 +152,21 @@ function MyPage() {
   const handleClosePopup = () => setIsPopupOpen(false);
 
   const userEditClick = (e) => {
+    console.log(e);
+
     navigate(`/mypage/edit`, {
-      state: { targetUserId: e.userId },
+      state: {
+        targetUserNo: clickUserNo || signedUserNo,
+        userId: e.userId,
+        email: e.email,
+        nickname: e.nickname,
+        pic: e.pic,
+        userStatusMessage: e.userStatusMessage,
+        myInfo: e.myInfo,
+      },
     });
   };
+
   return (
     <Layout>
       <Header>
@@ -122,20 +174,33 @@ function MyPage() {
       </Header>
       <Userinfo>
         <UserProfile>
-          {userData.pic ? (
+          {userData.pic === null ? (
             <img
-              src={imageSrc || "/default_profile.jpg"}
+              src="/default_profile.jpg"
+              alt="기본 프로필"
+              style={{
+                borderRadius: "50px",
+                width: "100px",
+                height: "100px",
+                cursor: "pointer",
+                display: "block",
+                margin: "0 auto",
+              }}
+            />
+          ) : (
+            <img
+              src={imageSrc}
               alt="프로필"
               style={{
                 borderRadius: "50px",
                 width: "100px",
                 height: "100px",
                 cursor: "pointer",
+                display: "block",
+                margin: "0 auto",
               }}
               onClick={handleImageClick}
             />
-          ) : (
-            <img src="/default_profile.jpg" alt="" />
           )}
           <Userpage>
             <UserDetail>
@@ -202,7 +267,7 @@ function MyPage() {
           </div>
         </div>
       )}
-      {setIsUser && (
+      {isUser && (
         <Footer>
           <button onClick={() => userEditClick(userData)}>정보 변경하기</button>
         </Footer>

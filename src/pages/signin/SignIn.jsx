@@ -185,7 +185,21 @@ function SignIn() {
     }),
     onSubmit: (values) => {
       console.log("제출된 비밀번호:", values);
-      alert("비밀번호가 성공적으로 재설정되었습니다.");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "success",
+        title: "비밀번호가 성공적으로 재설정되었습니다.",
+      });
       setShowPwPopup(false); // 팝업 닫기
     },
   });
@@ -226,7 +240,26 @@ function SignIn() {
 
       // 응답 처리
       if (result.code === "OK") {
-        alert(method === "POST" ? "인증 성공!" : "인증번호 전송 성공!");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "center",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        method === "POST"
+          ? Toast.fire({
+              icon: "success",
+              title: "인증 성공",
+            })
+          : Toast.fire({
+              icon: "success",
+              title: "인증번호 전송 성공!",
+            });
         if (method === "GET") setVerificationSent(true); // 인증번호 전송 상태
         if (method === "POST") setIsVerified(true); // 인증 성공 상태
         if (result.userId) setAssociatedID(result.userId); // 사용자 ID 저장

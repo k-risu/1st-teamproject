@@ -15,7 +15,7 @@ export const Header = styled.div`
   font-weight: bold;
   width: 100%;
   max-width: 700px;
-  background-color: white;
+  /* background-color: white; */
   margin: 0 auto;
   margin-top: 150px; /* 명시적으로 추가 */
   margin-bottom: 100px;
@@ -32,7 +32,7 @@ export const Userinfo = styled.div`
   padding-bottom: 20px;
   gap: 20px; /* 프로필과 정보 간 간격 */
   max-width: 700px; /* 전체 영역의 너비 */
-  background-color: white;
+  /* background-color: white; */
   margin: 0 auto;
 `;
 
@@ -109,7 +109,7 @@ export const Footer = styled.div`
 export const Layout = styled.div`
   width: 100%;
   height: 100%;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.5);
   display: flex;
   flex-direction: column;
   /* margin: auto; */

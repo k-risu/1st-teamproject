@@ -20,14 +20,16 @@ const AddModal = ({
   teamMembers,
   setTeamMembers,
 }) => {
-  const [memberList, setMemberList] = useState([]);
+  const [memberList, setMemberList] = useState([...teamMembers]);
   const [userInfo, setUserInfo] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
   if (!isOpen) return null;
 
-  const handleAddMemberButton = (userNo) => {
-    if (teamMembers.some((member) => member === userNo)) {
+  const handleAddMemberButton = (item) => {
+    if (teamMembers.some((member) => member.userNo === item.userNo)) {
+      console.log(teamMembers);
+
       Swal.fire({
         icon: "warning",
         title: "이미 추가된 사용자입니다.",
@@ -40,7 +42,10 @@ const AddModal = ({
       return;
     }
 
-    const clickUserData = userInfo.find((item) => item.userNo === userNo);
+    const clickUserData = userInfo.find(
+      (member) => member.userNo === item.userNo,
+    );
+
     const userNickname = clickUserData.nickname.split("#")[0];
 
     Swal.fire({
@@ -52,8 +57,8 @@ const AddModal = ({
       timer: 1500,
       timerProgressBar: true,
     });
-    setTeamMembers((prev) => [...prev, userNo]);
-    setMemberList((prev) => [...prev, userNickname]);
+    setTeamMembers((prev) => [...prev, item]);
+    setMemberList((prev) => [...prev, item]);
     setSearchInput("");
     setUserInfo([]);
   };
@@ -63,7 +68,7 @@ const AddModal = ({
       const seacrchNickname = encodeURIComponent(searchInput.trim());
 
       const res = await axios.get(
-        `/api/project/search-user/${seacrchNickname}`
+        `/api/project/search-user/${seacrchNickname}`,
       );
       if (res.data.code === "OK") {
         setUserInfo(res.data.userList);
@@ -90,9 +95,12 @@ const AddModal = ({
   };
 
   const handleDelete = (e) => {
-    const deleteMember = memberList.flat().filter((item) => item !== e);
+    const deleteMember = memberList.reduce((list, item) => {
+      if (item.userNo !== e.userNo) list.push(item);
+      return list;
+    });
 
-    if (teamMembers[0].nickname === deleteMember[0]) {
+    if (deleteMember.userNo === e.userNo) {
       const Toast = Swal.mixin({
         toast: true,
         position: "center",
@@ -109,7 +117,8 @@ const AddModal = ({
         title: "해당 사용자는 삭제할 수 없습니다",
       });
     } else {
-      setMemberList(deleteMember);
+      setTeamMembers([deleteMember]);
+      setMemberList([deleteMember]);
     }
   };
 
@@ -136,7 +145,7 @@ const AddModal = ({
                   <FindUserData
                     key={index}
                     onClick={() => {
-                      handleAddMemberButton(item.userNo);
+                      handleAddMemberButton(item);
                     }}
                   >
                     <img src="/default_profile.jpg" alt="Default Profile" />
@@ -148,7 +157,7 @@ const AddModal = ({
                   <FindUserData
                     key={index}
                     onClick={() => {
-                      handleAddMemberButton(item.userNo);
+                      handleAddMemberButton(item);
                     }}
                   >
                     <img
@@ -163,9 +172,9 @@ const AddModal = ({
         )}
         <div>
           <ModalText>
-            {memberList.map((item, index) => (
-              <div key={index}>
-                <span>{item}</span>
+            {memberList.map((item) => (
+              <div key={item.userNo}>
+                <span>{item.nickname}</span>
                 <FiDelete onClick={() => handleDelete(item)} />
               </div>
             ))}

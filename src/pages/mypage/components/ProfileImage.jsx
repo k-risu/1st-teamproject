@@ -1,22 +1,25 @@
 import { TbCameraHeart } from "react-icons/tb";
-import { useMemo, useId } from "react";
+import { useMemo, useId, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { UserImage } from "../MyPageEdit.styled";
 
 function ProfileImage({ pic, targetUserNo, handleImageChange }) {
   const uniqueId = useId();
   const inputId = `profile-upload-${uniqueId}`;
-
-  // const DEFAULT_PROFILE_IMAGE = "https://via.placeholder.com/150";
+  const location = useLocation();
+  const [clickUserNo, setClickUserNo] = useState(location.state?.targetUserNo);
   const DEFAULT_PROFILE_IMAGE = "/default_profile.jpg";
 
   const profileImageSrc = useMemo(() => {
     if (pic instanceof File) return URL.createObjectURL(pic);
     if (targetUserNo && pic) {
-      return `${import.meta.env.VITE_BASE_URL}/pic/user/${targetUserNo}/${pic}`;
+      return `${import.meta.env.VITE_BASE_URL}/pic/user/${clickUserNo}/${pic}`;
     } else {
       return DEFAULT_PROFILE_IMAGE;
     }
-  }, [pic, targetUserNo]);
+  }, [pic]);
+
+  console.log(profileImageSrc);
 
   return (
     <div style={{ position: "relative", textAlign: "center" }}>

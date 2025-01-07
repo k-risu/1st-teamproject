@@ -20,15 +20,24 @@ import {
   ProjectInformation,
   StyledLuCircleUser,
 } from "./ProjectCreationPage.styles";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { isLogin } from "../../utils/isLogin";
 import Swal from "sweetalert2";
 
 function ProjectCreationPage() {
+  const [cookies] = useCookies("signedUserNo");
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const [clickUserData, setClickUserData] = useState({
+    userNo: cookies.signedUserNo,
+    nickname: location.state?.nickname,
+  });
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // AddModal 상태
   const [isDateModalOpen, setIsDateModalOpen] = useState(false); // DateModal 상태
-  const [teamMembers, setTeamMembers] = useState([]); // 팀 구성원 상태
+  const [teamMembers, setTeamMembers] = useState([clickUserData]); // 팀 구성원 상태
   const [eventData, setEventData] = useState({});
   const [selectDate, setSelectDate] = useState([]);
   const [changeDate, setChangeDate] = useState([]);
@@ -42,9 +51,6 @@ function ProjectCreationPage() {
   const closeDateModal = () => {
     setIsDateModalOpen(false); // DateModal 닫기
   };
-
-  const [cookies] = useCookies("signedUserNo");
-  const navigate = useNavigate();
 
   useEffect(() => {
     isLogin({ navigate, cookies });
@@ -62,19 +68,17 @@ function ProjectCreationPage() {
   const addTeamMember = () => {
     closeAddModal();
   };
-  console.log(eventData);
   const handleSubmitForm = async (data) => {
+    console.log(teamMembers.map((item) => item.userNo));
+    const payload = {
+      signedUserNo: cookies.signedUserNo,
+      title: data.title,
+      description: data.description,
+      startAt: eventData.startAt.replace(/-/g, ""),
+      deadLine: eventData.deadLine.replace(/-/g, ""),
+      memberNoList: teamMembers.map((item) => item.userNo),
+    };
     try {
-      const payload = {
-        signedUserNo: cookies.signedUserNo,
-        title: data.title,
-        description: data.description,
-        startAt: eventData.startAt,
-        deadLine: eventData.deadLine,
-        memberNoList: teamMembers.map((item) => item),
-      };
-      console.log(payload);
-
       if (payload.title === "") {
         const Toast = Swal.mixin({
           toast: true,
@@ -109,6 +113,8 @@ function ProjectCreationPage() {
           title: "프로젝트 내용을 입력해주세요.",
         });
       }
+      console.log(payload);
+
       if (payload.startAt === undefined && payload.deadLine === undefined) {
         const Toast = Swal.mixin({
           toast: true,
@@ -152,53 +158,44 @@ function ProjectCreationPage() {
     }
   };
 
-  const eventSelectHandler = async (data) => {
-    console.log(data);
-
+  const eventSelectHandler = (data) => {
     const userSelectedDate = {
       startAt: data?.startStr,
       deadLine: dayjs(data?.endStr).subtract(1, "day").format("YYYY-MM-DD"),
     };
-    console.log(userSelectedDate);
 
-    await setEventData(userSelectedDate);
-    await openDateModal(userSelectedDate);
-    await setSelectDate(() => {
-      return [
-        {
-          title: "",
-          start: data.startStr,
-          end: data.endStr,
-          backgroundColor: "#58ACFA",
-          borderColor: "#58ACFA",
-        },
-      ];
-    });
+    setEventData(userSelectedDate);
+    openDateModal(userSelectedDate);
+    setSelectDate([
+      {
+        title: "",
+        start: data.startStr.replace(/-/g, ""),
+        end: data.endStr.replace(/-/g, ""),
+        backgroundColor: "#58ACFA",
+        borderColor: "#58ACFA",
+      },
+    ]);
   };
 
-  const eventChangeHandler = async (data) => {
-    console.log(data.event.startStr);
-    console.log(data.event.endStr);
-
+  const eventChangeHandler = (data) => {
     const userChangeDate = {
       startAt: data.event.startStr,
       deadLine: dayjs(data.event.endStr)
         .subtract(1, "day")
         .format("YYYY-MM-DD"),
     };
+    console.log(userChangeDate);
 
-    await setEventData(userChangeDate);
-    await setChangeDate(() => {
-      return [
-        {
-          title: "",
-          start: data.event.startStr,
-          end: data.event.endStr,
-          backgroundColor: "#58ACFA",
-          borderColor: "#58ACFA",
-        },
-      ];
-    });
+    setEventData(userChangeDate);
+    setChangeDate([
+      {
+        title: "",
+        start: data.event.startStr.replace(/-/g, ""),
+        end: data.event.endStr.replace(/-/g, ""),
+        backgroundColor: "#58ACFA",
+        borderColor: "#58ACFA",
+      },
+    ]);
   };
 
   useEffect(() => {

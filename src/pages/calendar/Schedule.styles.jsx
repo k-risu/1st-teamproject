@@ -61,7 +61,7 @@ export const CalendarLayout = styled.section`
 export const ModalTitle = styled.div`
   width: 100%;
   height: 30%;
-  padding: 5px 10px;
+  padding: 10px 10px;
   background-color: skyblue;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;

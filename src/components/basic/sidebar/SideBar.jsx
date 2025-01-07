@@ -27,8 +27,8 @@ const SideBar = () => {
       try {
         const res = await axios.get(`/api/user`, {
           params: {
-            targetUserNo: cookies.signedUserNo,
-            signedUserNo: cookies.signedUserNo,
+            targetUserNo: parseInt(cookies.signedUserNo),
+            signedUserNo: parseInt(cookies.signedUserNo),
           },
         });
         setUserData({ ...res.data });
