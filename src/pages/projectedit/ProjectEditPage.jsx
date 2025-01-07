@@ -31,7 +31,7 @@ const ProjectEditPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // AddModal 상태
   const [isDateModalOpen, setIsDateModalOpen] = useState(false); // DateModal 상태
   const [teamMembers, setTeamMembers] = useState(
-    location.state?.memberList || []
+    location.state?.memberList || [],
   );
   const [eventData, setEventData] = useState({});
   const [changeDate, setChangeDate] = useState([]);
@@ -115,7 +115,7 @@ const ProjectEditPage = () => {
 
     const isMemberNo = teamMembers.map((item) => item.userNo);
     const addMemberNo = userNoList.filter(
-      (userNo) => !isMemberNo.includes(userNo)
+      (userNo) => !isMemberNo.includes(userNo),
     );
 
     const payload = {

@@ -1,7 +1,12 @@
-import { ResponsiveBullet } from "@nivo/bullet";
+import axios from "axios";
 import dayjs from "dayjs";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { useLocation, useNavigate } from "react-router-dom";
 import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import ToggleButton from "../../components/ToggleButton";
+import { isLogin } from "../../utils/isLogin";
 import {
   ButtonDescription,
   ButtonSection,
@@ -13,23 +18,12 @@ import {
   ContainerWrap,
   DashBoardContainer,
   DashBoardTitleWrap,
-  DashBoardToggleWrap,
+  DescriptionSection,
   MemberContainer,
   ProjectData,
   ProjectInfo,
   SlideImage,
-  DescriptionSection,
 } from "./DashBoard.styles";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import { isLogin } from "../../utils/isLogin";
-import {
-  MembersSection,
-  MembersSectionBT,
-} from "../projectMembers/ProjectMembers.styles";
-import ToggleButton from "../../components/ToggleButton";
 import ProjectProgress from "./ProjectProgress";
 
 const DashBoard = () => {

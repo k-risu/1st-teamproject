@@ -2,9 +2,9 @@ import PropTypes from "prop-types";
 
 const ProjectProgress = ({ title, progress }) => {
   const getColor = (progress) => {
-    if (progress < 50) return "#FF6347"; // 빨간색
-    if (progress < 80) return "#FFD700"; // 노란색
-    return "#32CD32"; // 초록색
+    if (progress < 50) return "#ff775f"; // 빨간색
+    if (progress < 80) return "#ffe343"; // 노란색
+    return "#67da6f"; // 초록색
   };
 
   const containerStyles = {

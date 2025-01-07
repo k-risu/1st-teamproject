@@ -122,7 +122,7 @@ function MyPage() {
       </Header>
       <Userinfo>
         <UserProfile>
-          {userData.pic ? (
+          {/* {userData.pic ? (
             <img
               src={imageSrc || "/default_profile.jpg"}
               alt="프로필"
@@ -136,7 +136,7 @@ function MyPage() {
             />
           ) : (
             <img src="/default_profile.jpg" alt="" />
-          )}
+          )} */}
           <Userpage>
             <UserDetail>
               <Label>아이디</Label>

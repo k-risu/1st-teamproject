@@ -14,6 +14,7 @@ export const DashBoardContainer = styled.div`
 export const DashBoardTitleWrap = styled.div`
   display: flex;
   justify-content: space-between;
+  padding-right: 10px;
 
   > span {
     font-size: 24px;
