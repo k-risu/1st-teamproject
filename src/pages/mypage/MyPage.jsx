@@ -25,10 +25,10 @@ function MyPage() {
   const [clickUserNo, setClickUserNo] = useState(() => {
     if (location.state?.targetUserNo === parseInt(cookies.signedUserNo)) {
       setIsUser(true); // targetUserNo와 signedUserNo가 동일하면 true
-      return location.state?.targetUserNo;
+      return cookies.signedUserNo;
     } else {
       setIsUser(false); // 아니면 false
-      return cookies.signedUserNo;
+      return location.state?.targetUserNo;
     }
   });
 
@@ -101,6 +101,7 @@ function MyPage() {
     if (userData.pic) {
       const newImageSrc = `${import.meta.env.VITE_BASE_URL}/pic/user/${clickUserNo}/${userData.pic}`;
       setImageSrc(newImageSrc);
+      console.log(newImageSrc);
     }
   }, [userData.pic]);
 

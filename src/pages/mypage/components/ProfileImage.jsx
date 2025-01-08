@@ -2,12 +2,14 @@ import { TbCameraHeart } from "react-icons/tb";
 import { useMemo, useId, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UserImage } from "../MyPageEdit.styled";
+import { useCookies } from "react-cookie";
 
 function ProfileImage({ pic, targetUserNo, handleImageChange }) {
   const uniqueId = useId();
   const inputId = `profile-upload-${uniqueId}`;
   const location = useLocation();
-  const [clickUserNo, setClickUserNo] = useState(location.state?.targetUserNo);
+  const [cookies, removeCookie] = useCookies("signedUserNo");
+  const [clickUserNo, setClickUserNo] = useState(cookies.signedUserNo);
   const DEFAULT_PROFILE_IMAGE = "/default_profile.jpg";
 
   const profileImageSrc = useMemo(() => {
@@ -18,8 +20,6 @@ function ProfileImage({ pic, targetUserNo, handleImageChange }) {
       return DEFAULT_PROFILE_IMAGE;
     }
   }, [pic]);
-
-  console.log(profileImageSrc);
 
   return (
     <div style={{ position: "relative", textAlign: "center" }}>

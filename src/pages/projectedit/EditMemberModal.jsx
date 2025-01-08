@@ -191,7 +191,7 @@ const EditMemberModal = ({
           <ModalText>
             {membersData.map((item) => (
               <ModalUser key={item.userNo}>
-                <span>{item.nickname}</span>
+                <span>{item.nickname.split("#")[0]}</span>
                 <FiDelete onClick={() => handleDelete(item.userNo)} />
               </ModalUser>
             ))}

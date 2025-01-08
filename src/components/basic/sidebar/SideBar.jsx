@@ -31,21 +31,19 @@ const SideBar = () => {
             signedUserNo: parseInt(cookies.signedUserNo),
           },
         });
-
         setUserData({ ...res.data });
         setUserProfile(userData.pic);
       } catch (error) {
         console.error(error);
       }
     };
-
     getUserData();
   }, [userProfile]);
 
   const linkMypageHandler = () => {
     navigate(`/mypage`, {
       state: {
-        ...userData,
+        targetUserNo: cookies.signedUserNo,
       },
     });
   };
