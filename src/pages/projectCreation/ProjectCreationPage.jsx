@@ -76,8 +76,12 @@ function ProjectCreationPage() {
       description: data.description,
       startAt: eventData.startAt.replace(/-/g, ""),
       deadLine: eventData.deadLine.replace(/-/g, ""),
-      memberNoList: teamMembers.map((item) => item.userNo),
+      memberNoList: teamMembers
+        .filter((_, index) => index !== 0)
+        .map((item) => item.userNo),
     };
+    console.log(payload);
+
     try {
       if (payload.title === "") {
         const Toast = Swal.mixin({
