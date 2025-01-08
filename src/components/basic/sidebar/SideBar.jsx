@@ -31,14 +31,24 @@ const SideBar = () => {
             signedUserNo: parseInt(cookies.signedUserNo),
           },
         });
+
         setUserData({ ...res.data });
         setUserProfile(userData.pic);
       } catch (error) {
         console.error(error);
       }
     };
+
     getUserData();
   }, [userProfile]);
+
+  const linkMypageHandler = () => {
+    navigate(`/mypage`, {
+      state: {
+        ...userData,
+      },
+    });
+  };
 
   const removeCookieHandler = () => {
     removeCookie("signedUserNo");
@@ -70,7 +80,7 @@ const SideBar = () => {
             <BiBarChartSquare style={{ fontSize: 35 }} />
             <p>Project</p>
           </SideBarMenu>
-          <SideBarMenu onClick={() => navigate(`/mypage`)}>
+          <SideBarMenu onClick={() => linkMypageHandler(userData)}>
             <BiUserCircle style={{ fontSize: 35 }} />
             <p>MyPage</p>
           </SideBarMenu>
